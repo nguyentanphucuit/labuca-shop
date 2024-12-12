@@ -1,8 +1,8 @@
 "use client";
 import React, { Suspense } from "react";
+import Image from "next/image";
 import SourceDetails from "@/app/components/SourceDetails";
 import sourceImg from "/public/assets/img/background.png";
-import ExportedImage from "next-image-export-optimizer";
 import Search from "../ui/search";
 import { fetchFilteredSource, fetchSourcesPage } from "@/app/constants/common";
 import Pagination from "./Pagination";
@@ -18,10 +18,7 @@ const ListSourceInfo = () => {
 
   return (
     <>
-      <ExportedImage
-        className=""
-        alt="metagun button"
-        src={sourceImg}></ExportedImage>
+      <Image className="" alt="metagun button" src={sourceImg} />
       <div className="pt-12">
         <Suspense>
           <Search placeholder="Tìm kiếm ..." />

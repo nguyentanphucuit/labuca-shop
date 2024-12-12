@@ -1,6 +1,6 @@
-import ExportedImage from "next-image-export-optimizer";
 import React from "react";
 import logo from "/public/assets/img/labuca-logo.png";
+import Image from "next/image";
 // import ExportedImage from "next-image-export-optimizer";
 
 const Navbar = () => {
@@ -50,10 +50,7 @@ const Navbar = () => {
           </div>
           <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
             <div className="flex shrink-0 items-center">
-              <ExportedImage
-                className="h-12 w-24"
-                alt="metagun button"
-                src={logo}></ExportedImage>
+              <Image className="h-12 w-24" alt="metagun button" src={logo} />
               {/* <img className="h-8 w-auto" src="https://tailwindui.com/plus/img/logos/mark.svg?color=indigo&shade=500" alt="Your Company"> */}
             </div>
             <div className="hidden sm:ml-6 sm:block">
