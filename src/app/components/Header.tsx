@@ -1,7 +1,11 @@
 import React from "react";
 
 const Header = () => {
-  return <div>Header</div>;
+  return (
+    <head>
+      <link rel="icon" href="/labuca.svg" sizes="any" />
+    </head>
+  );
 };
 
 export default Header;
