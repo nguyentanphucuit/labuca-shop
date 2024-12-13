@@ -1,5 +1,5 @@
 import React from "react";
-import logo from "/public/assets/img/labuca-logo-2.png";
+import logo from "/public/assets/img/labuca-logo.png";
 import Image from "next/image";
 // import ExportedImage from "next-image-export-optimizer";
 
