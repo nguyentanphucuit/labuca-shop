@@ -1,14 +1,12 @@
 "use client";
 import React, { Suspense } from "react";
-import Image from "next/image";
 import SourceDetails from "@/app/components/SourceDetails";
-import sourceImg from "/public/assets/img/background.png";
 import Search from "../ui/search";
 import { fetchFilteredSource, fetchSourcesPage } from "@/app/constants/common";
 import Pagination from "./Pagination";
 import { useSearchParams } from "next/navigation";
 
-const ListSourceInfo = () => {
+const ListItem = () => {
   const searchParams = useSearchParams();
   const query = searchParams.get("query") || "";
   const currentPage = searchParams.get("page") || 1;
@@ -18,7 +16,6 @@ const ListSourceInfo = () => {
 
   return (
     <>
-      <Image className="" alt="metagun button" src={sourceImg} />
       <div className="pt-12">
         <Suspense>
           <Search placeholder="Tìm kiếm ..." />
@@ -42,4 +39,4 @@ const ListSourceInfo = () => {
   );
 };
 
-export default ListSourceInfo;
+export default ListItem;

@@ -1,9 +1,25 @@
+"use client";
 import React from "react";
 import logo from "/public/assets/img/labuca-logo.png";
 import Image from "next/image";
+import Link from "next/link";
+
+import { usePathname } from "next/navigation";
+import { classNames } from "../constant/common";
 // import ExportedImage from "next-image-export-optimizer";
 
+const navigation = [
+  { name: "Trang chủ", href: "/", current: true },
+  { name: "Giày cao gót", href: "/highHeels", current: false },
+  { name: "Giày Sandal", href: "/sandal", blank: false, current: false },
+  { name: "Chính sách", href: "/policy", current: false },
+  { name: "Thông tin", href: "/aboutUs", current: false },
+];
 const Navbar = () => {
+  const pathname = usePathname();
+  navigation.forEach((item) => {
+    item.current = item.href === pathname;
+  });
   return (
     <nav className="bg-white-500">
       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
@@ -55,7 +71,22 @@ const Navbar = () => {
             </div>
             <div className="hidden sm:ml-6 sm:block">
               <div className="flex space-x-4">
-                <a
+                {navigation.map((item) => (
+                  <Link
+                    key={item.name}
+                    target={item.blank ? "_blank" : "_self"}
+                    href={item.href}
+                    aria-current={item.current ? "page" : undefined}
+                    className={classNames(
+                      item.current
+                        ? "bg-gray-400 text-white"
+                        : "bg-gray-500 text-gray-200 hover:bg-gray-700 hover:text-white",
+                      "rounded-md px-3 py-2 text-sm font-medium"
+                    )}>
+                    {item.name}
+                  </Link>
+                ))}
+                {/* <a
                   href="#"
                   className="rounded-md bg-gray-900 px-3 py-2 text-sm font-medium text-white"
                   aria-current="page">
@@ -76,6 +107,11 @@ const Navbar = () => {
                   className="rounded-md px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-700 hover:text-white">
                   Thông tin
                 </a>
+                <a
+                  href="#"
+                  className="rounded-md px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-700 hover:text-white">
+                  Thông tin
+                </a> */}
               </div>
             </div>
           </div>

@@ -1,4 +1,4 @@
-import { listSource, sourcesPerPage } from "./index";
+import { ListItems, sourcesPerPage } from "./index";
 
 const formatPriceVND = (price: number) => {
   return (
@@ -9,7 +9,7 @@ const formatPriceVND = (price: number) => {
 };
 
 const totalNumberSearchQuery = (query: string) => {
-  return listSource.filter((source) =>
+  return ListItems.filter((source) =>
     source.title.toLowerCase().includes(query.toLowerCase())
   ).length;
 };
@@ -19,7 +19,7 @@ const fetchSourcesPage = (query: string) => {
 };
 
 const fetchFilteredSource = (query: string, currentPage: number) => {
-  const listSourceFilters = listSource.filter((source) =>
+  const listSourceFilters = ListItems.filter((source) =>
     source.title.toLowerCase().includes(query.toLowerCase())
   );
   const start = (currentPage - 1) * sourcesPerPage;

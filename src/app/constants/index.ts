@@ -21,7 +21,7 @@ import image20 from "../../../public/assets/img/image20.jpg";
 
 const sourcesPerPage = 4;
 
-const listSource = [
+const ListItems = [
   {
     id: 1,
     title: "Giày Thể Thao Nam 2024",
@@ -427,4 +427,4 @@ const listHighHeels = [
   },
 ];
 
-export { listSource, sourcesPerPage, listHighHeels };
+export { ListItems, sourcesPerPage, listHighHeels };
