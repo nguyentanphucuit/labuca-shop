@@ -31,11 +31,11 @@ export default function RootLayout({
       <Header />
 
       <body className={classNames(styles.main, inter.className)}>
-        {/* <GoogleTagManager gtmId="GTM-KLXH5B7D" /> */}
+        {/* <GoogleTagManager gtmId="GTM-5CXDKNWS" /> */}
         {/* <!-- Google Tag Manager (noscript) --> */}
         <noscript>
           <iframe
-            src="https://www.googletagmanager.com/ns.html?id=GTM-KLXH5B7D"
+            src="https://www.googletagmanager.com/ns.html?id=GTM-5CXDKNWS"
             height="0"
             width="0"
             className={"display:none;visibility:hidden"}></iframe>
