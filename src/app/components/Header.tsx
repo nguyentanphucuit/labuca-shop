@@ -1,11 +1,10 @@
-import Script from "next/script";
 import React from "react";
 
 const Header = () => {
   return (
     <head>
       <link rel="icon" href="/labuca.svg" sizes="any" />
-      <Script id="gtm" strategy="afterInteractive">
+      <script>
         {`
         (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
         new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -13,7 +12,7 @@ const Header = () => {
         'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
         })(window,document,'script','dataLayer','KLXH5B7D');
       `}
-      </Script>
+      </script>
     </head>
   );
 };

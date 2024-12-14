@@ -4,7 +4,7 @@ import "./globals.css";
 import Navbar from "@/app/components/Navbar";
 import Footer from "@/app/components/Footer";
 import ProgressBarProvider from "./components/ProgressBar";
-import { GoogleTagManager } from "@next/third-parties/google";
+// import { GoogleTagManager } from "@next/third-parties/google";
 
 import { Suspense } from "react";
 import { classNames } from "./constant/common";
@@ -31,7 +31,7 @@ export default function RootLayout({
       <Header />
 
       <body className={classNames(styles.main, inter.className)}>
-        <GoogleTagManager gtmId="GTM-KLXH5B7D" />
+        {/* <GoogleTagManager gtmId="GTM-KLXH5B7D" /> */}
         {/* <!-- Google Tag Manager (noscript) --> */}
         <noscript>
           <iframe
