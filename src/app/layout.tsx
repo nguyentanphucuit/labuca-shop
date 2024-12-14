@@ -29,9 +29,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <Header />
-      <GoogleTagManager gtmId="GTM-5CXDKNWS" />
 
       <body className={classNames(styles.main, inter.className)}>
+        <GoogleTagManager gtmId="GTM-5CXDKNWS" />
+
         <Navbar />
         <Suspense>
           <ProgressBarProvider>{children}</ProgressBarProvider>
