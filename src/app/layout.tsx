@@ -30,7 +30,7 @@ export default function RootLayout({
     <html lang="en">
       <Header />
       <body className={classNames(styles.main, inter.className)}>
-        <GoogleTagManager gtmId="GTM-86EWZHBMWV" />
+        <GoogleTagManager gtmId="GTM-G9G49RC1E8" />
 
         <Navbar />
         <Suspense>
