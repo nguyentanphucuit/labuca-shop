@@ -4,6 +4,8 @@ import "./globals.css";
 import Navbar from "@/app/components/Navbar";
 import Footer from "@/app/components/Footer";
 import ProgressBarProvider from "./components/ProgressBar";
+import { GoogleTagManager } from "@next/third-parties/google";
+
 import { Suspense } from "react";
 import { classNames } from "./constant/common";
 import styles from "./page.module.css";
@@ -28,6 +30,8 @@ export default function RootLayout({
     <html lang="en">
       <Header />
       <body className={classNames(styles.main, inter.className)}>
+        <GoogleTagManager gtmId="GTM-86EWZHBMWV" />
+
         <Navbar />
         <Suspense>
           <ProgressBarProvider>{children}</ProgressBarProvider>
