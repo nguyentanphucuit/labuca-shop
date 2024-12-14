@@ -29,7 +29,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <Header />
-      <GoogleTagManager gtmId="GTM-G9G49RC1E8" />
+      <GoogleTagManager gtmId="GTM-5CXDKNWS" />
 
       <body className={classNames(styles.main, inter.className)}>
         <Navbar />
