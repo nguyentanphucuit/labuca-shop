@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { usePathname } from "next/navigation";
-import { classNames } from "../constants/common";
+import { classNames } from "../constant/common";
 // import ExportedImage from "next-image-export-optimizer";
 
 const navigation = [

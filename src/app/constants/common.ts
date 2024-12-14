@@ -26,9 +26,6 @@ const fetchFilteredSource = (query: string, currentPage: number) => {
   const end = currentPage * sourcesPerPage;
   return [...listSourceFilters].slice(start, end);
 };
-export function classNames(...classes: (string | boolean | undefined)[]) {
-  return classes.filter(Boolean).join(" ");
-}
 
 export {
   formatPriceVND,
