@@ -31,7 +31,7 @@ export default function RootLayout({
       <Header />
 
       <body className={classNames(styles.main, inter.className)}>
-        <GoogleTagManager gtmId="GTM-G9G49RC1E8" />
+        <GoogleTagManager gtmId="GTM-5CXDKNWS" />
         {/* <!-- Google Tag Manager (noscript) --> */}
         {/* <noscript>
           <iframe
