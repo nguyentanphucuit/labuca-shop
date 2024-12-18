@@ -3,7 +3,7 @@ import React from "react";
 const Header = () => {
   return (
     <head>
-      <link rel="icon" href="/labuca.svg" sizes="any" />
+      <link rel="icon" href="/labuca-2.svg" sizes="any" />
       {/* <script>
         {`
         (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':

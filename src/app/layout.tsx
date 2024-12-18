@@ -15,8 +15,8 @@ import Header from "./components/Header";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Labuca - Shop giày thời trang chính hãng",
-  description: "Labuca - Shop giày thời trang chính hãng",
+  title: "Labuca - Giày Dép và Túi xách nữ thời trang",
+  description: "Labuca - Giày Dép và Túi xách nữ thời trang",
   keywords:
     "labuca, labuca.vn, labu, giày thời trang, giày cao gót, giày thể thao, giày sneaker, giày công sở, giày đẹp, giày giá rẻ, giày chính hãng, shop giày, mua giày online",
 };
