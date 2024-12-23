@@ -14,7 +14,7 @@ const Footer = () => {
             </a> */}
             {/* <ExportedImage
               className="h-12 w-24"
-              alt="metagun button"
+              alt="labuca button"
               src={logo}></ExportedImage> */}
           </div>
           <div className="grid grid-cols-2 gap-8 sm:gap-6 sm:grid-cols-4">

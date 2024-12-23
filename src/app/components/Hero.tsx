@@ -7,7 +7,7 @@ import ListItems from "./ListItems";
 const Hero = () => {
   return (
     <div className="mx-auto">
-      <Image className="" alt="metagun button" src={sourceImg} />
+      <Image className="" alt="labuca button" src={sourceImg} />
       <ListItems />
     </div>
   );

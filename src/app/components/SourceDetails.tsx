@@ -24,12 +24,12 @@ const SourceDetails = ({
 }: SourceDetailsProps) => {
   return (
     <div className="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-      <div className="relative w-76 h-60">
+      <div className="relative overflow-hidden">
         <Link href={link} target="_blank">
           <Image
-            fill
-            className="rounded-t-lg"
-            alt="metagun button"
+            objectFit="cover"
+            className="rounded-t-lg w-full h-60 cursor-pointer transition duration-500 hover:scale-105"
+            alt="labuca button"
             src={image}
           />
         </Link>
@@ -40,23 +40,24 @@ const SourceDetails = ({
           className="flex-none rounded bg-gray-900 px-2 py-1 text-sm font-semibold text-white shadow-sm hover:bg-gray-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900">
           {type}
         </a>
-        <p className="my-3 font-normal text-gray-700 dark:text-gray-400 line-clamp-4">
+        <p className="my-3 font-normal text-gray-700 dark:text-gray-400 line-clamp-1">
           {title}
         </p>
         <div className="flex flex-row justify-between items-center">
-          <p className="text-lg line-through font-semibold text-gray-500 dark:text-white ">
+          <p className="text-sm line-through font-semibold text-gray-500 dark:text-white ">
             {formatPriceVND(price)}
           </p>
-          <p className="text-xl font-semibold text-gray-900 dark:text-white ">
+          <p className="text-md font-semibold text-gray-900 dark:text-white ">
             {formatPriceVND((price * (100 - discount)) / 100)}
           </p>
-
+        </div>
+        <div className="flex flex-row justify-end mt-4">
           <Link
             href={link}
             target="_blank"
             className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
             <svg
-              className="w-6 h-6 text-white dark:text-gray-800"
+              className="w-4 h-4 text-white dark:text-gray-800"
               aria-hidden="true"
               xmlns="http://www.w3.org/2000/svg"
               width="24"
