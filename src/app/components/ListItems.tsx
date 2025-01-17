@@ -7,7 +7,7 @@ import Pagination from "./Pagination";
 import { useSearchParams } from "next/navigation";
 import { ProductTypes } from "../types/common";
 
-const ListItem = ({ items }: { items: ProductTypes[] }) => {
+const ListItem = () => {
   const searchParams = useSearchParams();
   const query = searchParams.get("query") || "";
   const currentPage = searchParams.get("page") || 1;

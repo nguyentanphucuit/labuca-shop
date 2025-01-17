@@ -37,7 +37,7 @@ const HighHeels = () => {
   console.log(items);
   return (
     <div className="mx-auto">
-      <ListItems items={items} />
+      <ListItems />
     </div>
   );
 };
