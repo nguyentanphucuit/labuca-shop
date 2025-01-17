@@ -24,11 +24,12 @@ const SourceDetails = ({
 }: SourceDetailsProps) => {
   return (
     <div className="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-      <div className="relative overflow-hidden">
+      <div className="flex flex-col justify-center items-center h-64">
         <Link href={link} target="_blank">
           <Image
-            objectFit="cover"
-            className="rounded-t-lg w-full h-60 cursor-pointer transition duration-500 hover:scale-105"
+            height={240}
+            objectFit="contain"
+            className="rounded-t-lg  cursor-pointer transition duration-500 hover:scale-105"
             alt="labuca button"
             src={image}
           />

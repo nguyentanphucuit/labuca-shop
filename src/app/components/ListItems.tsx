@@ -5,8 +5,9 @@ import Search from "../ui/search";
 import { fetchFilteredSource, fetchSourcesPage } from "@/app/constants/common";
 import Pagination from "./Pagination";
 import { useSearchParams } from "next/navigation";
+import { ProductTypes } from "../types/common";
 
-const ListItem = () => {
+const ListItem = ({ items }: { items: ProductTypes[] }) => {
   const searchParams = useSearchParams();
   const query = searchParams.get("query") || "";
   const currentPage = searchParams.get("page") || 1;

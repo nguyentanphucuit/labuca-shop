@@ -7,7 +7,7 @@ import ProgressBarProvider from "./components/ProgressBar";
 import { GoogleTagManager } from "@next/third-parties/google";
 
 import { Suspense } from "react";
-import { classNames } from "./constant/common";
+import { classNames } from "./constants/common";
 import styles from "./page.module.css";
 
 import Header from "./components/Header";
