@@ -13,10 +13,10 @@ const formatPriceVND = (price: number) => {
   );
 };
 
-const totalNumberSearchQuery = (items: ProductTypes[], query: string) => {
+const totalNumberSearchQuery = (items: { title: string }[], query: string) => {
   if (items === null || undefined || items.length === 0) return 0;
   return items.filter((source) =>
-    source.title.toLowerCase().includes(query.toLowerCase())
+    source.title?.toLowerCase().includes(query.toLowerCase())
   ).length;
 };
 

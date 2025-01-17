@@ -8,7 +8,6 @@ import { emptyProduct } from "../constants";
 
 const HighHeels = () => {
   const [items, setItems] = useState<ProductTypes[]>([]);
-  console.log(123);
   useEffect(() => {
     const fetchItems = async () => {
       const querySnapshot = await getDocs(collection(db, "products"));

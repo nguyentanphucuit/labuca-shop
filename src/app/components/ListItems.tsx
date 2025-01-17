@@ -2,7 +2,11 @@
 import React, { Suspense } from "react";
 import SourceDetails from "@/app/components/SourceDetails";
 import Search from "../ui/search";
-import { fetchFilteredSource, fetchSourcesPage } from "@/app/constants/common";
+import {
+  fetchFilteredSource,
+  fetchSourcesPage,
+  totalNumberSearchQuery,
+} from "@/app/constants/common";
 import Pagination from "./Pagination";
 import { useSearchParams } from "next/navigation";
 import { ProductTypes } from "../types/common";
@@ -14,6 +18,7 @@ const ListItem = ({ items }: { items: ProductTypes[] }) => {
   const sources = fetchFilteredSource(items, query, +currentPage) || [];
 
   const totalPages = fetchSourcesPage(items, query);
+  const totalNumber = totalNumberSearchQuery(items, query);
   console.log(sources);
 
   return (
@@ -31,7 +36,7 @@ const ListItem = ({ items }: { items: ProductTypes[] }) => {
             <p>No sources found</p>
           )}
         </div>
-        <Pagination totalPages={totalPages} />
+        <Pagination totalNumber={totalNumber} totalPages={totalPages} />
       </div>
     </>
   );

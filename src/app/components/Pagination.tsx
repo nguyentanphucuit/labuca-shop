@@ -4,7 +4,13 @@ import { usePathname, useSearchParams } from "next/navigation";
 import { sourcesPerPage } from "../constants";
 import { totalNumberSearchQuery } from "../constants/common";
 
-const Pagination = ({ totalPages }: { totalPages: number }) => {
+const Pagination = ({
+  totalNumber,
+  totalPages,
+}: {
+  totalNumber: number;
+  totalPages: number;
+}) => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const currentPage = Number(searchParams.get("page")) || 1;
@@ -37,13 +43,11 @@ const Pagination = ({ totalPages }: { totalPages: number }) => {
           <p className="text-sm  text-gray-700">
             Hiển thị
             <span className="font-medium px-1">{start}</span>
-            từ
-            <span className="font-medium px-1">{end}</span>
             đến
-            <span className="font-medium px-1">
-              {totalNumberSearchQuery(query)}
-            </span>
-            tổng sản phẩm
+            <span className="font-medium px-1">{end}</span>
+            của tổng
+            <span className="font-medium px-1">{totalNumber}</span>
+            sản phẩm
           </p>
         </div>
         <div>
