@@ -7,13 +7,14 @@ import Pagination from "./Pagination";
 import { useSearchParams } from "next/navigation";
 import { ProductTypes } from "../types/common";
 
-const ListItem = () => {
+const ListItem = ({ items }: { items: ProductTypes[] }) => {
   const searchParams = useSearchParams();
   const query = searchParams.get("query") || "";
   const currentPage = searchParams.get("page") || 1;
-  const sources = fetchFilteredSource(query, +currentPage);
+  const sources = fetchFilteredSource(items, query, +currentPage) || [];
 
-  const totalPages = fetchSourcesPage(query);
+  const totalPages = fetchSourcesPage(items, query);
+  console.log(sources);
 
   return (
     <>
@@ -22,9 +23,13 @@ const ListItem = () => {
           <Search placeholder="Tìm kiếm ..." />
         </Suspense>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-          {sources.map((source) => (
-            <SourceDetails key={source.id} {...source} />
-          ))}
+          {sources.length > 0 ? (
+            sources.map((source) => (
+              <SourceDetails key={source.id} {...source} />
+            ))
+          ) : (
+            <p>No sources found</p>
+          )}
         </div>
         <Pagination totalPages={totalPages} />
       </div>

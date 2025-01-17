@@ -15,15 +15,17 @@ export interface ProductDetailProps {
 }
 
 export interface ProductTypes {
-  id: string;
+  id: string | number;
   code: string;
   title: string;
   subtitle: string;
   href: string;
   content: string;
+  color: string;
+  size: string;
   type: string;
   date: string;
-  image: string;
+  image: string | StaticImageData;
   price: number;
   discount: number;
 }

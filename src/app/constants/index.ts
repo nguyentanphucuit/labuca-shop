@@ -39,7 +39,7 @@ const emptyProduct = {
   discount: 0,
 };
 
-const ListItems = [
+const listItems = [
   {
     id: 1,
     code: "E144",
@@ -293,4 +293,4 @@ const listHighHeels = [
   },
 ];
 
-export { ListItems, sourcesPerPage, listHighHeels, emptyProduct };
+export { listItems, sourcesPerPage, listHighHeels, emptyProduct };

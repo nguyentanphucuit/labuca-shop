@@ -8,10 +8,10 @@ import { emptyProduct } from "../constants";
 
 const HighHeels = () => {
   const [items, setItems] = useState<ProductTypes[]>([]);
-
+  console.log(123);
   useEffect(() => {
     const fetchItems = async () => {
-      const querySnapshot = await getDocs(collection(db, "highHeels"));
+      const querySnapshot = await getDocs(collection(db, "products"));
       setItems(
         querySnapshot.docs.map((doc) => {
           const data = doc.data();
@@ -22,6 +22,8 @@ const HighHeels = () => {
             date: data.date,
             title: data.title,
             image: data.image,
+            size: data.size,
+            color: data.color,
             subtitle: data.subtitle,
             href: data.href,
             content: data.content,
@@ -37,7 +39,7 @@ const HighHeels = () => {
   console.log(items);
   return (
     <div className="mx-auto">
-      <ListItems />
+      <ListItems items={items} />
     </div>
   );
 };

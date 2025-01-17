@@ -4,10 +4,10 @@ import { formatPriceVND } from "@/app/constants/common";
 import Image, { StaticImageData } from "next/image";
 
 interface SourceDetailsProps {
-  image: StaticImageData;
+  image: StaticImageData | string;
   title: string;
   subtitle: string;
-  link: string;
+  href: string;
   date: string;
   price: number;
   discount: number;
@@ -18,19 +18,22 @@ const SourceDetails = ({
   image,
   title,
   type,
-  link,
+  href,
   price,
   discount,
 }: SourceDetailsProps) => {
   return (
     <div className="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
       <div className="flex flex-col justify-center items-center h-64">
-        <Link href={link} target="_blank">
+        <Link href={href} target="_blank">
           <Image
-            height={240}
-            objectFit="contain"
+            width={0}
+            height={0}
+            sizes="100vw"
+            style={{ width: "auto", height: "240px" }}
+            priority
             className="rounded-t-lg  cursor-pointer transition duration-500 hover:scale-105"
-            alt="labuca button"
+            alt="labuca image"
             src={image}
           />
         </Link>
@@ -54,7 +57,7 @@ const SourceDetails = ({
         </div>
         <div className="flex flex-row justify-end mt-4">
           <Link
-            href={link}
+            href={href}
             target="_blank"
             className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
             <svg
