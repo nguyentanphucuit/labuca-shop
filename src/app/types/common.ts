@@ -1,8 +1,9 @@
+import { Editor } from "@tiptap/react";
 import { StaticImageData } from "next/image";
 
 export interface ProductDetailProps {
-  id: string | number;
-  image: StaticImageData;
+  id: string;
+  image: string;
   title: string;
   href: string;
   subtitle: string;
@@ -15,7 +16,7 @@ export interface ProductDetailProps {
 }
 
 export interface ProductTypes {
-  id: string | number;
+  id: string;
   code: string;
   title: string;
   subtitle: string;
@@ -25,7 +26,12 @@ export interface ProductTypes {
   size: string;
   type: string;
   date: string;
-  image: string | StaticImageData;
+  image: string;
   price: number;
   discount: number;
+}
+
+export interface ToolbarProps {
+  editor: Editor | null;
+  content: string;
 }

@@ -33,6 +33,8 @@ const emptyProduct = {
   content: "",
   type: "",
   date: "",
+  color: "",
+  size: "",
   image: "",
   href: "",
   price: 0,
@@ -41,7 +43,7 @@ const emptyProduct = {
 
 const listItems = [
   {
-    id: 1,
+    id: "1",
     code: "E144",
     title: "Giày Sandal Nữ 7cm Thời Trang LABUCA",
     subtitle: "Thiết kế năng động, thoải mái",
@@ -52,13 +54,13 @@ const listItems = [
     date: "2024-12-01",
     color: "Đen, Nâu Kem",
     size: "35, 36, 37, 38, 39",
-    image: imgE144,
+    image: "imgE144",
     link: "#",
     price: 1200000,
     discount: 10,
   },
   {
-    id: 2,
+    id: "2",
     code: "E156",
     title: "Giày xăng đan/sling back",
     subtitle: "Thiết kế năng động, thoải mái",
@@ -69,13 +71,13 @@ const listItems = [
     date: "2024-12-01",
     color: "Đen",
     size: "35, 36, 37, 38, 39",
-    image: imgE156,
+    image: "imgE156",
     link: "#",
     price: 1200000,
     discount: 10,
   },
   {
-    id: 3,
+    id: "3",
     code: "E157",
     title: "Dép Nữ Đế Bệt",
     subtitle: "Thiết kế năng động, thoải mái",
@@ -86,13 +88,13 @@ const listItems = [
     date: "2024-12-01",
     color: "Đen, Trắng, Nâu",
     size: "35, 36, 37, 38, 39",
-    image: imgE157,
+    image: "imgE157",
     link: "#",
     price: 1200000,
     discount: 10,
   },
   {
-    id: 4,
+    id: "4",
     code: "E121",
     title: "Giày Búp Bê",
     subtitle: "Thiết kế năng động, thoải mái",
@@ -103,7 +105,7 @@ const listItems = [
     date: "2024-12-01",
     color: "Đen, Trắng, Nâu",
     size: "35, 36, 37, 38, 39",
-    image: imgE121,
+    image: "imgE121",
     link: "#",
     price: 1200000,
     discount: 10,
@@ -112,7 +114,7 @@ const listItems = [
 
 const listHighHeels = [
   {
-    id: 1,
+    id: "1",
     title: "Giày Cao Gót Da Lộn Màu Đỏ",
     subtitle: "Kiểu dáng thanh thoát, dễ dàng phối đồ",
     type: "HIGH HEEL",
@@ -121,7 +123,7 @@ const listHighHeels = [
     image: image1,
   },
   {
-    id: 2,
+    id: "2",
     title: "Giày Cao Gót Mũi Nhọn Da",
     subtitle: "Cổ điển và sang trọng cho các dịp lễ",
     type: "HIGH HEEL",
@@ -130,7 +132,7 @@ const listHighHeels = [
     image: image2,
   },
   {
-    id: 3,
+    id: "3",
     title: "Giày Cao Gót Đính Đá Swarovski",
     subtitle: "Sự lựa chọn hoàn hảo cho tiệc đêm",
     type: "HIGH HEEL",
@@ -139,7 +141,7 @@ const listHighHeels = [
     image: image3,
   },
   {
-    id: 4,
+    id: "4",
     title: "Giày Cao Gót Đế Bằng Cổ Điển",
     subtitle: "Sang trọng và dễ sử dụng trong mọi hoàn cảnh",
     type: "HIGH HEEL",
@@ -148,7 +150,7 @@ const listHighHeels = [
     image: image4,
   },
   {
-    id: 5,
+    id: "5",
     title: "Giày Cao Gót Quai Mảnh Da Lộn",
     subtitle: "Kiểu dáng tinh tế, phù hợp mọi phong cách",
     type: "HIGH HEEL",
@@ -157,7 +159,7 @@ const listHighHeels = [
     image: image5,
   },
   {
-    id: 6,
+    id: "6",
     title: "Giày Cao Gót Kim Loại Màu Vàng",
     subtitle: "Phong cách mạnh mẽ, nổi bật với chất liệu kim loại",
     type: "HIGH HEEL",
@@ -166,7 +168,7 @@ const listHighHeels = [
     image: image6,
   },
   {
-    id: 7,
+    id: "7",
     title: "Giày Cao Gót Cao Cấp Da Bò",
     subtitle: "Chất liệu da bò mềm mại và bền bỉ",
     type: "HIGH HEEL",
@@ -175,7 +177,7 @@ const listHighHeels = [
     image: image7,
   },
   {
-    id: 8,
+    id: "8",
     title: "Giày Cao Gót Kim Loại Mạ Vàng",
     subtitle: "Phong cách sang trọng với mạ vàng tinh tế",
     type: "HIGH HEEL",
@@ -184,7 +186,7 @@ const listHighHeels = [
     image: image8,
   },
   {
-    id: 9,
+    id: "9",
     title: "Giày Cao Gót Đen Mũi Nhọn",
     subtitle: "Đơn giản, thanh lịch, dễ dàng kết hợp với mọi trang phục",
     type: "HIGH HEEL",
@@ -193,7 +195,7 @@ const listHighHeels = [
     image: image9,
   },
   {
-    id: 10,
+    id: "10",
     title: "Giày Cao Gót Màu Hồng Phấn",
     subtitle: "Dịu dàng và nữ tính với màu sắc nhẹ nhàng",
     type: "HIGH HEEL",
@@ -202,7 +204,7 @@ const listHighHeels = [
     image: image10,
   },
   {
-    id: 11,
+    id: "11",
     title: "Giày Cao Gót Cổ Điển Màu Đen",
     subtitle: "Lựa chọn tuyệt vời cho công sở và sự kiện",
     type: "HIGH HEEL",
@@ -211,7 +213,7 @@ const listHighHeels = [
     image: image11,
   },
   {
-    id: 12,
+    id: "12",
     title: "Giày Cao Gót Mũi Vuông Da Màu Nâu",
     subtitle: "Chắc chắn và thoải mái với thiết kế mũi vuông",
     type: "HIGH HEEL",
@@ -220,7 +222,7 @@ const listHighHeels = [
     image: image12,
   },
   {
-    id: 13,
+    id: "13",
     title: "Giày Cao Gót Thời Trang Màu Xám",
     subtitle: "Dành cho những cô nàng yêu thích sự khác biệt",
     type: "HIGH HEEL",
@@ -229,7 +231,7 @@ const listHighHeels = [
     image: image13,
   },
   {
-    id: 14,
+    id: "14",
     title: "Giày Cao Gót Đính Hoa Vải",
     subtitle: "Thiết kế nhẹ nhàng và tinh tế cho các buổi tiệc",
     type: "HIGH HEEL",
@@ -238,7 +240,7 @@ const listHighHeels = [
     image: image14,
   },
   {
-    id: 15,
+    id: "15",
     title: "Giày Cao Gót Đế Xuồng Màu Đen",
     subtitle: "Đế xuồng giúp tăng thêm sự thoải mái khi di chuyển",
     type: "HIGH HEEL",
@@ -247,7 +249,7 @@ const listHighHeels = [
     image: image15,
   },
   {
-    id: 16,
+    id: "16",
     title: "Giày Cao Gót Màu Vàng Mới Lạ",
     subtitle: "Chất liệu da mềm mại và bóng bẩy",
     type: "HIGH HEEL",
@@ -256,7 +258,7 @@ const listHighHeels = [
     image: image16,
   },
   {
-    id: 17,
+    id: "17",
     title: "Giày Cao Gót Xỏ Ngón Màu Hồng",
     subtitle: "Sự kết hợp hoàn hảo giữa phong cách hiện đại và cổ điển",
     type: "HIGH HEEL",
@@ -265,7 +267,7 @@ const listHighHeels = [
     image: image17,
   },
   {
-    id: 18,
+    id: "18",
     title: "Giày Cao Gót Mũi Nhọn Màu Đỏ Rượu",
     subtitle: "Màu sắc sang trọng cho mọi dịp đặc biệt",
     type: "HIGH HEEL",
@@ -274,7 +276,7 @@ const listHighHeels = [
     image: image18,
   },
   {
-    id: 19,
+    id: "19",
     title: "Giày Cao Gót Cổ Điển Đen Mới",
     subtitle: "Một sự lựa chọn tối giản nhưng không kém phần nổi bật",
     type: "HIGH HEEL",
@@ -283,7 +285,7 @@ const listHighHeels = [
     image: image19,
   },
   {
-    id: 20,
+    id: "20",
     title: "Giày Cao Gót Xinh Xắn Màu Be",
     subtitle: "Dễ dàng kết hợp với nhiều bộ trang phục khác nhau",
     type: "HIGH HEEL",
