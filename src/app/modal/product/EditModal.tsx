@@ -17,25 +17,10 @@ import {
 import { ProductTypes } from "@/app/types/common";
 import InputComp from "./InputComp";
 import Tiptap from "@/app/components/Tiptap/Tiptap";
-
-const listInput = [
-  {
-    name: "code",
-    label: "code",
-  },
-  {
-    name: "title",
-    label: "title",
-  },
-  {
-    name: "subtitle",
-    label: "subtitle",
-  },
-  {
-    name: "type",
-    label: "type",
-  },
-];
+import ImageUploader from "@/app/components/ImageUploader";
+import { listInput } from "./common";
+import { Bounce, ToastContainer, toast } from "react-toastify";
+import { notifySuccess } from "@/app/components/toast/common";
 
 export default function EditModal({
   showEditModal,
@@ -49,9 +34,14 @@ export default function EditModal({
   const [product, setProduct] = useState<ProductTypes>({
     ...productCurrent,
   });
+  const [uploadedImage, setUploadedImage] = useState<{
+    url: string;
+    publicId: string;
+  } | null>(null);
 
   useEffect(() => {
     setProduct({ ...productCurrent });
+    setUploadedImage({ url: productCurrent.imageUrl, publicId: "" });
   }, [productCurrent]);
 
   const date = new Date().toDateString();
@@ -61,6 +51,12 @@ export default function EditModal({
   };
   const handleContentChange = (newContent: string) => {
     setProduct({ ...product, content: newContent });
+  };
+
+  const handleUploadedImage = (
+    uploadedImage: { url: string; publicId: string } | null
+  ) => {
+    setUploadedImage(uploadedImage);
   };
 
   const handleProductChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -83,12 +79,14 @@ export default function EditModal({
         content: JSON.stringify(product.content).replaceAll("\\", ""),
         href: "/product/" + spaceToSlash(removeVietnameseTones(product.title)),
         date: date,
+        imageUrl: uploadedImage?.url,
       });
       console.log("Document written with ID: ", product.id);
       setProduct({ ...product });
     } catch (e) {
       console.error("Error adding document: ", e);
     }
+    notifySuccess();
     close();
   };
 
@@ -117,16 +115,22 @@ export default function EditModal({
               <div className="w-full h-full">
                 <form onSubmit={handleSubmit}>
                   <div className="px-4">ID : {product.id}</div>
-                  {listInput.map((input) => (
-                    <InputComp
-                      key={input.name}
-                      {...input}
-                      value={product[
-                        input.name as keyof typeof product
-                      ].toString()}
-                      onChange={handleProductChange}
-                    />
-                  ))}
+                  <div className="grid md:grid-cols-2 grid-cols-1 gap-4">
+                    {listInput.map((input) => (
+                      <InputComp
+                        key={input.name}
+                        {...input}
+                        value={product[
+                          input.name as keyof typeof product
+                        ].toString()}
+                        onChange={handleProductChange}
+                      />
+                    ))}
+                  </div>
+                  <ImageUploader
+                    uploadedImage={uploadedImage}
+                    setUploadedImage={handleUploadedImage}
+                  />
                   <Tiptap
                     content={product.content}
                     onChange={(newContent: string) =>

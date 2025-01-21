@@ -9,6 +9,7 @@ import db from "@/app/utils/firestore";
 import { collection, getDocs } from "@firebase/firestore";
 import { Pencil, Trash2 } from "lucide-react";
 import React, { useEffect, useState } from "react";
+import { ToastContainer } from "react-toastify";
 
 const ProductAdminPage = () => {
   const [productList, setProductList] = useState<ProductTypes[]>([]);
@@ -60,6 +61,7 @@ const ProductAdminPage = () => {
 
   return (
     <div className="pt-32 px-10">
+      <ToastContainer />
       <CreateModal />
       <EditModal
         showEditModal={showEditModal}

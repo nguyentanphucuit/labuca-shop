@@ -1,5 +1,5 @@
 "use client";
-import React, { EventHandler } from "react";
+import React, { EventHandler, Fragment } from "react";
 import logo from "/public/assets/img/labuca-logo.png";
 import Image from "next/image";
 import Link from "next/link";
@@ -7,6 +7,24 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { classNames } from "../constants/common";
 import { DropdownProps } from "../types/common";
+import {
+  Popover,
+  PopoverButton,
+  PopoverPanel,
+  Transition,
+} from "@headlessui/react";
+import {
+  ChevronDownIcon,
+  PhoneIcon,
+  PlayCircleIcon,
+} from "@heroicons/react/20/solid";
+import {
+  ArrowPathIcon,
+  ChartPieIcon,
+  CursorArrowRaysIcon,
+  FingerPrintIcon,
+  SquaresPlusIcon,
+} from "@heroicons/react/24/outline";
 
 const navigation = [
   { name: "Trang chủ", href: "/", current: true },
@@ -84,7 +102,6 @@ const Navbar = () => {
           <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
             <div className="flex shrink-0 items-center">
               <Image className="h-8 w-24" alt="labuca logo" src={logo} />
-              {/* <img className="h-8 w-auto" src="https://tailwindui.com/plus/img/logos/mark.svg?color=indigo&shade=500" alt="Your Company"> */}
             </div>
             <div className="hidden sm:ml-6 sm:block">
               <div className="flex space-x-4">
@@ -101,7 +118,7 @@ const Navbar = () => {
                         item.current
                           ? "bg-gray-400 text-white"
                           : "bg-gray-500 text-gray-200 hover:bg-gray-700 hover:text-white",
-                        "rounded-md px-3 py-2 text-sm font-medium"
+                        "font-medium rounded-lg text-sm px-3 py-2.5 text-center inline-flex items-center"
                       )}>
                       {item.name}
                     </Link>
@@ -141,7 +158,7 @@ const Navbar = () => {
                 item.current
                   ? "text-white bg-gray-900"
                   : "text-gray-600 hover:bg-gray-700 hover:text-white",
-                "block rounded-md px-3 py-2 text-base font-medium "
+                "block font-medium rounded-lg text-sm px-3 py-2.5"
               )}>
               {item.name}
             </Link>

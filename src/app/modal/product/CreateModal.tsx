@@ -18,41 +18,9 @@ import {
 } from "@/app/constants/common";
 import InputComp from "./InputComp";
 import ImageUploader from "@/app/components/ImageUploader";
-
-const listInput = [
-  {
-    name: "code",
-    label: "code",
-  },
-  {
-    name: "title",
-    label: "title",
-  },
-  {
-    name: "subtitle",
-    label: "subtitle",
-  },
-  {
-    name: "type",
-    label: "type",
-  },
-  {
-    name: "color",
-    label: "color",
-  },
-  {
-    name: "size",
-    label: "size",
-  },
-  {
-    name: "price",
-    label: "price",
-  },
-  {
-    name: "discount",
-    label: "discount",
-  },
-];
+import { listInput } from "./common";
+import { notifySuccess } from "@/app/components/toast/common";
+import { ToastContainer } from "react-toastify";
 
 export default function CreateModal() {
   const [isOpen, setIsOpen] = useState(false);
@@ -103,6 +71,7 @@ export default function CreateModal() {
     } catch (e) {
       console.error("Error adding document: ", e);
     }
+    notifySuccess();
     close();
   };
 
@@ -113,7 +82,6 @@ export default function CreateModal() {
         className="rounded-md bg-blue-600 py-2 px-4 text-sm font-medium text-white focus:outline-none data-[hover]:bg-blue-700/70 data-[focus]:outline-1 data-[focus]:outline-black">
         Create Product
       </Button>
-
       <Dialog
         open={isOpen}
         as="div"

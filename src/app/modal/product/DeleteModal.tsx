@@ -9,6 +9,7 @@ import {
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 import { deleteDoc, doc } from "@firebase/firestore";
 import db from "@/app/utils/firestore";
+import { notifySuccess } from "@/app/components/toast/common";
 
 export default function DeleteModal({
   showDeleteModal,
@@ -33,6 +34,7 @@ export default function DeleteModal({
     } catch (e) {
       console.error("Error adding document: ", e);
     }
+    notifySuccess();
     close();
   };
 

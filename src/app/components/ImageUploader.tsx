@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import Loading from "./Loading";
 
 const UploadForm = ({
   uploadedImage,
@@ -15,7 +16,10 @@ const UploadForm = ({
     uploadedImage: { url: string; publicId: string } | null
   ) => void;
 }) => {
+  const [loading, setLoading] = useState(false);
+
   const handleUpload = async (file: File) => {
+    setLoading(true);
     const formData = new FormData();
     formData.append("file", file);
 
@@ -29,6 +33,7 @@ const UploadForm = ({
 
       const data = await response.json();
       setUploadedImage({ url: data.url, publicId: data.public_id });
+      setLoading(false);
     } catch (error) {
       console.error("Upload error:", error);
     }
@@ -37,7 +42,6 @@ const UploadForm = ({
   const handleDelete = async () => {
     console.log(uploadedImage);
     if (!uploadedImage?.publicId) return;
-
     try {
       const response = await fetch("/api/delete", {
         method: "POST",
@@ -48,7 +52,6 @@ const UploadForm = ({
       });
 
       if (!response.ok) throw new Error("Delete failed");
-
       const result = await response.json();
       // alert(result.message);
       setUploadedImage(null);
@@ -58,13 +61,14 @@ const UploadForm = ({
   };
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 p-4 max-w-72">
       <h2 className="p-2 text-white bg-sky-500 w-32">Upload image</h2>
       <input
         type="file"
         accept="image/*"
         onChange={(e) => e.target.files && handleUpload(e.target.files[0])}
       />
+      <Loading loading={loading} />
       {uploadedImage && (
         <Image
           src={uploadedImage.url}
