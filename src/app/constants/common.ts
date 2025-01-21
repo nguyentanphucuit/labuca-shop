@@ -1,5 +1,5 @@
 import { ProductTypes } from "../types/common";
-import { listItems, sourcesPerPage } from "./index";
+import { listItem, sourcesPerPage } from "./index";
 
 const classNames = (...classes: (string | boolean | undefined)[]) => {
   return classes.filter(Boolean).join(" ");

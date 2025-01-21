@@ -10,6 +10,7 @@ export interface ProductDetailProps {
   content: string;
   link: string;
   date: string;
+  imageUrl: string;
   price: number;
   discount: number;
   type: string;
@@ -20,13 +21,13 @@ export interface ProductTypes {
   code: string;
   title: string;
   subtitle: string;
+  imageUrl: string;
   href: string;
   content: string;
   color: string;
   size: string;
   type: string;
   date: string;
-  image: string;
   price: number;
   discount: number;
 }

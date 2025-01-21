@@ -4,7 +4,7 @@ import { formatPriceVND } from "@/app/constants/common";
 import Image, { StaticImageData } from "next/image";
 
 interface SourceDetailsProps {
-  image: StaticImageData | string;
+  imageUrl: string;
   title: string;
   subtitle: string;
   href: string;
@@ -15,7 +15,7 @@ interface SourceDetailsProps {
 }
 
 const SourceDetails = ({
-  image,
+  imageUrl,
   title,
   type,
   href,
@@ -34,7 +34,7 @@ const SourceDetails = ({
             priority
             className="rounded-t-lg  cursor-pointer transition duration-500 hover:scale-105"
             alt="labuca image"
-            src={image}
+            src={imageUrl}
           />
         </Link>
       </div>

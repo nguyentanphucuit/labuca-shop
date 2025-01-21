@@ -1,4 +1,5 @@
 "use client";
+import ImageUploader from "@/app/components/ImageUploader";
 import { emptyProduct } from "@/app/constants";
 import CreateModal from "@/app/modal/product/CreateModal";
 import DeleteModal from "@/app/modal/product/DeleteModal";
@@ -45,7 +46,7 @@ const ProductAdminPage = () => {
             color: data.color,
             size: data.size,
             type: data.type,
-            image: data.image,
+            imageUrl: data.imageUrl,
             href: data.href,
             price: data.price,
             discount: data.discount,

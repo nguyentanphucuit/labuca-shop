@@ -1,17 +1,17 @@
 import React from "react";
 import ProductPage from "@/app/products/page";
 import { ProductDetailProps } from "@/app/types/common";
-import { listItems } from "@/app/constants/index";
+import { listItem } from "@/app/constants/index";
 2;
 const ProductDetail = ({ title }: { title: string }) => {
-  const id = listItems.findIndex(
+  const id = listItem.findIndex(
     (product) => product.href.toLowerCase() === title.toLowerCase()
   );
 
   return id === -1 ? (
     <ProductPage />
   ) : (
-    <ProductDetailTemplate {...listItems[id]} />
+    <ProductDetailTemplate {...listItem[id]} />
   );
 };
 

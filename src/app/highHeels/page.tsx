@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import ListItems from "../components/ListItems";
+import ListItem from "../components/ListItem";
 import { collection, getDocs } from "firebase/firestore";
 import db from "@/app/utils/firestore";
 import { ProductTypes } from "../types/common";
@@ -20,7 +20,7 @@ const HighHeels = () => {
             type: data.type,
             date: data.date,
             title: data.title,
-            image: data.image,
+            imageUrl: data.imageUrl,
             size: data.size,
             color: data.color,
             subtitle: data.subtitle,
@@ -38,7 +38,7 @@ const HighHeels = () => {
   console.log(items);
   return (
     <div className="mx-auto">
-      <ListItems items={items} />
+      <ListItem items={items} />
     </div>
   );
 };

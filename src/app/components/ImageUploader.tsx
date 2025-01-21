@@ -1,70 +1,83 @@
+"use client";
+
 import { useState } from "react";
-import axios from "axios";
+import Image from "next/image";
 
-const ImageUploader = () => {
-  const [image, setImage] = useState<File | null>(null);
-  const [uploading, setUploading] = useState<boolean>(false);
-  const [imageUrl, setImageUrl] = useState<string>("");
+const UploadForm = ({
+  uploadedImage,
+  setUploadedImage,
+}: {
+  uploadedImage: {
+    url: string;
+    publicId: string;
+  } | null;
+  setUploadedImage: (
+    uploadedImage: { url: string; publicId: string } | null
+  ) => void;
+}) => {
+  const handleUpload = async (file: File) => {
+    const formData = new FormData();
+    formData.append("file", file);
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setImage(e.target.files[0]);
+    try {
+      const response = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) throw new Error("Upload failed");
+
+      const data = await response.json();
+      setUploadedImage({ url: data.url, publicId: data.public_id });
+    } catch (error) {
+      console.error("Upload error:", error);
     }
   };
 
-  const handleUpload = async () => {
-    if (!image) {
-      alert("Please select an image first!");
-      return;
-    }
-
-    setUploading(true);
-
-    const formData = new FormData();
-    formData.append("image", image);
+  const handleDelete = async () => {
+    console.log(uploadedImage);
+    if (!uploadedImage?.publicId) return;
 
     try {
-      const response = await axios.post(
-        "https://api.imgur.com/3/image",
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${process.env.IMGUR_ACCESS_TOKEN}`,
-          },
-        }
-      );
+      const response = await fetch("/api/delete", {
+        method: "POST",
+        body: JSON.stringify({ publicId: uploadedImage.publicId }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
-      const { link } = response.data.data;
-      setImageUrl(link); // Store the uploaded image URL
-      alert("Image uploaded successfully!");
+      if (!response.ok) throw new Error("Delete failed");
+
+      const result = await response.json();
+      // alert(result.message);
+      setUploadedImage(null);
     } catch (error) {
-      console.error("Upload failed:", error);
-      alert("Failed to upload the image.");
-    } finally {
-      setUploading(false);
+      console.error("Delete error:", error);
     }
   };
 
   return (
-    <div>
+    <div className="flex flex-col gap-4">
+      <h2 className="p-2 text-white bg-sky-500 w-32">Upload image</h2>
       <input
         type="file"
         accept="image/*"
-        onChange={handleImageChange}
-        disabled={uploading}
+        onChange={(e) => e.target.files && handleUpload(e.target.files[0])}
       />
-      <button onClick={handleUpload} disabled={uploading}>
-        {uploading ? "Uploading..." : "Upload"}
-      </button>
-
-      {imageUrl && (
-        <div>
-          <p>Uploaded Image:</p>
-          <img src={imageUrl} alt="Uploaded" style={{ width: "300px" }} />
-        </div>
+      {uploadedImage && (
+        <Image
+          src={uploadedImage.url}
+          alt="Uploaded"
+          width={0}
+          height={0}
+          sizes="100vw"
+          style={{ width: "auto", height: "240px" }}
+          priority
+        />
       )}
     </div>
   );
 };
 
-export default ImageUploader;
+export default UploadForm;

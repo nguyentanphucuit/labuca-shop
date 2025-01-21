@@ -37,10 +37,6 @@ const listInput = [
     label: "type",
   },
   {
-    name: "image",
-    label: "image",
-  },
-  {
     name: "color",
     label: "color",
   },
@@ -60,6 +56,10 @@ const listInput = [
 
 export default function CreateModal() {
   const [isOpen, setIsOpen] = useState(false);
+  const [uploadedImage, setUploadedImage] = useState<{
+    url: string;
+    publicId: string;
+  } | null>(null);
 
   const open = () => {
     setIsOpen(true);
@@ -80,6 +80,12 @@ export default function CreateModal() {
     setProduct({ ...product, [e.target.name]: e.target.value });
   };
 
+  const handleUploadedImage = (
+    uploadedImage: { url: string; publicId: string } | null
+  ) => {
+    setUploadedImage(uploadedImage);
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -90,6 +96,7 @@ export default function CreateModal() {
         content: JSON.stringify(product.content).replaceAll("\\", ""),
         href: "/product/" + spaceToSlash(removeVietnameseTones(product.title)),
         date: date,
+        imageUrl: uploadedImage?.url,
       });
       console.log("Document written with ID: ", docRef.id);
       setProduct({ ...emptyProduct });
@@ -139,7 +146,10 @@ export default function CreateModal() {
                       onChange={handleProductChange}
                     />
                   ))}
-                  <ImageUploader />
+                  <ImageUploader
+                    uploadedImage={uploadedImage}
+                    setUploadedImage={handleUploadedImage}
+                  />
                   <Tiptap
                     content={product.content}
                     onChange={(newContent: string) =>

@@ -1,10 +1,10 @@
 import React from "react";
-import ListItems from "../components/ListItems";
+import listItem from "../components/listItem";
 
 const Sandal = () => {
   return (
     <div className="mx-auto">
-      <ListItems />
+      <listItem />
     </div>
   );
 };

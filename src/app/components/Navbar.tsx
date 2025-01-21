@@ -10,8 +10,7 @@ import { classNames } from "../constants/common";
 
 const navigation = [
   { name: "Trang chủ", href: "/", current: true },
-  { name: "Giày cao gót", href: "/highHeels", current: false },
-  { name: "Giày Sandal", href: "/sandal", blank: false, current: false },
+  { name: "Giày cao gót", href: "/highHeels", current: false, blank: false },
   { name: "Chính sách", href: "/policy", current: false },
   { name: "Thông tin", href: "/aboutUs", current: false },
 ];

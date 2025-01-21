@@ -35,10 +35,6 @@ const listInput = [
     name: "type",
     label: "type",
   },
-  {
-    name: "image",
-    label: "image",
-  },
 ];
 
 export default function EditModal({
