@@ -1,6 +1,6 @@
 import React from "react";
 import ProductPage from "@/app/products/page";
-import { ProductDetailProps } from "@/app/types/common";
+import { ProductTypes } from "@/app/types/common";
 import { listItem } from "@/app/constants/index";
 2;
 const ProductDetail = ({ title }: { title: string }) => {
@@ -15,7 +15,7 @@ const ProductDetail = ({ title }: { title: string }) => {
   );
 };
 
-const ProductDetailTemplate = ({ ...props }: ProductDetailProps) => {
+const ProductDetailTemplate = ({ ...props }: ProductTypes) => {
   return (
     <div className="flex flex-col gap-4">
       <div className=" text-slate-700 dark:text-slate-400">{props.date}</div>
