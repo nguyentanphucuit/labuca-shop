@@ -2,29 +2,19 @@ import React from "react";
 import Link from "next/link";
 import { formatPriceVND } from "@/app/constants/common";
 import Image, { StaticImageData } from "next/image";
+import { ProductTypes } from "../types/common";
 
-interface SourceDetailsProps {
-  imageUrl: string;
-  title: string;
-  subtitle: string;
-  href: string;
-  date: string;
-  price: number;
-  discount: number;
-  type: string;
-}
-
-const SourceDetails = ({
+const ProductDetails = ({
   imageUrl,
   title,
-  type,
+  typeLabel,
   href,
   price,
   discount,
-}: SourceDetailsProps) => {
+}: ProductTypes) => {
   return (
-    <div className="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-      <div className="flex flex-col justify-center items-center h-64">
+    <div className="max-w-72 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+      <div className="w-64 h-64 flex flex-col items-center justify-center mx-auto">
         <Link href={href} target="_blank">
           <Image
             width={0}
@@ -32,7 +22,7 @@ const SourceDetails = ({
             sizes="100vw"
             style={{ width: "auto", height: "240px" }}
             priority
-            className="rounded-t-lg  cursor-pointer transition duration-500 hover:scale-105"
+            className="rounded-t-lg cursor-pointer transition duration-500 hover:scale-105"
             alt="labuca image"
             src={imageUrl}
           />
@@ -42,7 +32,7 @@ const SourceDetails = ({
         <a
           href="#"
           className="flex-none rounded bg-gray-900 px-2 py-1 text-sm font-semibold text-white shadow-sm hover:bg-gray-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900">
-          {type}
+          {typeLabel}
         </a>
         <p className="my-3 font-normal text-gray-700 dark:text-gray-400 line-clamp-1">
           {title}
@@ -83,4 +73,4 @@ const SourceDetails = ({
   );
 };
 
-export default SourceDetails;
+export default ProductDetails;

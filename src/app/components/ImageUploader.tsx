@@ -61,7 +61,7 @@ const UploadForm = ({
   };
 
   return (
-    <div className="flex flex-col gap-4 p-4 max-w-72">
+    <div className="flex flex-col gap-4 max-w-72">
       <h2 className="p-2 text-white bg-sky-500 w-32">Upload image</h2>
       <input
         type="file"

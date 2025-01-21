@@ -10,8 +10,8 @@ const Hero = () => {
   return (
     <div className="mx-auto">
       <Image className="" alt="labuca button" src={sourceImg} />
-      <ListItem items={listItem} />
       {/* <UpdateData /> */}
+      <ListItem items={listItem} loading={false} />
     </div>
   );
 };

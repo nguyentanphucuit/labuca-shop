@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import ListItem from "@/app/components/ListItem";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, query, where } from "firebase/firestore";
 import db from "@/app/utils/firestore";
 import { ProductTypes } from "@/app/types/common";
 import { emptyProduct } from "@/app/constants";
@@ -12,7 +12,11 @@ const HighHeels = () => {
 
   useEffect(() => {
     const fetchItems = async () => {
-      const querySnapshot = await getDocs(collection(db, "products"));
+      const q = query(
+        collection(db, "products"),
+        where("typeValue", "==", "1")
+      );
+      const querySnapshot = await getDocs(q);
       setItems(
         querySnapshot.docs.map((doc) => {
           const data = doc.data();

@@ -44,7 +44,9 @@ const Pagination = ({
             Hiển thị
             <span className="font-medium px-1">{start}</span>
             đến
-            <span className="font-medium px-1">{end}</span>
+            <span className="font-medium px-1">
+              {end < totalNumber ? end : totalNumber}
+            </span>
             của tổng
             <span className="font-medium px-1">{totalNumber}</span>
             sản phẩm

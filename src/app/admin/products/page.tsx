@@ -8,6 +8,7 @@ import { ProductTypes } from "@/app/types/common";
 import db from "@/app/utils/firestore";
 import { collection, getDocs } from "@firebase/firestore";
 import { Pencil, Trash2 } from "lucide-react";
+import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { ToastContainer } from "react-toastify";
 
@@ -46,7 +47,8 @@ const ProductAdminPage = () => {
             content: data.content,
             color: data.color,
             size: data.size,
-            type: data.type,
+            typeValue: data.typeValue,
+            typeLabel: data.typeLabel,
             imageUrl: data.imageUrl,
             href: data.href,
             price: data.price,
@@ -78,8 +80,9 @@ const ProductAdminPage = () => {
         <thead className="">
           <tr>
             <th className="w-1/6 p-4">ID</th>
+            <th className="w-1/12 p-4">Image</th>
             <th className="w-2/6 p-4">Title</th>
-            <th className="w-2/6 p-4">Subtitle</th>
+            <th className="w-3/12 p-4">Subtitle</th>
             <th className="w-1/12 p-4">Edit</th>
             <th className="w-1/12 p-4">Delete</th>
           </tr>
@@ -90,6 +93,16 @@ const ProductAdminPage = () => {
               <td className="p-4">
                 <div className="flex justify-center items-center">
                   <p className="line-clamp-2">{product.id}</p>
+                </div>
+              </td>
+              <td className="p-4">
+                <div className="flex justify-center items-center">
+                  <Image
+                    src={product.imageUrl}
+                    className=""
+                    alt={product.title}
+                    width={60}
+                    height={60}></Image>
                 </div>
               </td>
               <td className="p-4">

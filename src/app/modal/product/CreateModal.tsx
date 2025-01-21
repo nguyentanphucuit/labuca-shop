@@ -10,7 +10,7 @@ import Tiptap from "@/app/components/Tiptap/Tiptap";
 import React, { useState } from "react";
 import { addDoc, collection } from "@firebase/firestore";
 import db from "@/app/utils/firestore";
-import { emptyProduct } from "@/app/constants";
+import { emptyProduct, listType } from "@/app/constants";
 import {
   classNames,
   removeVietnameseTones,
@@ -21,6 +21,7 @@ import ImageUploader from "@/app/components/ImageUploader";
 import { listInput } from "./common";
 import { notifySuccess } from "@/app/components/toast/common";
 import { ToastContainer } from "react-toastify";
+import Combobox from "@/app/components/Combobox";
 
 export default function CreateModal() {
   const [isOpen, setIsOpen] = useState(false);
@@ -28,6 +29,8 @@ export default function CreateModal() {
     url: string;
     publicId: string;
   } | null>(null);
+  const [product, setProduct] = React.useState({ ...emptyProduct });
+  const [type, setType] = useState("");
 
   const open = () => {
     setIsOpen(true);
@@ -37,7 +40,6 @@ export default function CreateModal() {
     setIsOpen(false);
   };
 
-  const [product, setProduct] = React.useState({ ...emptyProduct });
   const date = new Date().toDateString();
 
   const handleContentChange = (newContent: string) => {
@@ -64,6 +66,10 @@ export default function CreateModal() {
         content: JSON.stringify(product.content).replaceAll("\\", ""),
         href: "/product/" + spaceToSlash(removeVietnameseTones(product.title)),
         date: date,
+        typeValue: listType.find(
+          (item) => item.label.toLowerCase() === type.toLowerCase()
+        )?.value,
+        typeLabel: type,
         imageUrl: uploadedImage?.url,
       });
       console.log("Document written with ID: ", docRef.id);
@@ -104,20 +110,23 @@ export default function CreateModal() {
               </DialogTitle>
               <div className="w-full h-full">
                 <form onSubmit={handleSubmit}>
-                  {listInput.map((input) => (
-                    <InputComp
-                      key={input.name}
-                      {...input}
-                      value={product[
-                        input.name as keyof typeof product
-                      ].toString()}
-                      onChange={handleProductChange}
+                  <div className="flex flex-col p-4 gap-2">
+                    {listInput.map((input) => (
+                      <InputComp
+                        key={input.name}
+                        {...input}
+                        value={product[
+                          input.name as keyof typeof product
+                        ].toString()}
+                        onChange={handleProductChange}
+                      />
+                    ))}
+                    <Combobox value={type} setValue={setType} />
+                    <ImageUploader
+                      uploadedImage={uploadedImage}
+                      setUploadedImage={handleUploadedImage}
                     />
-                  ))}
-                  <ImageUploader
-                    uploadedImage={uploadedImage}
-                    setUploadedImage={handleUploadedImage}
-                  />
+                  </div>
                   <Tiptap
                     content={product.content}
                     onChange={(newContent: string) =>

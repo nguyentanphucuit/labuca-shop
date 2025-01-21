@@ -8,37 +8,24 @@ import { usePathname } from "next/navigation";
 import { classNames } from "../constants/common";
 import { DropdownProps } from "../types/common";
 import {
-  Popover,
-  PopoverButton,
-  PopoverPanel,
-  Transition,
-} from "@headlessui/react";
-import {
-  ChevronDownIcon,
-  PhoneIcon,
-  PlayCircleIcon,
-} from "@heroicons/react/20/solid";
-import {
-  ArrowPathIcon,
-  ChartPieIcon,
-  CursorArrowRaysIcon,
-  FingerPrintIcon,
-  SquaresPlusIcon,
-} from "@heroicons/react/24/outline";
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { listType } from "../constants";
 
 const navigation = [
   { name: "Trang chủ", href: "/", current: true },
   {
-    name: "Giày cao gót",
+    name: "Giày",
     href: "/shoes",
     current: false,
     blank: false,
     dropdown: true,
-    listDropdown: [
-      { id: "1", name: "Giày cao gót", href: "/shoes" },
-      { id: "2", name: "Giày thể thao", href: "/sportsShoes" },
-      { id: "3", name: "Giày búp bê", href: "/dollsShoes" },
-    ],
+    listDropdown: listType,
   },
   { name: "Chính sách", href: "/policy", current: false },
   { name: "Thông tin", href: "/aboutUs", current: false },
@@ -172,56 +159,25 @@ const Navbar = () => {
 const Dropdown = (props: DropdownProps) => {
   const [openDropdown, setOpenDropdown] = React.useState(false);
   return (
-    <div className="relative">
-      <button
-        id="dropdownDefaultButton"
-        data-dropdown-toggle="dropdown"
-        onClick={() => setOpenDropdown(!openDropdown)}
-        className={classNames(
-          props.current
-            ? "bg-gray-400 text-white"
-            : "bg-gray-500 text-gray-200 hover:bg-gray-700 hover:text-white",
-          "font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center"
-        )}
-        type="button">
-        {props.name}
-        <svg
-          className="w-2.5 h-2.5 ms-3"
-          aria-hidden="true"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 10 6">
-          <path
-            stroke="currentColor"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            d="m1 1 4 4 4-4"
-          />
-        </svg>
-      </button>
-
-      <div
-        id="dropdown"
-        className={classNames(
-          openDropdown ? "block" : "hidden",
-          "absolute z-10 top-10 w-full bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700"
-        )}>
-        <ul
-          className="py-2 text-sm text-gray-700 dark:text-gray-200"
-          aria-labelledby="dropdownDefaultButton">
+    <div>
+      <DropdownMenu>
+        <DropdownMenuTrigger className="block font-medium rounded-lg text-sm px-3 py-2.5 bg-gray-500 text-gray-200 hover:bg-gray-700 hover:text-white">
+          {props.name}
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="bg-gray-500">
           {props.listDropdown.map((item) => (
-            <li key={item.id}>
+            <DropdownMenuItem
+              key={item.value}
+              className="text-gray-200 bg-gray-500">
               <Link
-                target="_self"
                 href={item.href}
-                className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-                {item.name}
+                className="block font-medium rounded-lg text-sm px-3 py-2.5">
+                {item.label}
               </Link>
-            </li>
+            </DropdownMenuItem>
           ))}
-        </ul>
-      </div>
+        </DropdownMenuContent>
+      </DropdownMenu>
     </div>
   );
 };

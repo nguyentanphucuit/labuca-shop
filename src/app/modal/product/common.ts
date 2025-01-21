@@ -12,10 +12,6 @@ export const listInput = [
     label: "subtitle",
   },
   {
-    name: "type",
-    label: "type",
-  },
-  {
     name: "color",
     label: "color",
   },

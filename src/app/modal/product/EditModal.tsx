@@ -21,6 +21,8 @@ import ImageUploader from "@/app/components/ImageUploader";
 import { listInput } from "./common";
 import { Bounce, ToastContainer, toast } from "react-toastify";
 import { notifySuccess } from "@/app/components/toast/common";
+import { listType } from "@/app/constants";
+import Combobox from "@/app/components/Combobox";
 
 export default function EditModal({
   showEditModal,
@@ -39,9 +41,12 @@ export default function EditModal({
     publicId: string;
   } | null>(null);
 
+  const [type, setType] = useState(productCurrent.typeLabel);
+
   useEffect(() => {
     setProduct({ ...productCurrent });
     setUploadedImage({ url: productCurrent.imageUrl, publicId: "" });
+    setType(productCurrent.typeLabel);
   }, [productCurrent]);
 
   const date = new Date().toDateString();
@@ -79,6 +84,10 @@ export default function EditModal({
         content: JSON.stringify(product.content).replaceAll("\\", ""),
         href: "/product/" + spaceToSlash(removeVietnameseTones(product.title)),
         date: date,
+        typeValue: listType.find(
+          (item) => item.label.toLowerCase() === type.toLowerCase()
+        )?.value,
+        typeLabel: type,
         imageUrl: uploadedImage?.url,
       });
       console.log("Document written with ID: ", product.id);
@@ -127,6 +136,7 @@ export default function EditModal({
                       />
                     ))}
                   </div>
+                  <Combobox value={type} setValue={setType} />
                   <ImageUploader
                     uploadedImage={uploadedImage}
                     setUploadedImage={handleUploadedImage}

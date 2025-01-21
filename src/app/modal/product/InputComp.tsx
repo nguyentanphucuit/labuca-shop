@@ -7,7 +7,7 @@ const InputComp = (props: {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }) => {
   return (
-    <div className="px-4">
+    <div className="">
       <label className="uppercase">
         {props.label}:
         <input

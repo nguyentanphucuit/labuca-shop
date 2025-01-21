@@ -10,7 +10,8 @@ export interface ProductTypes {
   content: string;
   color: string;
   size: string;
-  type: string;
+  typeValue: string;
+  typeLabel: string;
   date: string;
   price: number;
   discount: number;
@@ -22,8 +23,8 @@ export interface ToolbarProps {
 }
 
 export interface ListDropdownProps {
-  id: string;
-  name: string;
+  value: string;
+  label: string;
   href: string;
 }
 
