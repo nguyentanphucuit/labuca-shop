@@ -21,7 +21,7 @@ import ImageUploader from "@/app/components/ImageUploader";
 import { listInput } from "./common";
 import { notifySuccess } from "@/app/components/toast/common";
 import { ToastContainer } from "react-toastify";
-import Combobox from "@/app/components/Combobox";
+import ComboboxComp from "@/app/components/ComboboxComp";
 
 export default function CreateModal() {
   const [isOpen, setIsOpen] = useState(false);
@@ -30,7 +30,10 @@ export default function CreateModal() {
     publicId: string;
   } | null>(null);
   const [product, setProduct] = React.useState({ ...emptyProduct });
-  const [type, setType] = useState("");
+  const [selected, setSelected] = useState<{
+    label: string;
+    value: string;
+  } | null>(listType[0]);
 
   const open = () => {
     setIsOpen(true);
@@ -66,10 +69,8 @@ export default function CreateModal() {
         content: JSON.stringify(product.content).replaceAll("\\", ""),
         href: "/product/" + spaceToSlash(removeVietnameseTones(product.title)),
         date: date,
-        typeValue: listType.find(
-          (item) => item.label.toLowerCase() === type.toLowerCase()
-        )?.value,
-        typeLabel: type,
+        typeValue: selected?.value,
+        typeLabel: selected?.label,
         imageUrl: uploadedImage?.url,
       });
       console.log("Document written with ID: ", docRef.id);
@@ -110,7 +111,7 @@ export default function CreateModal() {
               </DialogTitle>
               <div className="w-full h-full">
                 <form onSubmit={handleSubmit}>
-                  <div className="flex flex-col p-4 gap-2">
+                  <div className="grid md:grid-cols-2 grid-cols-1 gap-4">
                     {listInput.map((input) => (
                       <InputComp
                         key={input.name}
@@ -121,7 +122,10 @@ export default function CreateModal() {
                         onChange={handleProductChange}
                       />
                     ))}
-                    <Combobox value={type} setValue={setType} />
+                    <ComboboxComp
+                      selected={selected}
+                      setSelected={setSelected}
+                    />
                     <ImageUploader
                       uploadedImage={uploadedImage}
                       setUploadedImage={handleUploadedImage}
