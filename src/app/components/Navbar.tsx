@@ -6,11 +6,22 @@ import Link from "next/link";
 
 import { usePathname } from "next/navigation";
 import { classNames } from "../constants/common";
-// import ExportedImage from "next-image-export-optimizer";
+import { DropdownProps } from "../types/common";
 
 const navigation = [
   { name: "Trang chủ", href: "/", current: true },
-  { name: "Giày cao gót", href: "/highHeels", current: false, blank: false },
+  {
+    name: "Giày cao gót",
+    href: "/shoes",
+    current: false,
+    blank: false,
+    dropdown: true,
+    listDropdown: [
+      { id: "1", name: "Giày cao gót", href: "/shoes" },
+      { id: "2", name: "Giày thể thao", href: "/sportsShoes" },
+      { id: "3", name: "Giày búp bê", href: "/dollsShoes" },
+    ],
+  },
   { name: "Chính sách", href: "/policy", current: false },
   { name: "Thông tin", href: "/aboutUs", current: false },
 ];
@@ -77,21 +88,25 @@ const Navbar = () => {
             </div>
             <div className="hidden sm:ml-6 sm:block">
               <div className="flex space-x-4">
-                {navigation.map((item) => (
-                  <Link
-                    key={item.name}
-                    target={item.blank ? "_blank" : "_self"}
-                    href={item.href}
-                    aria-current={item.current ? "page" : undefined}
-                    className={classNames(
-                      item.current
-                        ? "bg-gray-400 text-white"
-                        : "bg-gray-500 text-gray-200 hover:bg-gray-700 hover:text-white",
-                      "rounded-md px-3 py-2 text-sm font-medium"
-                    )}>
-                    {item.name}
-                  </Link>
-                ))}
+                {navigation.map((item) =>
+                  item.dropdown ? (
+                    <Dropdown key={item.name} {...item} />
+                  ) : (
+                    <Link
+                      key={item.name}
+                      target={item.blank ? "_blank" : "_self"}
+                      href={item.href}
+                      aria-current={item.current ? "page" : undefined}
+                      className={classNames(
+                        item.current
+                          ? "bg-gray-400 text-white"
+                          : "bg-gray-500 text-gray-200 hover:bg-gray-700 hover:text-white",
+                        "rounded-md px-3 py-2 text-sm font-medium"
+                      )}>
+                      {item.name}
+                    </Link>
+                  )
+                )}
               </div>
             </div>
           </div>
@@ -126,7 +141,7 @@ const Navbar = () => {
                 item.current
                   ? "text-white bg-gray-900"
                   : "text-gray-600 hover:bg-gray-700 hover:text-white",
-                "block rounded-md px-3 py-2 text-base font-medium"
+                "block rounded-md px-3 py-2 text-base font-medium "
               )}>
               {item.name}
             </Link>
@@ -134,6 +149,63 @@ const Navbar = () => {
         </div>
       </div>
     </nav>
+  );
+};
+
+const Dropdown = (props: DropdownProps) => {
+  const [openDropdown, setOpenDropdown] = React.useState(false);
+  return (
+    <div className="relative">
+      <button
+        id="dropdownDefaultButton"
+        data-dropdown-toggle="dropdown"
+        onClick={() => setOpenDropdown(!openDropdown)}
+        className={classNames(
+          props.current
+            ? "bg-gray-400 text-white"
+            : "bg-gray-500 text-gray-200 hover:bg-gray-700 hover:text-white",
+          "font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center"
+        )}
+        type="button">
+        {props.name}
+        <svg
+          className="w-2.5 h-2.5 ms-3"
+          aria-hidden="true"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 10 6">
+          <path
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="m1 1 4 4 4-4"
+          />
+        </svg>
+      </button>
+
+      <div
+        id="dropdown"
+        className={classNames(
+          openDropdown ? "block" : "hidden",
+          "absolute z-10 top-10 w-full bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700"
+        )}>
+        <ul
+          className="py-2 text-sm text-gray-700 dark:text-gray-200"
+          aria-labelledby="dropdownDefaultButton">
+          {props.listDropdown.map((item) => (
+            <li key={item.id}>
+              <Link
+                target="_self"
+                href={item.href}
+                className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                {item.name}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
   );
 };
 

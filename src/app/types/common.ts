@@ -36,3 +36,18 @@ export interface ToolbarProps {
   editor: Editor | null;
   content: string;
 }
+
+export interface ListDropdownProps {
+  id: string;
+  name: string;
+  href: string;
+}
+
+export interface DropdownProps {
+  name: string;
+  href: string;
+  listDropdown: ListDropdownProps[];
+  current: boolean;
+  blank?: boolean;
+  dropdown?: boolean;
+}
