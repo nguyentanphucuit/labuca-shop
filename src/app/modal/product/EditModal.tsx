@@ -23,6 +23,7 @@ import { Bounce, ToastContainer, toast } from "react-toastify";
 import { notifySuccess } from "@/app/components/toast/common";
 import { listType } from "@/app/constants";
 import ComboboxComp from "@/app/components/ComboboxComp";
+import { useRouter } from "next/navigation";
 
 export default function EditModal({
   showEditModal,
@@ -40,6 +41,7 @@ export default function EditModal({
     url: string;
     publicId: string;
   } | null>(null);
+  const router = useRouter();
 
   const [selected, setSelected] = useState<{
     label: string;
@@ -101,6 +103,7 @@ export default function EditModal({
     }
     notifySuccess();
     close();
+    window.location.reload();
   };
 
   return (

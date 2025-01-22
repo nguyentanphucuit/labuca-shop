@@ -22,6 +22,7 @@ import { listInput } from "./common";
 import { notifySuccess } from "@/app/components/toast/common";
 import { ToastContainer } from "react-toastify";
 import ComboboxComp from "@/app/components/ComboboxComp";
+import { useRouter } from "next/navigation";
 
 export default function CreateModal() {
   const [isOpen, setIsOpen] = useState(false);
@@ -34,6 +35,7 @@ export default function CreateModal() {
     label: string;
     value: string;
   } | null>(listType[0]);
+  const router = useRouter();
 
   const open = () => {
     setIsOpen(true);
@@ -80,6 +82,7 @@ export default function CreateModal() {
     }
     notifySuccess();
     close();
+    router.refresh();
   };
 
   return (

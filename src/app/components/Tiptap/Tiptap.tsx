@@ -5,6 +5,7 @@ import StarterKit from "@tiptap/starter-kit";
 import Toolbar from "./Toolbar";
 import Underline from "@tiptap/extension-underline";
 import ImageResize from "tiptap-extension-resize-image";
+import { removeFirstAndLastQuotes } from "@/app/constants/common";
 
 const Tiptap = ({
   onChange,
@@ -37,7 +38,7 @@ const Tiptap = ({
   return (
     <div className="w-full p-4">
       <p className="text-lg uppercase">{name} :</p>
-      <Toolbar editor={editor} content={content} />
+      <Toolbar editor={editor} content={removeFirstAndLastQuotes(content)} />
       <EditorContent style={{ whiteSpace: "pre-line" }} editor={editor} />
     </div>
   );
