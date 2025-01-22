@@ -23,6 +23,7 @@ const emptyProduct = {
 };
 
 const listType = [
+  { value: "0", label: "Tất cả sản phẩm", href: "/shoes" },
   { value: "1", label: "Giày Cao Gót", href: "/shoes/highHeels" },
   { value: "2", label: "Giày Đế Xuồng", href: "/shoes/wedges" },
   { value: "3", label: "Giày Búp Bê", href: "/shoes/flats" },
