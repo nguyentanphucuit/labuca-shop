@@ -1,30 +1,30 @@
 export const listInput = [
   {
     name: "code",
-    label: "code",
+    label: "Mã SP",
   },
   {
     name: "title",
-    label: "title",
+    label: "Tiêu đề",
   },
   {
     name: "subtitle",
-    label: "subtitle",
+    label: "Tiêu đề phụ",
   },
   {
     name: "color",
-    label: "color",
+    label: "Màu sắc",
   },
   {
     name: "size",
-    label: "size",
+    label: "Size",
   },
   {
     name: "price",
-    label: "price",
+    label: "Giá",
   },
   {
     name: "discount",
-    label: "discount",
+    label: "Giảm giá",
   },
 ];
