@@ -72,14 +72,14 @@ const ProductAdminPage = () => {
       />
       <DeleteModal
         showDeleteModal={showDeleteModal}
-        idCurrent={productCurrent.id}
+        productCurrent={productCurrent}
         collection="products"
         setShowDeleteModal={setShowDeleteModal}
       />
       <table className="w-full p-10 table-fixed border border-gray-400">
         <thead className="">
           <tr>
-            <th className="w-1/6 p-4">ID</th>
+            <th className="w-1/6 p-4">Code</th>
             <th className="w-1/12 p-4">Image</th>
             <th className="w-2/6 p-4">Title</th>
             <th className="w-3/12 p-4">Subtitle</th>
@@ -92,7 +92,7 @@ const ProductAdminPage = () => {
             <tr className="border border-gray-400" key={product.id}>
               <td className="p-4">
                 <div className="flex justify-center items-center">
-                  <p className="line-clamp-2">{product.id}</p>
+                  <p className="line-clamp-2">{product.code}</p>
                 </div>
               </td>
               <td className="p-4">

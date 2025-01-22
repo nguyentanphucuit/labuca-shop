@@ -10,15 +10,16 @@ import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 import { deleteDoc, doc } from "@firebase/firestore";
 import db from "@/app/utils/firestore";
 import { notifySuccess } from "@/app/components/toast/common";
+import { ProductTypes } from "@/app/types/common";
 
 export default function DeleteModal({
   showDeleteModal,
-  idCurrent,
+  productCurrent,
   collection,
   setShowDeleteModal,
 }: {
   showDeleteModal: boolean;
-  idCurrent: string;
+  productCurrent: ProductTypes;
   collection: string;
   setShowDeleteModal: (setShowDeleteModal: boolean) => void;
 }) {
@@ -27,9 +28,9 @@ export default function DeleteModal({
   };
 
   const onDelete = async () => {
-    console.log(idCurrent);
+    console.log(productCurrent.id);
     try {
-      const ref = doc(db, collection, idCurrent);
+      const ref = doc(db, collection, productCurrent.id);
       await deleteDoc(ref);
     } catch (e) {
       console.error("Error adding document: ", e);
@@ -66,8 +67,12 @@ export default function DeleteModal({
                   </DialogTitle>
                   <div className="mt-2">
                     <p className="text-sm text-gray-500">
-                      Are you sure you want to delete? All of your data will be
-                      permanently removed. This action cannot be undone.
+                      Are you sure you want to delete{" "}
+                      <span className="text-md font-bold px-1 text-red-600">
+                        {productCurrent.code}
+                      </span>
+                      ? All of your data will be permanently removed. This
+                      action cannot be undone.
                     </p>
                   </div>
                 </div>
