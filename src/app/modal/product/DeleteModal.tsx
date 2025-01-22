@@ -37,6 +37,7 @@ export default function DeleteModal({
     }
     notifySuccess();
     close();
+    window.location.reload();
   };
 
   return (

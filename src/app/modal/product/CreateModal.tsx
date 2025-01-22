@@ -35,7 +35,6 @@ export default function CreateModal() {
     label: string;
     value: string;
   } | null>(listType[0]);
-  const router = useRouter();
 
   const open = () => {
     setIsOpen(true);
@@ -82,7 +81,7 @@ export default function CreateModal() {
     }
     notifySuccess();
     close();
-    router.refresh();
+    window.location.reload();
   };
 
   return (
