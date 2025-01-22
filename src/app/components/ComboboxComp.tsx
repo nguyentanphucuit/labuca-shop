@@ -30,7 +30,7 @@ export default function ComboboxComp({
         );
 
   return (
-    <div className="flex flex-row justify-center items-center w-72 gap-2">
+    <div className="flex flex-row items-center w-72 gap-2">
       TYPE :
       <Combobox
         value={selected}

@@ -87,7 +87,7 @@ export default function CreateModal() {
       <Button
         onClick={open}
         className="rounded-md bg-blue-600 py-2 px-4 text-sm font-medium text-white focus:outline-none data-[hover]:bg-blue-700/70 data-[focus]:outline-1 data-[focus]:outline-black">
-        Create Product
+        Tạo mới
       </Button>
       <Dialog
         open={isOpen}
@@ -106,12 +106,12 @@ export default function CreateModal() {
               className="w-full max-w-screen-lg rounded-xl bg-blue-200 p-6 backdrop-blur-2xl duration-300 ease-out data-[closed]:transform-[scale(95%)] data-[closed]:opacity-0">
               <DialogTitle
                 as="h3"
-                className="text-base/7 font-medium text-black">
-                Create Product
+                className="flex flex-row justify-center rounded-md text-base/7 font-medium text-white w-48 p-2 my-2 bg-sky-500">
+                Tạo mới sản phẩm
               </DialogTitle>
               <div className="w-full h-full">
                 <form onSubmit={handleSubmit}>
-                  <div className="grid md:grid-cols-2 grid-cols-1 gap-4">
+                  <div className="grid md:grid-cols-2 grid-cols-1 gap-4 px-4">
                     {listInput.map((input) => (
                       <InputComp
                         key={input.name}

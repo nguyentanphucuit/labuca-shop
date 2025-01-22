@@ -122,13 +122,13 @@ export default function EditModal({
               className="w-full max-w-screen-lg rounded-xl bg-blue-200 p-6 backdrop-blur-2xl duration-300 ease-out data-[closed]:transform-[scale(95%)] data-[closed]:opacity-0">
               <DialogTitle
                 as="h3"
-                className="text-base/7 font-medium text-black">
-                Create Product
+                className="flex flex-row justify-center rounded-md text-base/7 font-medium text-white w-48 p-2 my-2 bg-orange-500">
+                Chỉnh sửa sản phẩm
               </DialogTitle>
               <div className="w-full h-full">
                 <form onSubmit={handleSubmit}>
                   <div className="px-4">ID : {product.id}</div>
-                  <div className="grid md:grid-cols-2 grid-cols-1 gap-4">
+                  <div className="grid md:grid-cols-2 grid-cols-1 gap-4 px-4">
                     {listInput.map((input) => (
                       <InputComp
                         key={input.name}
@@ -139,12 +139,15 @@ export default function EditModal({
                         onChange={handleProductChange}
                       />
                     ))}
+                    <ComboboxComp
+                      selected={selected}
+                      setSelected={setSelected}
+                    />
+                    <ImageUploader
+                      uploadedImage={uploadedImage}
+                      setUploadedImage={handleUploadedImage}
+                    />
                   </div>
-                  <ComboboxComp selected={selected} setSelected={setSelected} />
-                  <ImageUploader
-                    uploadedImage={uploadedImage}
-                    setUploadedImage={handleUploadedImage}
-                  />
                   <Tiptap
                     content={product.content}
                     onChange={(newContent: string) =>
