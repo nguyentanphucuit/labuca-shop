@@ -9,9 +9,11 @@ import ImageResize from "tiptap-extension-resize-image";
 const Tiptap = ({
   onChange,
   content,
+  name,
 }: {
   onChange: (newContent: string) => void;
   content: string;
+  name: string;
 }) => {
   const handleChange = (newContent: string) => {
     onChange(newContent);
@@ -33,7 +35,8 @@ const Tiptap = ({
   });
 
   return (
-    <div className="w-full px-4">
+    <div className="w-full p-4">
+      <p className="text-lg uppercase">{name} :</p>
       <Toolbar editor={editor} content={content} />
       <EditorContent style={{ whiteSpace: "pre-line" }} editor={editor} />
     </div>

@@ -153,6 +153,7 @@ export default function EditModal({
                     onChange={(newContent: string) =>
                       handleContentChange(newContent)
                     }
+                    name={"Thông tin sản phẩm"}
                   />
                   <div className="flex justify-end gap-4 mt-4">
                     <Button
