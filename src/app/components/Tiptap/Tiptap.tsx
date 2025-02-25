@@ -32,7 +32,7 @@ const Tiptap = ({
     onUpdate: ({ editor }) => {
       handleChange(editor.getHTML());
     },
-    content: content.slice(1, -1),
+    content: removeFirstAndLastQuotes(content),
   });
 
   return (
