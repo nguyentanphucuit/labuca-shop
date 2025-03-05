@@ -5,6 +5,9 @@ import imgE121 from "../../../public/assets/img/E121-tt2.jpg";
 
 const sourcesPerPage = 4;
 
+const FOLDER_IMAGE = "labuca";
+const BANNER_IMAGE = "LabucaBanner_";
+
 const emptyProduct = {
   id: "",
   code: "",
@@ -109,4 +112,11 @@ const listItem = [
   },
 ];
 
-export { listItem, listType, sourcesPerPage, emptyProduct };
+export {
+  listItem,
+  listType,
+  sourcesPerPage,
+  emptyProduct,
+  FOLDER_IMAGE,
+  BANNER_IMAGE,
+};

@@ -149,6 +149,7 @@ export default function EditModal({
                     <ImageUploader
                       uploadedImage={uploadedImage}
                       setUploadedImage={handleUploadedImage}
+                      newPublicId={product.id}
                     />
                   </div>
                   <Tiptap

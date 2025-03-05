@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import cloudinary from "cloudinary";
+import { FOLDER_IMAGE } from "@/app/constants";
 
 // Configure Cloudinary with environment variables
 cloudinary.v2.config({
@@ -21,6 +22,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     console.log("Form data received:", formData);
 
     const file = formData.get("file") as Blob;
+    const public_id = formData.get("public_id") as string;
 
     if (!file) {
       console.error("No file found in request");
@@ -37,7 +39,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     const uploadResult = await new Promise<cloudinary.UploadApiResponse>(
       (resolve, reject) => {
         const uploadStream = cloudinary.v2.uploader.upload_stream(
-          { folder: "labuca" },
+          { folder: FOLDER_IMAGE, public_id: public_id },
           (error, result) => {
             if (error) {
               console.error("Cloudinary upload error:", error);

@@ -7,6 +7,7 @@ import Loading from "./Loading";
 const UploadForm = ({
   uploadedImage,
   setUploadedImage,
+  newPublicId,
 }: {
   uploadedImage: {
     url: string;
@@ -15,6 +16,7 @@ const UploadForm = ({
   setUploadedImage: (
     uploadedImage: { url: string; publicId: string } | null
   ) => void;
+  newPublicId: string;
 }) => {
   const [loading, setLoading] = useState(false);
 
@@ -22,6 +24,8 @@ const UploadForm = ({
     setLoading(true);
     const formData = new FormData();
     formData.append("file", file);
+    formData.append("public_id", newPublicId || "");
+    console.log(formData);
 
     try {
       const response = await fetch("/api/upload", {
@@ -32,7 +36,10 @@ const UploadForm = ({
       if (!response.ok) throw new Error("Upload failed");
 
       const data = await response.json();
-      setUploadedImage({ url: data.url, publicId: data.public_id });
+      setUploadedImage({
+        url: data.url,
+        publicId: newPublicId,
+      });
       setLoading(false);
     } catch (error) {
       console.error("Upload error:", error);
@@ -63,11 +70,21 @@ const UploadForm = ({
   return (
     <div className="flex flex-col gap-4 max-w-72">
       <h2 className="p-2 text-white bg-sky-500 w-32">Upload image</h2>
-      <input
-        type="file"
-        accept="image/*"
-        onChange={(e) => e.target.files && handleUpload(e.target.files[0])}
-      />
+
+      {!newPublicId ? (
+        <>
+          <span className="text-sm text-red-500">
+            Nhập mã sản phẩm để upload hình
+          </span>
+        </>
+      ) : (
+        <input
+          type="file"
+          accept="image/*"
+          onChange={(e) => e.target.files && handleUpload(e.target.files[0])}
+        />
+      )}
+
       <Loading loading={loading} />
       {uploadedImage && (
         <Image
