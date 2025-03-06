@@ -90,10 +90,8 @@ const UploadForm = ({
         <Image
           src={uploadedImage.url}
           alt="Uploaded"
-          width={0}
-          height={0}
-          sizes="100vw"
-          style={{ width: "auto", height: "240px" }}
+          width={640}
+          height={160}
           priority
         />
       )}
