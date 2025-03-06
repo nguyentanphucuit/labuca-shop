@@ -29,7 +29,6 @@ const ImageGallery = () => {
           parseInt(img.public_id.split("_")[1])
         );
         const newID = listID.length !== 0 ? Math.max(...listID) + 1 : 0;
-        console.log(newID);
         setPublicId(`${BANNER_IMAGE}${newID}`);
 
         if (response.ok) {

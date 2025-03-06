@@ -78,3 +78,14 @@ ul {
 ol {
   @apply list-decimal px-4;
 }
+
+/* Change Next & Prev Button Colors */
+.swiper-button-next,
+.swiper-button-prev {
+  color: #f77234 !important; /* Blue (Tailwind `blue-600`) */
+}
+
+.swiper-button-next:hover,
+.swiper-button-prev:hover {
+  color: #f77234 !important; /* Darker Blue (Tailwind `blue-800`) */
+}
