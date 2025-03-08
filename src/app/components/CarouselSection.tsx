@@ -36,14 +36,14 @@ const Carousel = () => {
   console.log(images);
 
   return (
-    <div className="w-full max-w-7xl mx-auto px-10">
+    <div className="w-96 sm:container mx-auto px-10">
       <Swiper
         modules={[Navigation, Pagination, Autoplay]}
         spaceBetween={1}
         slidesPerView={1}
         navigation
         pagination={{ clickable: true }}
-        autoplay={{ delay: 5000 }}
+        // autoplay={{ delay: 5000 }}
         loop
         className="rounded-xl overflow-cover">
         {images.map((src, index) => (
@@ -51,7 +51,7 @@ const Carousel = () => {
             <img
               src={src}
               alt={`Slide ${index}`}
-              className="w-full h-80 object-fill"
+              className="w-full h-48 sm:h-80 object-fill"
             />
           </SwiperSlide>
         ))}
