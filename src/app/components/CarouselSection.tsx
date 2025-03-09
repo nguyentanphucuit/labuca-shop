@@ -6,6 +6,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 import { useEffect, useState } from "react";
 import { FOLDER_IMAGE } from "../constants";
+import Image from "next/image";
 
 const Carousel = () => {
   const [images, setImages] = useState<string[]>([]);
@@ -36,27 +37,33 @@ const Carousel = () => {
   console.log(images);
 
   return (
-    <div className="w-96 sm:container mx-auto px-10">
-      <Swiper
-        modules={[Navigation, Pagination, Autoplay]}
-        spaceBetween={1}
-        slidesPerView={1}
-        navigation
-        pagination={{ clickable: true }}
-        // autoplay={{ delay: 5000 }}
-        loop
-        className="rounded-xl overflow-cover">
-        {images.map((src, index) => (
-          <SwiperSlide key={index}>
-            <img
-              src={src}
-              alt={`Slide ${index}`}
-              className="w-full h-48 sm:h-80 object-fill"
-            />
-          </SwiperSlide>
-        ))}
-      </Swiper>
-    </div>
+    images.length > 0 && (
+      <div className="w-96 sm:container mx-auto px-10">
+        <Swiper
+          modules={[Navigation, Pagination, Autoplay]}
+          spaceBetween={1}
+          slidesPerView={1}
+          navigation
+          pagination={{ clickable: true }}
+          scrollbar={{ draggable: true }}
+          autoplay={{ delay: 2000 }}
+          loop
+          className="rounded-xl overflow-cover">
+          {images.map((src, index) => (
+            <SwiperSlide key={index}>
+              <Image
+                src={src}
+                alt={src}
+                width={500}
+                height={300}
+                style={{ width: "100vw", height: "35vw" }}
+                unoptimized
+              />
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      </div>
+    )
   );
 };
 
