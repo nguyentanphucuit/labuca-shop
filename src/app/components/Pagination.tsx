@@ -21,7 +21,7 @@ const Pagination = ({
     params.set("page", pageNumber.toString());
     return `${pathname}?${params.toString()}`;
   };
-  const start = (currentPage - 1) * sourcesPerPage;
+  const start = (currentPage - 1) * sourcesPerPage + 1;
   const end = currentPage * sourcesPerPage;
 
   return (
