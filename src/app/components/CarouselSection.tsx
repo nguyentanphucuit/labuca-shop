@@ -46,7 +46,7 @@ const Carousel = () => {
           navigation
           pagination={{ clickable: true }}
           scrollbar={{ draggable: true }}
-          autoplay={{ delay: 2000 }}
+          autoplay={{ delay: 4000 }}
           loop
           className="rounded-xl overflow-cover">
           {images.map((src, index) => (
