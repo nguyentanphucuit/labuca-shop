@@ -31,7 +31,7 @@ const ProductDetails = ({
       <div className="p-5">
         <a
           href="#"
-          className="flex-none rounded bg-red-500 px-2 py-1 text-sm font-semibold text-white shadow-sm hover:bg-gray-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900">
+          className="flex-none rounded bg-red-500 px-2 py-1 text-sm font-semibold text-white shadow-sm hover:bg-red-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900">
           {typeLabel}
         </a>
         <p className="my-3 font-normal text-gray-700 dark:text-gray-400 line-clamp-1">
