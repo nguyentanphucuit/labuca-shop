@@ -1,6 +1,7 @@
 import { formatPriceVND } from "@/app/constants/common";
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
 import { useCart } from "../context/CartContext";
 import { ProductTypes } from "../types/common";
 
@@ -14,74 +15,111 @@ const ProductDetails = ({
   discount,
 }: ProductTypes) => {
   const { addItem } = useCart();
+  const [isImageLoading, setIsImageLoading] = useState(true);
+  const [isHovered, setIsHovered] = useState(false);
 
-  const handleAddToCart = () => {
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.preventDefault();
     addItem({
       id: id,
       quantity: 1,
       color: { name: "Default", value: "#000000" },
-      size: "35", // Default size
+      size: "35",
     });
   };
 
+  const discountedPrice = (price * (100 - discount)) / 100;
+
   return (
-    <div className="max-w-72 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-      <div className="w-64 h-64 flex flex-col items-center justify-center mx-auto">
-        <Link href={href} target="_blank">
+    <Link
+      href={href}
+      className="block group"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      <div className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-white to-gray-50 hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] transition-all duration-300">
+        {/* Image Container */}
+        <div className="aspect-[4/5] relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           <Image
-            width={0}
-            height={0}
-            sizes="100vw"
-            style={{ width: "auto", height: "240px" }}
-            priority
-            className="rounded-t-lg cursor-pointer transition duration-500 hover:scale-105"
-            alt="labuca image"
             src={imageUrl}
+            alt={title}
+            fill
+            className={`
+              object-cover object-center transform 
+              transition-all duration-700 ease-out
+              ${isHovered ? "scale-110" : "scale-100"}
+              ${isImageLoading ? "opacity-0 blur-2xl" : "opacity-100 blur-0"}
+            `}
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            priority
+            onLoadingComplete={() => setIsImageLoading(false)}
           />
-        </Link>
-      </div>
-      <div className="p-5">
-        <a
-          href="#"
-          className="flex-none rounded bg-red-500 px-2 py-1 text-sm font-semibold text-white shadow-sm hover:bg-red-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900"
-        >
-          {typeLabel}
-        </a>
-        <p className="my-3 font-normal text-gray-700 dark:text-gray-400 line-clamp-1">{title}</p>
-        <div className="flex flex-row justify-between items-center">
-          <p className="text-sm line-through font-semibold text-gray-500 dark:text-white ">
-            {formatPriceVND(price)}
-          </p>
-          <p className="text-md font-semibold text-gray-900 dark:text-white ">
-            {formatPriceVND((price * (100 - discount)) / 100)}
-          </p>
-        </div>
-        <div className="flex flex-row justify-end mt-4">
+          {isImageLoading && <div className="absolute inset-0 bg-gray-100 animate-pulse" />}
+
+          {/* Floating Action Button */}
           <button
             onClick={handleAddToCart}
-            className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-red-500 rounded-lg hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-700"
+            className={`
+              absolute bottom-4 right-4 z-20 
+              flex items-center gap-2 px-4 py-2.5
+              bg-gradient-to-r from-[#B14BF4] to-[#F364D7] rounded-full
+              text-sm font-medium text-white
+              transform transition-all duration-300
+              hover:shadow-[0_8px_20px_rgb(177,75,244,0.3)]
+              hover:translate-y-[-2px]
+              active:scale-95
+              ${isHovered ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"}
+            `}
           >
+            <span className="relative top-px">Thêm vào giỏ</span>
             <svg
-              className="w-4 h-4 text-white dark:text-gray-800"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
+              className="w-4 h-4"
               fill="none"
               viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
             >
               <path
-                stroke="currentColor"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                strokeWidth="2"
-                d="M5 4h1.5L9 16m0 0h8m-8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm-8.5-3h9.25L19 7H7.312"
+                d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
               />
             </svg>
           </button>
+
+          {/* Labels */}
+          <div className="absolute top-4 left-4 right-4 flex justify-between items-center z-20">
+            {typeLabel && (
+              <span className="px-3 py-1 text-xs font-medium text-white bg-[#B14BF4]/90 backdrop-blur-md rounded-full shadow-sm">
+                {typeLabel}
+              </span>
+            )}
+            {discount > 0 && (
+              <span className="px-3 py-1 text-xs font-medium text-white bg-red-500/90 backdrop-blur-md rounded-full shadow-sm">
+                -{discount}%
+              </span>
+            )}
+          </div>
+        </div>
+
+        {/* Content */}
+        <div className="p-4">
+          <h3 className="text-sm font-medium text-gray-700 line-clamp-2 min-h-[40px] group-hover:text-[#B14BF4] transition-colors duration-300">
+            {title}
+          </h3>
+
+          <div className="mt-2 flex items-center gap-2">
+            <span className="text-base font-semibold text-gray-900">
+              {formatPriceVND(discountedPrice)}
+            </span>
+            {discount > 0 && (
+              <span className="text-xs text-gray-400 line-through">{formatPriceVND(price)}</span>
+            )}
+          </div>
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
 
