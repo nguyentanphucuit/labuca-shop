@@ -136,7 +136,7 @@ const Pagination = ({ totalNumber, totalPages }: { totalNumber: number; totalPag
   if (totalPages <= 1) return null;
 
   return (
-    <div className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-6 sm:px-6">
+    <div className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-6 mt-3 sm:mt-6 sm:px-6">
       <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
         <div>
           <p className="text-sm text-gray-700">

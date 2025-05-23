@@ -4,7 +4,7 @@ import { Phone } from "lucide-react";
 export default function PhoneSpeedDial() {
   return (
     <a
-      href="tel:0978552409"
+      href="tel:0905075588"
       className="flex items-center gap-3 px-4 py-2.5 rounded-full
         bg-cyan-500/10 hover:bg-cyan-500/20
         transition-all duration-200
@@ -23,7 +23,7 @@ export default function PhoneSpeedDial() {
         <span className="absolute inset-0 rounded-full animate-ping bg-cyan-500" />
       </div>
       <span className="text-base font-medium bg-gradient-to-r from-cyan-600 to-cyan-500 bg-clip-text text-transparent">
-        0978.552.409
+        0905.075.588
       </span>
     </a>
   );

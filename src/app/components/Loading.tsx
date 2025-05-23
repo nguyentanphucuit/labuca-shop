@@ -1,5 +1,3 @@
-import React from 'react';
-
 const Loading = ({ loading }: { loading: boolean }) => {
   return (
     loading && (
