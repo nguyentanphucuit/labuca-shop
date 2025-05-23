@@ -13,7 +13,6 @@ import { classNames } from "./constants/common";
 import styles from "./page.module.css";
 
 import Header from "./components/Header";
-import PhoneSpeedDial from "./components/PhoneSpeedDial";
 import SpeedDial from "./components/SpeedDial";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -44,7 +43,6 @@ export default function RootLayout({
             </Suspense>
           </main>
           <SpeedDial />
-          <PhoneSpeedDial />
           <Footer />
           <Cart />
         </CartProvider>
