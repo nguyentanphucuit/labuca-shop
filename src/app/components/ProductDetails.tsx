@@ -37,7 +37,7 @@ const ProductDetails = ({
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <div className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-white to-gray-50 hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] transition-all duration-300">
+      <div className="relative max-w-80 rounded-2xl overflow-hidden bg-gradient-to-br from-white to-gray-50 hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] transition-all duration-300">
         {/* Image Container */}
         <div className="aspect-[4/5] relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
