@@ -82,7 +82,7 @@ const Navbar = () => {
           </div>
 
           {/* Logo */}
-          <div className="flex flex-1 items-center justify-center sm:justify-start sm:ml-16">
+          <div className="flex flex-1 items-center justify-center ml-16 sm:justify-start">
             <div className="flex shrink-0 items-center">
               <Link href="/" className="flex items-center">
                 <Image className="h-8 w-40 object-contain" alt="labuca logo" src={logo} />
