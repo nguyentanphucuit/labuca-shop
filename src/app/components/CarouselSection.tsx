@@ -1,70 +1,97 @@
-'use client';
+"use client";
 
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination, Autoplay } from 'swiper/modules';
-import 'swiper/css';
-import 'swiper/css/navigation';
-import { useEffect, useState } from 'react';
-import { FOLDER_IMAGE } from '../constants';
-import Image from 'next/image';
+import Image from "next/image";
+import { useEffect, useState } from "react";
+import "swiper/css/bundle";
+import { Autoplay, EffectFade, Navigation, Pagination } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { FOLDER_IMAGE } from "../constants";
+
+const CarouselSkeleton = () => (
+  <div className="w-[2000px] max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 mt-20 mb-8">
+    <div className="aspect-[21/9] rounded-2xl overflow-hidden bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 animate-pulse" />
+  </div>
+);
 
 const Carousel = () => {
   const [images, setImages] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const fetchImages = async () => {
-      try {
-        const response = await fetch(`/api/get-images?folder=${FOLDER_IMAGE}`);
-        const data = await response.json();
-
-        if (response.ok) {
-          setImages(
-            data
-              .filter((img: any) => img.secure_url.includes('LabucaBanner_'))
-              .map((img: any) => img.secure_url)
-          );
-        } else {
-          console.error('Error:', data.error);
-        }
-      } catch (error) {
-        console.error('Fetch error:', error);
-      } finally {
-      }
-    };
-
-    fetchImages();
+    fetch(`/api/get-images?folder=${FOLDER_IMAGE}`)
+      .then((res) => res.json())
+      .then((data) =>
+        setImages(
+          data
+            ?.filter((img: any) => img.secure_url.includes("LabucaBanner_"))
+            .map((img: any) => img.secure_url)
+        )
+      )
+      .catch(console.error)
+      .finally(() => setIsLoading(false));
   }, []);
-  console.log(images);
+
+  if (isLoading || !images.length) return <CarouselSkeleton />;
 
   return (
-    images.length > 0 && (
-      <div className="w-96 sm:container mx-auto px-10">
-        <Swiper
-          modules={[Navigation, Pagination, Autoplay]}
-          spaceBetween={1}
-          slidesPerView={1}
-          navigation
-          pagination={{ clickable: true }}
-          scrollbar={{ draggable: true }}
-          autoplay={{ delay: 4000 }}
-          loop
-          className="rounded-xl overflow-cover"
-        >
-          {images.map((src, index) => (
-            <SwiperSlide key={index}>
+    <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 mt-20 mb-8">
+      <Swiper
+        modules={[Navigation, Pagination, Autoplay, EffectFade]}
+        effect="fade"
+        navigation
+        pagination={{ clickable: true }}
+        autoplay={{ delay: 5000 }}
+        loop
+        className="rounded-2xl overflow-hidden group"
+      >
+        {images.map((src, i) => (
+          <SwiperSlide key={i}>
+            <div className="aspect-[21/9] relative">
               <Image
                 src={src}
-                alt={src}
-                width={500}
-                height={300}
-                style={{ width: '100vw', height: '35vw' }}
-                unoptimized
+                alt={`Banner ${i + 1}`}
+                fill
+                priority={!i}
+                className="object-cover"
+                sizes="100vw"
               />
-            </SwiperSlide>
-          ))}
-        </Swiper>
-      </div>
-    )
+            </div>
+          </SwiperSlide>
+        ))}
+      </Swiper>
+      <style jsx global>{`
+        .swiper-pagination-bullet {
+          width: 8px;
+          height: 8px;
+          background: rgba(255, 255, 255, 0.6);
+          opacity: 1;
+        }
+        .swiper-pagination-bullet-active {
+          background: #b14bf4;
+          width: 24px;
+          border-radius: 4px;
+        }
+        .swiper-button-prev,
+        .swiper-button-next {
+          width: 48px !important;
+          height: 48px !important;
+          background: rgba(255, 255, 255, 0.8);
+          backdrop-filter: blur(4px);
+          border-radius: 50%;
+          color: #333;
+          opacity: 0;
+          transition: 0.2s;
+        }
+        .swiper:hover .swiper-button-prev,
+        .swiper:hover .swiper-button-next {
+          opacity: 1;
+        }
+        .swiper-button-prev:after,
+        .swiper-button-next:after {
+          font-size: 1.5rem !important;
+        }
+      `}</style>
+    </div>
   );
 };
 
