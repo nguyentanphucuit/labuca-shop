@@ -11,6 +11,7 @@ import { classNames } from "./constants/common";
 import styles from "./page.module.css";
 
 import Header from "./components/Header";
+import SpeedDial from "./components/SpeedDial";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -45,6 +46,7 @@ export default function RootLayout({
         <Suspense>
           <ProgressBarProvider>{children}</ProgressBarProvider>
         </Suspense>
+        <SpeedDial />
         <Footer />
       </body>
     </html>
