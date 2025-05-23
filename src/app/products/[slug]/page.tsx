@@ -1,7 +1,7 @@
-"use client";
-import ProductDetail from "@/app/components/products/ProductDetail";
+'use client';
+import ProductDetail from '@/app/components/products/ProductDetail';
 
-import { usePathname } from "next/navigation";
+import { usePathname } from 'next/navigation';
 
 const ProductDetailsTemplate = () => {
   const pathname = usePathname();
@@ -9,7 +9,7 @@ const ProductDetailsTemplate = () => {
 
   return (
     <div className="max-h-max w-full pt-12 mx-auto max-w-7xl px-6 lg:px-8">
-      <ProductDetail title={slug || ""} />
+      <ProductDetail title={slug || ''} />
     </div>
   );
 };

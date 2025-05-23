@@ -1,16 +1,11 @@
-"use client";
+'use client';
 
-import {
-  Dialog,
-  DialogBackdrop,
-  DialogPanel,
-  DialogTitle,
-} from "@headlessui/react";
-import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
-import { deleteDoc, doc } from "@firebase/firestore";
-import db from "@/app/utils/firestore";
-import { notifySuccess } from "@/app/components/toast/common";
-import { ProductTypes } from "@/app/types/common";
+import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react';
+import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
+import { deleteDoc, doc } from '@firebase/firestore';
+import db from '@/app/utils/firestore';
+import { notifySuccess } from '@/app/components/toast/common';
+import { ProductTypes } from '@/app/types/common';
 
 export default function DeleteImageModal({
   showDeleteModal,
@@ -27,19 +22,19 @@ export default function DeleteImageModal({
 
   const deleteImage = async (public_id: string) => {
     try {
-      const response = await fetch("/api/delete-image", {
-        method: "DELETE",
+      const response = await fetch('/api/delete-image', {
+        method: 'DELETE',
         body: JSON.stringify({ public_id: public_id }),
       });
 
       const data = await response.json();
       if (response.ok) {
-        console.log("Image deleted:", data);
+        console.log('Image deleted:', data);
       } else {
-        console.error("Error:", data.error);
+        console.error('Error:', data.error);
       }
     } catch (error) {
-      console.error("Delete request failed:", error);
+      console.error('Delete request failed:', error);
     }
     notifySuccess();
     close();
@@ -56,29 +51,22 @@ export default function DeleteImageModal({
         <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
           <DialogPanel
             transition
-            className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all data-[closed]:translate-y-4 data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in sm:my-8 sm:w-full sm:max-w-lg data-[closed]:sm:translate-y-0 data-[closed]:sm:scale-95">
+            className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all data-[closed]:translate-y-4 data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in sm:my-8 sm:w-full sm:max-w-lg data-[closed]:sm:translate-y-0 data-[closed]:sm:scale-95"
+          >
             <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
               <div className="sm:flex sm:items-start">
                 <div className="mx-auto flex size-12 shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:size-10">
-                  <ExclamationTriangleIcon
-                    aria-hidden="true"
-                    className="size-6 text-red-600"
-                  />
+                  <ExclamationTriangleIcon aria-hidden="true" className="size-6 text-red-600" />
                 </div>
                 <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
-                  <DialogTitle
-                    as="h3"
-                    className="text-base font-semibold text-gray-900">
+                  <DialogTitle as="h3" className="text-base font-semibold text-gray-900">
                     Delete
                   </DialogTitle>
                   <div className="mt-2">
                     <p className="text-sm text-gray-500">
-                      Are you sure you want to delete{" "}
-                      <span className="text-md font-bold px-1 text-red-600">
-                        {public_id}
-                      </span>
-                      ? All of your data will be permanently removed. This
-                      action cannot be undone.
+                      Are you sure you want to delete{' '}
+                      <span className="text-md font-bold px-1 text-red-600">{public_id}</span>? All
+                      of your data will be permanently removed. This action cannot be undone.
                     </p>
                   </div>
                 </div>
@@ -88,14 +76,16 @@ export default function DeleteImageModal({
               <button
                 type="button"
                 onClick={() => deleteImage(public_id)}
-                className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto">
+                className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
+              >
                 Delete
               </button>
               <button
                 type="button"
                 data-autofocus
                 onClick={close}
-                className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto">
+                className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
+              >
                 Cancel
               </button>
             </div>

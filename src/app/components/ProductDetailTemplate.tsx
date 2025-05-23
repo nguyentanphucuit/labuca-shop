@@ -1,17 +1,13 @@
-import React, { useState } from "react";
+import { classNames, formatPriceVND } from "@/app/constants/common";
 import { ProductTypes } from "@/app/types/common";
-import { classNames, formatPriceVND, removeFirstAndLastQuotes } from "@/app/constants/common";
+import { Check, Star } from "lucide-react";
 import Image from "next/image";
-import { Star, Check } from "lucide-react";
+import { useState } from "react";
+import { useCart } from "../context/CartContext";
 
 const ProductDetailTemplate = ({ ...props }: ProductTypes) => {
   // Create fake images based on the main image by adding different angles
-  const thumbnails = [
-    props.imageUrl,
-    props.imageUrl,
-    props.imageUrl,
-   
-  ];
+  const thumbnails = [props.imageUrl, props.imageUrl, props.imageUrl];
 
   // Define a set of realistic t-shirt colors
   const availableColors = [
@@ -19,16 +15,18 @@ const ProductDetailTemplate = ({ ...props }: ProductTypes) => {
     { name: "Navy", value: "#000080" },
     { name: "Black", value: "#000000" },
     { name: "Gray", value: "#808080" },
-    { name: "White", value: "#FFFFFF" }
+    { name: "White", value: "#FFFFFF" },
   ];
 
   const [selectedColor, setSelectedColor] = useState(availableColors[0]);
   const [selectedSize, setSelectedSize] = useState(props.size.split(",")[0]);
   const [quantity, setQuantity] = useState(1);
   const [mainImage, setMainImage] = useState(thumbnails[0]);
-  const [activeTab, setActiveTab] = useState('details');
-  
-  const sizes = props.size.split(",").map(s => s.trim());
+  const [activeTab, setActiveTab] = useState("details");
+
+  const { addItem } = useCart();
+
+  const sizes = props.size.split(",").map((s) => s.trim());
   const discountedPrice = (props.price * (100 - props.discount)) / 100;
 
   // Sample reviews data
@@ -38,32 +36,43 @@ const ProductDetailTemplate = ({ ...props }: ProductTypes) => {
       author: "Lê Thị Hồng",
       rating: 5,
       date: "15/03/2025",
-      comment: "Sản phẩm rất tốt, đúng như mô tả. Giao hàng nhanh."
+      comment: "Sản phẩm rất tốt, đúng như mô tả. Giao hàng nhanh.",
     },
     {
       id: 2,
       author: "Đặng Thị Huyền",
       rating: 4,
       date: "14/05/2025",
-      comment: "Chất lượng tốt, giá cả hợp lý."
-    }
+      comment: "Chất lượng tốt, giá cả hợp lý.",
+    },
   ];
 
   // Sample FAQs
   const faqs = [
     {
       question: "Làm thế nào để chọn size giày phù hợp?",
-      answer: "Bạn có thể đo chiều dài bàn chân và tham khảo bảng size của chúng tôi. Nếu bạn đang phân vân giữa hai size, nên chọn size lớn hơn."
+      answer:
+        "Bạn có thể đo chiều dài bàn chân và tham khảo bảng size của chúng tôi. Nếu bạn đang phân vân giữa hai size, nên chọn size lớn hơn.",
     },
     {
       question: "Chính sách đổi trả như thế nào?",
-      answer: "Chúng tôi chấp nhận đổi trả trong vòng 30 ngày kể từ ngày mua hàng, với điều kiện sản phẩm còn nguyên tem mác và chưa qua sử dụng."
-    }
+      answer:
+        "Chúng tôi chấp nhận đổi trả trong vòng 30 ngày kể từ ngày mua hàng, với điều kiện sản phẩm còn nguyên tem mác và chưa qua sử dụng.",
+    },
   ];
+
+  const handleAddToCart = () => {
+    addItem({
+      id: props.id,
+      quantity: quantity,
+      color: selectedColor,
+      size: selectedSize,
+    });
+  };
 
   const renderTabContent = () => {
     switch (activeTab) {
-      case 'details':
+      case "details":
         return (
           <div className="space-y-8">
             {/* Product Specifications */}
@@ -86,11 +95,13 @@ const ProductDetailTemplate = ({ ...props }: ProductTypes) => {
                   <div className="flex items-center gap-2 text-gray-600">
                     <span className="font-medium min-w-32">Màu sắc:</span>
                     {availableColors.map((color) => (
-                      <span 
-                        key={color.name} 
+                      <span
+                        key={color.name}
                         className={classNames(
                           "px-2 py-1 text-sm font-semibold rounded",
-                          color.name === "White" ? "text-gray-900 border border-gray-200" : "text-white"
+                          color.name === "White"
+                            ? "text-gray-900 border border-gray-200"
+                            : "text-white"
                         )}
                         style={{ backgroundColor: color.value }}
                       >
@@ -108,10 +119,10 @@ const ProductDetailTemplate = ({ ...props }: ProductTypes) => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-3">
                   {[
-                    'Kiểu dáng cổ điển thoáng, mềm, nhẹ chân',
-                    'Chất liệu da mờ sang trọng',
-                    'Phù hợp đi làm, đi chơi, dự tiệc',
-                    'Mix-match được với nhiều loại trang phục'
+                    "Kiểu dáng cổ điển thoáng, mềm, nhẹ chân",
+                    "Chất liệu da mờ sang trọng",
+                    "Phù hợp đi làm, đi chơi, dự tiệc",
+                    "Mix-match được với nhiều loại trang phục",
                   ].map((feature, index) => (
                     <div key={index} className="flex items-center gap-2 text-gray-600">
                       <Check className="w-5 h-5 text-green-500 flex-shrink-0" />
@@ -129,15 +140,18 @@ const ProductDetailTemplate = ({ ...props }: ProductTypes) => {
                 <div className="space-y-2">
                   <p className="flex items-start gap-2">
                     <span className="text-black font-medium">•</span>
-                    Bạn nên thường xuyên vệ sinh giày để giúp đôi giày luôn mới và kéo dài thời gian sử dụng.
+                    Bạn nên thường xuyên vệ sinh giày để giúp đôi giày luôn mới và kéo dài thời gian
+                    sử dụng.
                   </p>
                   <p className="flex items-start gap-2">
                     <span className="text-black font-medium">•</span>
-                    Khi giày bị bẩn chỉ cần dùng vải ẩm mềm lau nhẹ nhàng bề mặt da, không nên rửa bằng nước và dùng vật cứng.
+                    Khi giày bị bẩn chỉ cần dùng vải ẩm mềm lau nhẹ nhàng bề mặt da, không nên rửa
+                    bằng nước và dùng vật cứng.
                   </p>
                   <p className="flex items-start gap-2">
                     <span className="text-black font-medium">•</span>
-                    Đối với giày bị thấm nước mưa, chỉ cần dùng vải ướt lau hết bùn đất, sau đó dùng vải khô lau lại một lượt.
+                    Đối với giày bị thấm nước mưa, chỉ cần dùng vải ướt lau hết bùn đất, sau đó dùng
+                    vải khô lau lại một lượt.
                   </p>
                   <p className="flex items-start gap-2">
                     <span className="text-black font-medium">•</span>
@@ -145,19 +159,18 @@ const ProductDetailTemplate = ({ ...props }: ProductTypes) => {
                   </p>
                   <p className="flex items-start gap-2">
                     <span className="text-black font-medium">•</span>
-                    Nếu bạn ít sử dụng giày, có thể để vào hộp có túi hút ẩm, thỉnh thoảng lấy ra mang để giày có hơi chân không bị bong keo.
+                    Nếu bạn ít sử dụng giày, có thể để vào hộp có túi hút ẩm, thỉnh thoảng lấy ra
+                    mang để giày có hơi chân không bị bong keo.
                   </p>
                 </div>
               </div>
             </div>
-
-           
           </div>
         );
-      case 'reviews':
+      case "reviews":
         return (
           <div className="space-y-6">
-            {reviews.map(review => (
+            {reviews.map((review) => (
               <div key={review.id} className="border-b pb-4">
                 <div className="flex items-center gap-2 mb-2">
                   <div className="flex">
@@ -173,7 +186,7 @@ const ProductDetailTemplate = ({ ...props }: ProductTypes) => {
             ))}
           </div>
         );
-      case 'faqs':
+      case "faqs":
         return (
           <div className="space-y-6">
             {faqs.map((faq, index) => (
@@ -194,9 +207,9 @@ const ProductDetailTemplate = ({ ...props }: ProductTypes) => {
       {/* Product Header - Breadcrumb */}
       <div className="flex items-center gap-2 text-sm text-gray-500">
         <span>Trang chủ</span>
-        <span>{'>'}</span>
+        <span>{">"}</span>
         <span>Giày</span>
-        <span>{'>'}</span>
+        <span>{">"}</span>
         <span>{props.title}</span>
       </div>
 
@@ -204,13 +217,7 @@ const ProductDetailTemplate = ({ ...props }: ProductTypes) => {
         {/* Left Column - Image Gallery */}
         <div className="flex flex-col gap-4">
           <div className="aspect-square relative rounded-lg overflow-hidden bg-gray-100">
-            <Image
-              src={mainImage}
-              alt={props.title}
-              fill
-              className="object-cover"
-              priority
-            />
+            <Image src={mainImage} alt={props.title} fill className="object-cover" priority />
           </div>
           <div className="flex gap-4">
             {thumbnails.map((thumb, idx) => (
@@ -235,7 +242,7 @@ const ProductDetailTemplate = ({ ...props }: ProductTypes) => {
         {/* Right Column - Product Info */}
         <div className="flex flex-col gap-6">
           <h1 className="text-4xl font-bold tracking-tight">{props.title}</h1>
-          
+
           {/* Rating */}
           <div className="flex items-center gap-2">
             <div className="flex">
@@ -252,16 +259,18 @@ const ProductDetailTemplate = ({ ...props }: ProductTypes) => {
             <span className="text-2xl font-bold">{formatPriceVND(discountedPrice)}</span>
             {props.discount > 0 && (
               <>
-                <span className="text-xl text-gray-500 line-through">{formatPriceVND(props.price)}</span>
-                <span className="px-2 py-1 text-sm font-semibold text-red-600 bg-red-100 rounded">-{props.discount}%</span>
+                <span className="text-xl text-gray-500 line-through">
+                  {formatPriceVND(props.price)}
+                </span>
+                <span className="px-2 py-1 text-sm font-semibold text-red-600 bg-red-100 rounded">
+                  -{props.discount}%
+                </span>
               </>
             )}
           </div>
 
           {/* Description */}
-          <p className="text-gray-600">
-            {props.subtitle}
-          </p>
+          <p className="text-gray-600">{props.subtitle}</p>
 
           {/* Color Selection */}
           <div className="space-y-3">
@@ -275,17 +284,25 @@ const ProductDetailTemplate = ({ ...props }: ProductTypes) => {
                   key={color.name}
                   onClick={() => setSelectedColor(color)}
                   className={`w-10 h-10 rounded-full border-2 ${
-                    selectedColor.name === color.name
-                      ? "border-black"
-                      : "border-gray-200"
+                    selectedColor.name === color.name ? "border-black" : "border-gray-200"
                   } ${color.name === "White" ? "bg-white" : ""}`}
                   style={{ backgroundColor: color.value }}
                   aria-label={`Select ${color.name} color`}
                 >
                   {selectedColor.name === color.name && (
                     <span className="flex items-center justify-center h-full">
-                      <svg className={`w-6 h-6 ${color.name === "White" ? "text-black" : "text-white"}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      <svg
+                        className={`w-6 h-6 ${color.name === "White" ? "text-black" : "text-white"}`}
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M5 13l4 4L19 7"
+                        />
                       </svg>
                     </span>
                   )}
@@ -335,8 +352,11 @@ const ProductDetailTemplate = ({ ...props }: ProductTypes) => {
                 +
               </button>
             </div>
-            <button className="flex-1 px-6 py-3 text-sm font-medium text-white bg-black rounded-lg hover:bg-gray-900">
-              Add to Cart
+            <button
+              onClick={handleAddToCart}
+              className="flex-1 px-6 py-3 text-sm font-medium text-white bg-black rounded-lg hover:bg-gray-900"
+            >
+              Thêm vào giỏ hàng
             </button>
           </div>
         </div>
@@ -346,41 +366,39 @@ const ProductDetailTemplate = ({ ...props }: ProductTypes) => {
       <div className="mt-12">
         <div className="border-b border-gray-200">
           <nav className="flex gap-8">
-            <button 
-              onClick={() => setActiveTab('details')}
+            <button
+              onClick={() => setActiveTab("details")}
               className={`px-1 py-4 text-sm font-medium border-b-2 ${
-                activeTab === 'details' 
-                  ? 'border-black text-black' 
-                  : 'border-transparent text-gray-500 hover:text-black'
+                activeTab === "details"
+                  ? "border-black text-black"
+                  : "border-transparent text-gray-500 hover:text-black"
               }`}
             >
               Chi tiết sản phẩm
             </button>
-            <button 
-              onClick={() => setActiveTab('reviews')}
+            <button
+              onClick={() => setActiveTab("reviews")}
               className={`px-1 py-4 text-sm font-medium border-b-2 ${
-                activeTab === 'reviews' 
-                  ? 'border-black text-black' 
-                  : 'border-transparent text-gray-500 hover:text-black'
+                activeTab === "reviews"
+                  ? "border-black text-black"
+                  : "border-transparent text-gray-500 hover:text-black"
               }`}
             >
               Đánh giá
             </button>
-            <button 
-              onClick={() => setActiveTab('faqs')}
+            <button
+              onClick={() => setActiveTab("faqs")}
               className={`px-1 py-4 text-sm font-medium border-b-2 ${
-                activeTab === 'faqs' 
-                  ? 'border-black text-black' 
-                  : 'border-transparent text-gray-500 hover:text-black'
+                activeTab === "faqs"
+                  ? "border-black text-black"
+                  : "border-transparent text-gray-500 hover:text-black"
               }`}
             >
               FAQs
             </button>
           </nav>
         </div>
-        <div className="py-6">
-          {renderTabContent()}
-        </div>
+        <div className="py-6">{renderTabContent()}</div>
       </div>
     </div>
   );

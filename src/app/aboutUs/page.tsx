@@ -1,21 +1,23 @@
-import React from "react";
-import Image from "next/image";
-import { MapPin, Phone, Mail, Clock } from "lucide-react";
-import { Metadata } from "next";
+import React from 'react';
+import Image from 'next/image';
+import { MapPin, Phone, Mail, Clock } from 'lucide-react';
+import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: "Về Chúng Tôi | Labuca - Giày Dép và Túi xách nữ thời trang",
-  description: "Labuca - Chuyên cung cấp giày dép và túi xách nữ thời trang chất lượng cao với giá cả hợp lý. Địa chỉ: 152 Lý Thường Kiệt, P. Thành Công, Tp. Buôn Ma Thuột.",
+  title: 'Về Chúng Tôi | Labuca - Giày Dép và Túi xách nữ thời trang',
+  description:
+    'Labuca - Chuyên cung cấp giày dép và túi xách nữ thời trang chất lượng cao với giá cả hợp lý. Địa chỉ: 152 Lý Thường Kiệt, P. Thành Công, Tp. Buôn Ma Thuột.',
   openGraph: {
-    title: "Về Chúng Tôi | Labuca - Giày Dép và Túi xách nữ thời trang",
-    description: "Labuca - Chuyên cung cấp giày dép và túi xách nữ thời trang chất lượng cao với giá cả hợp lý. Địa chỉ: 152 Lý Thường Kiệt, P. Thành Công, Tp. Buôn Ma Thuột.",
-    url: "https://labuca.vn/aboutUs",
-    siteName: "Labuca",
-    locale: "vi_VN",
-    type: "website",
+    title: 'Về Chúng Tôi | Labuca - Giày Dép và Túi xách nữ thời trang',
+    description:
+      'Labuca - Chuyên cung cấp giày dép và túi xách nữ thời trang chất lượng cao với giá cả hợp lý. Địa chỉ: 152 Lý Thường Kiệt, P. Thành Công, Tp. Buôn Ma Thuột.',
+    url: 'https://labuca.vn/aboutUs',
+    siteName: 'Labuca',
+    locale: 'vi_VN',
+    type: 'website',
   },
   alternates: {
-    canonical: "https://labuca.vn/aboutUs",
+    canonical: 'https://labuca.vn/aboutUs',
   },
 };
 
@@ -53,13 +55,16 @@ const AboutUs = () => {
               </h2>
               <div className="space-y-6">
                 <p className="text-gray-600 leading-relaxed">
-                  Labuca được thành lập với sứ mệnh mang đến những sản phẩm giày dép chất lượng cao với giá cả phải chăng cho người tiêu dùng Việt Nam.
+                  Labuca được thành lập với sứ mệnh mang đến những sản phẩm giày dép chất lượng cao
+                  với giá cả phải chăng cho người tiêu dùng Việt Nam.
                 </p>
                 <p className="text-gray-600 leading-relaxed">
-                  Chúng tôi tin rằng mỗi bước chân đều xứng đáng được nâng niu và chăm sóc với những sản phẩm tốt nhất.
+                  Chúng tôi tin rằng mỗi bước chân đều xứng đáng được nâng niu và chăm sóc với những
+                  sản phẩm tốt nhất.
                 </p>
                 <p className="text-gray-600 leading-relaxed">
-                  Với hơn nhiều năm kinh nghiệm trong ngành, chúng tôi tự hào là đối tác tin cậy của hàng nghìn khách hàng.
+                  Với hơn nhiều năm kinh nghiệm trong ngành, chúng tôi tự hào là đối tác tin cậy của
+                  hàng nghìn khách hàng.
                 </p>
               </div>
             </div>
@@ -86,8 +91,18 @@ const AboutUs = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 transform hover:-translate-y-1">
               <div className="w-16 h-16 bg-gradient-to-br from-rose-500 to-pink-500 rounded-full flex items-center justify-center mb-6 mx-auto transform hover:rotate-12 transition-all duration-300 hover:scale-110">
-                <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                <svg
+                  className="w-8 h-8 text-white"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M5 13l4 4L19 7"
+                  />
                 </svg>
               </div>
               <h3 className="text-2xl font-semibold mb-4 text-center">Chất Lượng</h3>
@@ -97,8 +112,18 @@ const AboutUs = () => {
             </div>
             <div className="bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 transform hover:-translate-y-1">
               <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-full flex items-center justify-center mb-6 mx-auto transform hover:rotate-12 transition-all duration-300 hover:scale-110">
-                <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                <svg
+                  className="w-8 h-8 text-white"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
                 </svg>
               </div>
               <h3 className="text-2xl font-semibold mb-4 text-center">Giá Cả Hợp Lý</h3>
@@ -108,8 +133,18 @@ const AboutUs = () => {
             </div>
             <div className="bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 transform hover:-translate-y-1">
               <div className="w-16 h-16 bg-gradient-to-br from-violet-500 to-purple-500 rounded-full flex items-center justify-center mb-6 mx-auto transform hover:rotate-12 transition-all duration-300 hover:scale-110">
-                <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5" />
+                <svg
+                  className="w-8 h-8 text-white"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"
+                  />
                 </svg>
               </div>
               <h3 className="text-2xl font-semibold mb-4 text-center">Dịch Vụ Tận Tâm</h3>
@@ -129,7 +164,9 @@ const AboutUs = () => {
             <div className="text-center">
               <MapPin className="w-8 h-8 mx-auto mb-4 text-black" />
               <h3 className="font-semibold mb-2">Địa Chỉ</h3>
-              <p className="text-gray-600">152 Lý Thường Kiệt, P. Thành Công, Tp. Buôn Ma Thuột, tỉnh Đắk Lắk</p>
+              <p className="text-gray-600">
+                152 Lý Thường Kiệt, P. Thành Công, Tp. Buôn Ma Thuột, tỉnh Đắk Lắk
+              </p>
             </div>
             <div className="text-center">
               <Phone className="w-8 h-8 mx-auto mb-4 text-black" />

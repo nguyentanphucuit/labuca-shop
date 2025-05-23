@@ -1,5 +1,5 @@
-import { Editor } from "@tiptap/react";
-import { StaticImageData } from "next/image";
+import { Editor } from '@tiptap/react';
+import { StaticImageData } from 'next/image';
 export interface ProductTypes {
   id: string;
   code: string;

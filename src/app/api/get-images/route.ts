@@ -1,5 +1,5 @@
-import { NextResponse } from "next/server";
-import { v2 as cloudinary } from "cloudinary";
+import { NextResponse } from 'next/server';
+import { v2 as cloudinary } from 'cloudinary';
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -10,32 +10,24 @@ cloudinary.config({
 export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
-    const folder = searchParams.get("folder");
+    const folder = searchParams.get('folder');
 
     if (!folder) {
-      return NextResponse.json(
-        { error: "Folder name is required" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Folder name is required' }, { status: 400 });
     }
 
     const result = await cloudinary.api.resources({
-      type: "upload",
+      type: 'upload',
       prefix: folder, // Fetch only images from this folder
       max_results: 20, // Limit results
     });
     console.log(result);
 
     return NextResponse.json(
-      result.resources.filter((img: any) =>
-        img.public_id.includes("LabucaBanner_")
-      )
+      result.resources.filter((img: any) => img.public_id.includes('LabucaBanner_'))
     );
   } catch (error) {
-    console.error("Error fetching images:", error);
-    return NextResponse.json(
-      { error: "Failed to get images" },
-      { status: 500 }
-    );
+    console.error('Error fetching images:', error);
+    return NextResponse.json({ error: 'Failed to get images' }, { status: 500 });
   }
 }

@@ -1,13 +1,13 @@
-"use client";
-import React, { useEffect, useState } from "react";
-import Image from "next/image";
-import sourceImg from "/public/assets/img/background.png";
+'use client';
+import React, { useEffect, useState } from 'react';
+import Image from 'next/image';
+import sourceImg from '/public/assets/img/background.png';
 
-import ListItem from "./ListItem";
-import CarouselSection from "./CarouselSection";
-import { collection, getDocs } from "firebase/firestore";
-import db from "@/app/utils/firestore";
-import { ProductTypes } from "@/app/types/common";
+import ListItem from './ListItem';
+import CarouselSection from './CarouselSection';
+import { collection, getDocs } from 'firebase/firestore';
+import db from '@/app/utils/firestore';
+import { ProductTypes } from '@/app/types/common';
 
 const Hero = () => {
   const [items, setItems] = useState<ProductTypes[]>([]);
@@ -15,9 +15,9 @@ const Hero = () => {
 
   useEffect(() => {
     const fetchItems = async () => {
-      const querySnapshot = await getDocs(collection(db, "products"));
+      const querySnapshot = await getDocs(collection(db, 'products'));
       setItems(
-        querySnapshot.docs.map((doc) => {
+        querySnapshot.docs.map(doc => {
           const data = doc.data();
           return {
             id: doc.id,

@@ -1,24 +1,18 @@
-"use client";
-import React from "react";
-import { usePathname, useSearchParams } from "next/navigation";
-import { sourcesPerPage } from "../constants";
-import { totalNumberSearchQuery } from "../constants/common";
+'use client';
+import React from 'react';
+import { usePathname, useSearchParams } from 'next/navigation';
+import { sourcesPerPage } from '../constants';
+import { totalNumberSearchQuery } from '../constants/common';
 
-const Pagination = ({
-  totalNumber,
-  totalPages,
-}: {
-  totalNumber: number;
-  totalPages: number;
-}) => {
+const Pagination = ({ totalNumber, totalPages }: { totalNumber: number; totalPages: number }) => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const currentPage = Number(searchParams.get("page")) || 1;
-  const query = searchParams.get("query") || "";
+  const currentPage = Number(searchParams.get('page')) || 1;
+  const query = searchParams.get('query') || '';
 
   const createPageURL = (pageNumber: number | string) => {
     const params = new URLSearchParams(searchParams);
-    params.set("page", pageNumber.toString());
+    params.set('page', pageNumber.toString());
     return `${pathname}?${params.toString()}`;
   };
   const start = (currentPage - 1) * sourcesPerPage + 1;
@@ -29,12 +23,14 @@ const Pagination = ({
       <div className="flex flex-1 justify-between sm:hidden">
         <a
           href="#"
-          className="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
+          className="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+        >
           Previous
         </a>
         <a
           href="#"
-          className="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
+          className="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+        >
           Next
         </a>
       </div>
@@ -44,9 +40,7 @@ const Pagination = ({
             Hiển thị
             <span className="font-medium px-1">{start}</span>
             đến
-            <span className="font-medium px-1">
-              {end < totalNumber ? end : totalNumber}
-            </span>
+            <span className="font-medium px-1">{end < totalNumber ? end : totalNumber}</span>
             của tổng
             <span className="font-medium px-1">{totalNumber}</span>
             sản phẩm
@@ -55,17 +49,20 @@ const Pagination = ({
         <div>
           <nav
             className="isolate inline-flex -space-x-px rounded-md shadow-sm"
-            aria-label="Pagination">
+            aria-label="Pagination"
+          >
             <a
               href="#"
-              className="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">
+              className="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
+            >
               <span className="sr-only">Previous</span>
               <svg
                 className="h-5 w-5"
                 viewBox="0 0 20 20"
                 fill="currentColor"
                 aria-hidden="true"
-                data-slot="icon">
+                data-slot="icon"
+              >
                 <path
                   fillRule="evenodd"
                   d="M11.78 5.22a.75.75 0 0 1 0 1.06L8.06 10l3.72 3.72a.75.75 0 1 1-1.06 1.06l-4.25-4.25a.75.75 0 0 1 0-1.06l4.25-4.25a.75.75 0 0 1 1.06 0Z"
@@ -73,26 +70,29 @@ const Pagination = ({
                 />
               </svg>
             </a>
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
               <a
                 key={page}
                 href={createPageURL(page)}
                 className={`relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 ${
-                  currentPage === page ? "bg-indigo-600 text-white" : ""
-                }`}>
+                  currentPage === page ? 'bg-indigo-600 text-white' : ''
+                }`}
+              >
                 {page}
               </a>
             ))}
             <a
               href="#"
-              className="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">
+              className="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
+            >
               <span className="sr-only">Next</span>
               <svg
                 className="h-5 w-5"
                 viewBox="0 0 20 20"
                 fill="currentColor"
                 aria-hidden="true"
-                data-slot="icon">
+                data-slot="icon"
+              >
                 <path
                   fillRule="evenodd"
                   d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z"

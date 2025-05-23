@@ -1,10 +1,12 @@
+import Footer from "@/app/components/Footer";
+import Navbar from "@/app/components/Navbar";
+import { GoogleTagManager } from "@next/third-parties/google";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import "./globals.css";
-import Navbar from "@/app/components/Navbar";
-import Footer from "@/app/components/Footer";
+import Cart from "./components/Cart";
 import ProgressBarProvider from "./components/ProgressBar";
-import { GoogleTagManager } from "@next/third-parties/google";
+import { CartProvider } from "./context/CartContext";
+import "./globals.css";
 
 import { Suspense } from "react";
 import { classNames } from "./constants/common";
@@ -33,21 +35,17 @@ export default function RootLayout({
 
       <body className={classNames(styles.main, inter.className)}>
         <GoogleTagManager gtmId="GTM-5CXDKNWS" />
-        {/* <!-- Google Tag Manager (noscript) --> */}
-        {/* <noscript>
-          <iframe
-            src="https://www.googletagmanager.com/ns.html?id=GTM-5CXDKNWS"
-            height="0"
-            width="0"
-            className={"display:none;visibility:hidden"}></iframe>
-        </noscript> */}
-        {/* <!-- End Google Tag Manager (noscript) --> */}
-        <Navbar />
-        <Suspense>
-          <ProgressBarProvider>{children}</ProgressBarProvider>
-        </Suspense>
-        <SpeedDial />
-        <Footer />
+        <CartProvider>
+          <Navbar />
+          <main className="pt-20">
+            <Suspense>
+              <ProgressBarProvider>{children}</ProgressBarProvider>
+            </Suspense>
+          </main>
+          <SpeedDial />
+          <Footer />
+          <Cart />
+        </CartProvider>
       </body>
     </html>
   );

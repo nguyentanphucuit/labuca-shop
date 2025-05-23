@@ -1,5 +1,5 @@
-"use client";
-import { AppProgressBar as ProgressBar } from "next-nprogress-bar";
+'use client';
+import { AppProgressBar as ProgressBar } from 'next-nprogress-bar';
 const ProgressBarProvider = ({
   children,
 }: Readonly<{
@@ -8,12 +8,7 @@ const ProgressBarProvider = ({
   return (
     <>
       {children}
-      <ProgressBar
-        height="4px"
-        color="#000000"
-        options={{ showSpinner: false }}
-        shallowRouting
-      />
+      <ProgressBar height="4px" color="#000000" options={{ showSpinner: false }} shallowRouting />
     </>
   );
 };

@@ -1,5 +1,5 @@
-import { NextResponse } from "next/server";
-import { v2 as cloudinary } from "cloudinary";
+import { NextResponse } from 'next/server';
+import { v2 as cloudinary } from 'cloudinary';
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -13,23 +13,17 @@ export async function PUT(req: Request) {
 
     if (!old_public_id || !new_public_id) {
       return NextResponse.json(
-        { error: "Both old and new public_id are required" },
+        { error: 'Both old and new public_id are required' },
         { status: 400 }
       );
     }
 
     // Rename (move) image to new public_id
-    const result = await cloudinary.uploader.rename(
-      old_public_id,
-      new_public_id
-    );
+    const result = await cloudinary.uploader.rename(old_public_id, new_public_id);
 
-    return NextResponse.json({ message: "Image renamed", result });
+    return NextResponse.json({ message: 'Image renamed', result });
   } catch (error) {
-    console.error("Error renaming image:", error);
-    return NextResponse.json(
-      { error: "Failed to rename image" },
-      { status: 500 }
-    );
+    console.error('Error renaming image:', error);
+    return NextResponse.json({ error: 'Failed to rename image' }, { status: 500 });
   }
 }

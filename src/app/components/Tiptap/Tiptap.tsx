@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { useEditor, EditorContent } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
-import Toolbar from "./Toolbar";
-import Underline from "@tiptap/extension-underline";
-import ImageResize from "tiptap-extension-resize-image";
-import { removeFirstAndLastQuotes } from "@/app/constants/common";
+import { useEditor, EditorContent } from '@tiptap/react';
+import StarterKit from '@tiptap/starter-kit';
+import Toolbar from './Toolbar';
+import Underline from '@tiptap/extension-underline';
+import ImageResize from 'tiptap-extension-resize-image';
+import { removeFirstAndLastQuotes } from '@/app/constants/common';
 
 const Tiptap = ({
   onChange,
@@ -23,8 +23,7 @@ const Tiptap = ({
     extensions: [StarterKit, Underline, ImageResize],
     editorProps: {
       attributes: {
-        class:
-          "flex flex-col px-4 py-3 justify-start border-b border-r border-l  border-gray-700",
+        class: 'flex flex-col px-4 py-3 justify-start border-b border-r border-l  border-gray-700',
       },
     },
     immediatelyRender: true,
@@ -39,7 +38,7 @@ const Tiptap = ({
     <div className="w-full p-4">
       <p className="text-lg uppercase">{name} :</p>
       <Toolbar editor={editor} content={removeFirstAndLastQuotes(content)} />
-      <EditorContent style={{ whiteSpace: "pre-line" }} editor={editor} />
+      <EditorContent style={{ whiteSpace: 'pre-line' }} editor={editor} />
     </div>
   );
 };

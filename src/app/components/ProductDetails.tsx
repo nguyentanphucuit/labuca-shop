@@ -1,10 +1,11 @@
-import React from "react";
-import Link from "next/link";
 import { formatPriceVND } from "@/app/constants/common";
-import Image, { StaticImageData } from "next/image";
+import Image from "next/image";
+import Link from "next/link";
+import { useCart } from "../context/CartContext";
 import { ProductTypes } from "../types/common";
 
 const ProductDetails = ({
+  id,
   imageUrl,
   title,
   typeLabel,
@@ -12,6 +13,17 @@ const ProductDetails = ({
   price,
   discount,
 }: ProductTypes) => {
+  const { addItem } = useCart();
+
+  const handleAddToCart = () => {
+    addItem({
+      id: id,
+      quantity: 1,
+      color: { name: "Default", value: "#000000" },
+      size: "35", // Default size
+    });
+  };
+
   return (
     <div className="max-w-72 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
       <div className="w-64 h-64 flex flex-col items-center justify-center mx-auto">
@@ -31,12 +43,11 @@ const ProductDetails = ({
       <div className="p-5">
         <a
           href="#"
-          className="flex-none rounded bg-red-500 px-2 py-1 text-sm font-semibold text-white shadow-sm hover:bg-red-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900">
+          className="flex-none rounded bg-red-500 px-2 py-1 text-sm font-semibold text-white shadow-sm hover:bg-red-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900"
+        >
           {typeLabel}
         </a>
-        <p className="my-3 font-normal text-gray-700 dark:text-gray-400 line-clamp-1">
-          {title}
-        </p>
+        <p className="my-3 font-normal text-gray-700 dark:text-gray-400 line-clamp-1">{title}</p>
         <div className="flex flex-row justify-between items-center">
           <p className="text-sm line-through font-semibold text-gray-500 dark:text-white ">
             {formatPriceVND(price)}
@@ -46,10 +57,10 @@ const ProductDetails = ({
           </p>
         </div>
         <div className="flex flex-row justify-end mt-4">
-          <Link
-            href={href}
-            target="_blank"
-            className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-red-500 rounded-lg hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-700">
+          <button
+            onClick={handleAddToCart}
+            className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-red-500 rounded-lg hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-700"
+          >
             <svg
               className="w-4 h-4 text-white dark:text-gray-800"
               aria-hidden="true"
@@ -57,7 +68,8 @@ const ProductDetails = ({
               width="24"
               height="24"
               fill="none"
-              viewBox="0 0 24 24">
+              viewBox="0 0 24 24"
+            >
               <path
                 stroke="currentColor"
                 strokeLinecap="round"
@@ -66,7 +78,7 @@ const ProductDetails = ({
                 d="M5 4h1.5L9 16m0 0h8m-8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm-8.5-3h9.25L19 7H7.312"
               />
             </svg>
-          </Link>
+          </button>
         </div>
       </div>
     </div>

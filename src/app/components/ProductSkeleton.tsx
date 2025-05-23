@@ -1,9 +1,9 @@
-import React from "react";
-import Link from "next/link";
-import { formatPriceVND } from "@/app/constants/common";
-import Image, { StaticImageData } from "next/image";
-import { ProductTypes } from "../types/common";
-import { Skeleton } from "@/components/ui/skeleton";
+import React from 'react';
+import Link from 'next/link';
+import { formatPriceVND } from '@/app/constants/common';
+import Image, { StaticImageData } from 'next/image';
+import { ProductTypes } from '../types/common';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const ProductSkeleton = () => {
   return (

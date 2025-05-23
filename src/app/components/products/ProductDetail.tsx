@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
-import ProductPage from "@/app/products/page";
-import { ProductTypes } from "@/app/types/common";
-import { listItem } from "@/app/constants/index";
-import { collection } from "firebase/firestore";
-import { getDocs } from "firebase/firestore";
-import db from "@/app/utils/firestore";
-import ProductDetailTemplate from "../ProductDetailTemplate";
+import React, { useEffect, useState } from 'react';
+import ProductPage from '@/app/products/page';
+import { ProductTypes } from '@/app/types/common';
+import { listItem } from '@/app/constants/index';
+import { collection } from 'firebase/firestore';
+import { getDocs } from 'firebase/firestore';
+import db from '@/app/utils/firestore';
+import ProductDetailTemplate from '../ProductDetailTemplate';
 2;
 const ProductDetail = ({ title }: { title: string }) => {
   const [items, setItems] = useState<ProductTypes[]>([]);
@@ -13,9 +13,9 @@ const ProductDetail = ({ title }: { title: string }) => {
 
   useEffect(() => {
     const fetchItems = async () => {
-      const querySnapshot = await getDocs(collection(db, "products"));
+      const querySnapshot = await getDocs(collection(db, 'products'));
       setItems(
-        querySnapshot.docs.map((doc) => {
+        querySnapshot.docs.map(doc => {
           const data = doc.data();
           return {
             id: doc.id,
@@ -40,17 +40,9 @@ const ProductDetail = ({ title }: { title: string }) => {
     fetchItems();
     setLoading(false);
   }, []);
-  const id = items.findIndex(
-    (item) => item.href.toLowerCase() === title.toLowerCase()
-  );
+  const id = items.findIndex(item => item.href.toLowerCase() === title.toLowerCase());
   console.log(title);
-  return id === -1 ? (
-    <ProductPage />
-  ) : (
-    <ProductDetailTemplate {...items[id]} />
-  );
+  return id === -1 ? <ProductPage /> : <ProductDetailTemplate {...items[id]} />;
 };
-
-
 
 export default ProductDetail;

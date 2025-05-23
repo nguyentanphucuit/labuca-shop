@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import Image from "next/image";
-import Loading from "./Loading";
+import { useState } from 'react';
+import Image from 'next/image';
+import Loading from './Loading';
 
 const UploadForm = ({
   uploadedImage,
@@ -13,9 +13,7 @@ const UploadForm = ({
     url: string;
     publicId: string;
   } | null;
-  setUploadedImage: (
-    uploadedImage: { url: string; publicId: string } | null
-  ) => void;
+  setUploadedImage: (uploadedImage: { url: string; publicId: string } | null) => void;
   newPublicId: string;
 }) => {
   const [loading, setLoading] = useState(false);
@@ -23,17 +21,17 @@ const UploadForm = ({
   const handleUpload = async (file: File) => {
     setLoading(true);
     const formData = new FormData();
-    formData.append("file", file);
-    formData.append("public_id", newPublicId || "");
+    formData.append('file', file);
+    formData.append('public_id', newPublicId || '');
     console.log(formData);
 
     try {
-      const response = await fetch("/api/upload", {
-        method: "POST",
+      const response = await fetch('/api/upload', {
+        method: 'POST',
         body: formData,
       });
 
-      if (!response.ok) throw new Error("Upload failed");
+      if (!response.ok) throw new Error('Upload failed');
 
       const data = await response.json();
       setUploadedImage({
@@ -42,7 +40,7 @@ const UploadForm = ({
       });
       setLoading(false);
     } catch (error) {
-      console.error("Upload error:", error);
+      console.error('Upload error:', error);
     }
   };
 
@@ -50,20 +48,20 @@ const UploadForm = ({
     console.log(uploadedImage);
     if (!uploadedImage?.publicId) return;
     try {
-      const response = await fetch("/api/delete", {
-        method: "POST",
+      const response = await fetch('/api/delete', {
+        method: 'POST',
         body: JSON.stringify({ publicId: uploadedImage.publicId }),
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
       });
 
-      if (!response.ok) throw new Error("Delete failed");
+      if (!response.ok) throw new Error('Delete failed');
       const result = await response.json();
       // alert(result.message);
       setUploadedImage(null);
     } catch (error) {
-      console.error("Delete error:", error);
+      console.error('Delete error:', error);
     }
   };
 
@@ -73,27 +71,19 @@ const UploadForm = ({
 
       {!newPublicId ? (
         <>
-          <span className="text-sm text-red-500">
-            Nhập mã sản phẩm để upload hình
-          </span>
+          <span className="text-sm text-red-500">Nhập mã sản phẩm để upload hình</span>
         </>
       ) : (
         <input
           type="file"
           accept="image/*"
-          onChange={(e) => e.target.files && handleUpload(e.target.files[0])}
+          onChange={e => e.target.files && handleUpload(e.target.files[0])}
         />
       )}
 
       <Loading loading={loading} />
       {uploadedImage && (
-        <Image
-          src={uploadedImage.url}
-          alt="Uploaded"
-          width={640}
-          height={160}
-          priority
-        />
+        <Image src={uploadedImage.url} alt="Uploaded" width={640} height={160} priority />
       )}
     </div>
   );

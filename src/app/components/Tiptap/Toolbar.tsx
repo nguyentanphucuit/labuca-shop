@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback } from 'react';
 import {
   Bold,
   Strikethrough,
@@ -12,94 +12,94 @@ import {
   Redo,
   Code,
   ImagePlus,
-} from "lucide-react";
-import { ToolbarProps } from "../../types/common";
+} from 'lucide-react';
+import { ToolbarProps } from '../../types/common';
 
 const Toolbar = ({ editor }: ToolbarProps) => {
   const addImage = useCallback(() => {
-    const url = window.prompt("URL") || "";
+    const url = window.prompt('URL') || '';
     editor?.chain().focus().setImage({ src: url }).run();
   }, [editor]);
   if (!editor) return null;
 
   const listToolbar = [
     {
-      name: "bold",
+      name: 'bold',
       icon: <Bold className="w-5 h-5" />,
       handleClick: () => editor.chain().focus().toggleBold().run(),
     },
     {
-      name: "italic",
+      name: 'italic',
       icon: <Italic className="w-5 h-5" />,
       handleClick: () => {
         editor.chain().focus().toggleItalic().run();
       },
     },
     {
-      name: "underline",
+      name: 'underline',
       icon: <Underline className="w-5 h-5" />,
       handleClick: () => {
         editor.chain().focus().toggleUnderline().run();
       },
     },
     {
-      name: "strikethrough",
+      name: 'strikethrough',
       icon: <Strikethrough className="w-5 h-5" />,
       handleClick: () => {
         editor.chain().focus().toggleStrike().run();
       },
     },
     {
-      name: "heading",
+      name: 'heading',
       icon: <Heading2 className="w-5 h-5" />,
       handleClick: () => {
         editor.chain().focus().toggleHeading({ level: 2 }).run();
       },
     },
     {
-      name: "list",
+      name: 'list',
       icon: <List className="w-5 h-5" />,
       handleClick: () => {
         editor.chain().focus().toggleBulletList().run();
       },
     },
     {
-      name: "list-ordered",
+      name: 'list-ordered',
       icon: <ListOrdered className="w-5 h-5" />,
       handleClick: () => {
         editor.chain().focus().toggleOrderedList().run();
       },
     },
     {
-      name: "blockquote",
+      name: 'blockquote',
       icon: <Quote className="w-5 h-5" />,
       handleClick: () => {
         editor.chain().focus().toggleBlockquote().run();
       },
     },
     {
-      name: "code",
+      name: 'code',
       icon: <Code className="w-5 h-5" />,
       handleClick: () => {
         editor.chain().focus().toggleCode().run();
       },
     },
     {
-      name: "undo",
+      name: 'undo',
       icon: <Undo className="w-5 h-5" />,
       handleClick: () => {
         editor.chain().focus().undo().run();
       },
     },
     {
-      name: "redo",
+      name: 'redo',
       icon: <Redo className="w-5 h-5" />,
       handleClick: () => {
         editor.chain().focus().redo().run();
       },
     },
     {
-      name: "image",
+      name: 'image',
       icon: <ImagePlus className="w-5 h-5" />,
       handleClick: addImage,
     },
@@ -107,21 +107,19 @@ const Toolbar = ({ editor }: ToolbarProps) => {
   return (
     <div className="px-4 py-3 rounded-tl-md rounded-tr-md flex justify-between items-start gap-5 w-full flex-wrap border border-gray-700">
       <div className="flex justify-start items-center gap-5 w-full lg:w-10/20 flex-wrap">
-        {listToolbar.map((item) => (
+        {listToolbar.map(item => (
           <button
             key={item.name}
-            onClick={(e) => {
+            onClick={e => {
               e.preventDefault();
               item.handleClick();
             }}
             className={
-              editor.isActive(
-                item.name,
-                item.name === "heading" && { level: 2 }
-              )
-                ? "bg-sky-700 text-white p-2 rounded-lg"
-                : "text-sky-400"
-            }>
+              editor.isActive(item.name, item.name === 'heading' && { level: 2 })
+                ? 'bg-sky-700 text-white p-2 rounded-lg'
+                : 'text-sky-400'
+            }
+          >
             {item.icon}
           </button>
         ))}

@@ -1,5 +1,5 @@
-import { NextResponse } from "next/server";
-import { v2 as cloudinary } from "cloudinary";
+import { NextResponse } from 'next/server';
+import { v2 as cloudinary } from 'cloudinary';
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -10,23 +10,17 @@ cloudinary.config({
 export async function DELETE(req: Request) {
   try {
     const { public_id } = await req.json();
-    console.log("Delete request received:", public_id);
+    console.log('Delete request received:', public_id);
 
     if (!public_id) {
-      return NextResponse.json(
-        { error: "public_id is required" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'public_id is required' }, { status: 400 });
     }
 
     const result = await cloudinary.uploader.destroy(`labuca/${public_id}`);
 
-    return NextResponse.json({ message: "Image deleted", result });
+    return NextResponse.json({ message: 'Image deleted', result });
   } catch (error) {
-    console.error("Error deleting image:", error);
-    return NextResponse.json(
-      { error: "Failed to delete image" },
-      { status: 500 }
-    );
+    console.error('Error deleting image:', error);
+    return NextResponse.json({ error: 'Failed to delete image' }, { status: 500 });
   }
 }

@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination, Autoplay } from "swiper/modules";
-import "swiper/css";
-import "swiper/css/navigation";
-import { useEffect, useState } from "react";
-import { FOLDER_IMAGE } from "../constants";
-import Image from "next/image";
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation, Pagination, Autoplay } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import { useEffect, useState } from 'react';
+import { FOLDER_IMAGE } from '../constants';
+import Image from 'next/image';
 
 const Carousel = () => {
   const [images, setImages] = useState<string[]>([]);
@@ -20,14 +20,14 @@ const Carousel = () => {
         if (response.ok) {
           setImages(
             data
-              .filter((img: any) => img.secure_url.includes("LabucaBanner_"))
+              .filter((img: any) => img.secure_url.includes('LabucaBanner_'))
               .map((img: any) => img.secure_url)
           );
         } else {
-          console.error("Error:", data.error);
+          console.error('Error:', data.error);
         }
       } catch (error) {
-        console.error("Fetch error:", error);
+        console.error('Fetch error:', error);
       } finally {
       }
     };
@@ -48,7 +48,8 @@ const Carousel = () => {
           scrollbar={{ draggable: true }}
           autoplay={{ delay: 4000 }}
           loop
-          className="rounded-xl overflow-cover">
+          className="rounded-xl overflow-cover"
+        >
           {images.map((src, index) => (
             <SwiperSlide key={index}>
               <Image
@@ -56,7 +57,7 @@ const Carousel = () => {
                 alt={src}
                 width={500}
                 height={300}
-                style={{ width: "100vw", height: "35vw" }}
+                style={{ width: '100vw', height: '35vw' }}
                 unoptimized
               />
             </SwiperSlide>

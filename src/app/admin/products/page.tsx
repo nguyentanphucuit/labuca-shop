@@ -1,16 +1,16 @@
-"use client";
-import ImageUploader from "@/app/components/ImageUploader";
-import { emptyProduct } from "@/app/constants";
-import CreateModal from "@/app/modal/product/CreateModal";
-import DeleteModal from "@/app/modal/product/DeleteModal";
-import EditModal from "@/app/modal/product/EditModal";
-import { ProductTypes } from "@/app/types/common";
-import db from "@/app/utils/firestore";
-import { collection, getDocs } from "@firebase/firestore";
-import { Pencil, Trash2 } from "lucide-react";
-import Image from "next/image";
-import React, { useEffect, useState } from "react";
-import { ToastContainer } from "react-toastify";
+'use client';
+import ImageUploader from '@/app/components/ImageUploader';
+import { emptyProduct } from '@/app/constants';
+import CreateModal from '@/app/modal/product/CreateModal';
+import DeleteModal from '@/app/modal/product/DeleteModal';
+import EditModal from '@/app/modal/product/EditModal';
+import { ProductTypes } from '@/app/types/common';
+import db from '@/app/utils/firestore';
+import { collection, getDocs } from '@firebase/firestore';
+import { Pencil, Trash2 } from 'lucide-react';
+import Image from 'next/image';
+import React, { useEffect, useState } from 'react';
+import { ToastContainer } from 'react-toastify';
 
 const ProductAdminPage = () => {
   const [productList, setProductList] = useState<ProductTypes[]>([]);
@@ -23,20 +23,20 @@ const ProductAdminPage = () => {
   const onEditProduct = (product: ProductTypes) => {
     setShowEditModal(!showEditModal);
     setProductCurrent(product);
-    console.log("Edit Product");
+    console.log('Edit Product');
   };
 
   const onDeleteProduct = (product: ProductTypes) => {
     setShowDeleteModal(!showDeleteModal);
     setProductCurrent(product);
-    console.log("Delete Product");
+    console.log('Delete Product');
   };
 
   useEffect(() => {
     const fetchItems = async () => {
-      const querySnapshot = await getDocs(collection(db, "products"));
+      const querySnapshot = await getDocs(collection(db, 'products'));
       setProductList(
-        querySnapshot.docs.map((doc) => {
+        querySnapshot.docs.map(doc => {
           const data = doc.data();
           return {
             id: doc.id,
@@ -88,7 +88,7 @@ const ProductAdminPage = () => {
           </tr>
         </thead>
         <tbody>
-          {productList.map((product) => (
+          {productList.map(product => (
             <tr className="border border-gray-400" key={product.id}>
               <td className="p-4">
                 <div className="flex justify-center items-center">
@@ -102,7 +102,8 @@ const ProductAdminPage = () => {
                     className=""
                     alt={product.title}
                     width={60}
-                    height={60}></Image>
+                    height={60}
+                  ></Image>
                 </div>
               </td>
               <td className="p-4">
