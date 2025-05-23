@@ -68,7 +68,7 @@ export default function CreateModal() {
       const docRef = await addDoc(collection(db, "products"), {
         ...product,
         content: JSON.stringify(product.content).replaceAll("\\", ""),
-        href: "/product/" + spaceToSlash(removeVietnameseTones(product.title)),
+        href: "/products/" + spaceToSlash(removeVietnameseTones(product.title)),
         date: date,
         typeValue: selected?.value,
         typeLabel: selected?.label,

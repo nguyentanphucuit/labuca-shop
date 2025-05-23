@@ -118,7 +118,7 @@ const Navbar = () => {
           </div>
 
           {/* Right section - can be used for cart, account, etc */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 md:px-6 lg:px-12">
             <button
               type="button"
               className="rounded-full bg-gray-100 p-2 text-gray-700 hover:text-gray-900">
@@ -171,18 +171,28 @@ const Dropdown = (props: DropdownProps) => {
         props.current
           ? "text-black font-semibold after:block after:content-[''] after:absolute after:h-[3px] after:bg-black after:w-[calc(100%-24px)] after:scale-x-100 after:bottom-0 after:left-[12px]"
           : "text-gray-600 hover:text-black relative after:block after:content-[''] after:absolute after:h-[3px] after:bg-black after:w-[calc(100%-24px)] after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300 after:origin-left after:bottom-0 after:left-[12px]",
-        "px-3 py-2 text-sm font-medium relative"
+        "px-3 py-2 text-sm font-medium relative inline-flex items-center gap-1 outline-none"
       )}>
         {props.name}
+        <svg 
+          className="w-4 h-4 ml-0.5 transition-transform duration-200 ease-in-out group-data-[state=open]:rotate-180" 
+          fill="none" 
+          viewBox="0 0 24 24" 
+          stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+        </svg>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="bg-white border rounded-md shadow-lg mt-2 min-w-[160px]">
+      <DropdownMenuContent 
+        className="bg-white border border-gray-100 rounded-lg shadow-lg mt-1 min-w-[200px] p-1 animate-in fade-in-0 zoom-in-95"
+        align="start"
+        sideOffset={8}>
         {props.listDropdown.map((item) => (
           <DropdownMenuItem
             key={item.value}
             className="focus:outline-none">
             <Link
               href={item.href}
-              className="block w-full px-4 py-2 text-sm text-gray-600 hover:text-black hover:bg-gray-50 transition-colors duration-200">
+              className="block w-full px-4 py-2.5 text-sm text-gray-600 hover:text-black rounded-md hover:bg-gray-50 transition-all duration-200 font-medium">
               {item.label}
             </Link>
           </DropdownMenuItem>

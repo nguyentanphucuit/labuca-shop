@@ -90,7 +90,7 @@ export default function EditModal({
       await setDoc(productRef, {
         ...product,
         content: JSON.stringify(product.content).replaceAll("\\", ""),
-        href: "/product/" + spaceToSlash(removeVietnameseTones(product.title)),
+        href: "/products/" + spaceToSlash(removeVietnameseTones(product.title)),
         date: date,
         typeValue: selected?.value,
         typeLabel: selected?.label,
