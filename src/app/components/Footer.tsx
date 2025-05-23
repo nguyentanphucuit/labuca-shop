@@ -1,116 +1,175 @@
 // import ExportedImage from "next-image-export-optimizer";
 import React from "react";
-// import logo from "/public/assets/img/labuca-logo.png";
+import Image from "next/image";
+import Link from "next/link";
+import { Video, MapPin, Phone, Mail, ArrowRight, Facebook, Instagram, Store, MessageCircle } from "lucide-react";
+import logo from "/public/assets/img/labuca-logo.png";
 const contactInfo = [
   {
     name: "Địa chỉ",
     link: "152 Lý Thường Kiệt, P. Thành Công, Tp. Buôn Ma Thuột, tỉnh Đắk Lắk",
     href: "https://maps.app.goo.gl/KjnnaNFcaqDcQWDa7",
+    icon: MapPin,
   },
   {
     name: "Số điện thoại",
     link: "0905 075 588",
     href: "https://zalo.me/0905075588",
+    icon: Phone,
   },
 ];
-const contactInfo1 = [
+
+const socialLinks = [
   {
-    name: "facebook",
+    name: "Facebook",
     link: "https://www.facebook.com/profile.php?id=100063755854074&mibextid=LQQJ4d",
+    icon: Facebook,
   },
   {
-    name: "shopee",
+    name: "Shopee",
     link: "https://shopee.vn/labuca_bmt",
+    icon: Store,
   },
   {
-    name: "tiktok",
+    name: "TikTok",
     link: "https://www.tiktok.com/@labuca7979",
+    icon: Video,
   },
   {
-    name: "zalo",
+    name: "Zalo",
     link: "https://zalo.me/0905075588",
+    icon: MessageCircle,
   },
 ];
 
 const Footer = () => {
   return (
-    <footer className=" bottom-0 left-0 right-0 bg-white dark:bg-gray-900">
-      <div className="mx-auto w-full max-w-screen-xl p-4 py-6 lg:py-8">
-        <div className="md:flex md:justify-between">
-          <div className="mb-6 md:mb-0">
-            {/* <a href="https://flowbite.com/" className="flex items-center">
-                <img src="https://flowbite.com/docs/images/logo.svg" className="h-8 me-3" alt="FlowBite Logo" />
-                <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Flowbite</span>
-            </a> */}
-            {/* <ExportedImage
-              className="h-12 w-24"
-              alt="labuca button"
-              src={logo}></ExportedImage> */}
+    <footer className="footer bg-white border-t">
+      <div className="mx-auto max-w-screen-xl px-4 pb-6 pt-16 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+          {/* Brand Section */}
+          <div className="">
+            <div className="flex items-center">
+              <Image
+                src={logo}
+                alt="Labuca Logo"
+                width={120}
+                height={40}
+                className="object-contain"
+              />
+            </div>
+
+            <p className="mt-6 max-w-md text-center leading-relaxed text-gray-600 sm:max-w-xs sm:text-left">
+              Chuyên cung cấp các sản phẩm giày dép chất lượng cao với giá cả hợp lý.
+            </p>
+
+            <ul className="mt-8 flex justify-center gap-6 sm:justify-start md:gap-8">
+              {socialLinks.map((social) => (
+                <li key={social.name}>
+                  <Link
+                    href={social.link}
+                    rel="noreferrer"
+                    target="_blank"
+                    className="text-gray-700 transition hover:text-gray-700/75"
+                  >
+                    <span className="sr-only">{social.name}</span>
+                    <social.icon className="h-6 w-6" />
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </div>
-          <div className="grid grid-cols-2 gap-8 sm:gap-6 sm:grid-cols-4">
-            <div>
-              <h2 className="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">
-                Thông tin liên hệ
-              </h2>
-              <ul className="text-gray-500 dark:text-gray-400 font-medium">
-                {contactInfo.map((item, index) => (
-                  <li key={index} className="mb-4">
+
+          {/* Links Section */}
+          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:col-span-2">
+            <div className="text-center sm:text-left">
+              <p className="text-lg font-medium text-gray-900">Liên Hệ</p>
+              <ul className="mt-8 space-y-4 text-sm">
+                {contactInfo.map((item) => (
+                  <li key={item.name}>
                     <a
-                      target="_blank"
+                      className="flex items-center justify-center gap-1.5 sm:justify-start"
                       href={item.href}
-                      className="hover:underline">
-                      {item.name} : {item.link}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      <div className="flex flex-row items-center gap-4">
+                        <div className="flex items-center justify-center w-6 h-6">
+                            <item.icon className="text-gray-900" />
+                        </div>
+                        <span className="text-gray-700">{item.link}</span>
+                      </div>                      
                     </a>
                   </li>
                 ))}
               </ul>
             </div>
 
-            <div>
-              <h2 className="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">
-                Thông tin về chúng tôi
-              </h2>
-              <ul className="text-gray-500 dark:text-gray-400 font-medium">
-                {contactInfo1.map((item, index) => (
-                  <li key={index} className="mb-4 capitalize">
-                    <a
-                      target="_blank"
-                      href={item.link}
-                      className="hover:underline">
-                      {item.name}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div>
-              <h2 className="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">
-                Chính sách
-              </h2>
-              <ul className="text-gray-500 dark:text-gray-400 font-medium">
-                <li className="mb-4">
-                  <a href="/policy" className="hover:underline">
+            <div className="text-center sm:text-left">
+              <p className="text-lg font-medium text-gray-900">Chính Sách</p>
+              <ul className="mt-8 space-y-4 text-sm">
+                <li>
+                  <Link href="/policy" className="text-gray-700 transition hover:text-gray-700/75">
                     Chính sách bảo mật
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="/policy" className="hover:underline">
+                  <Link href="/policy" className="text-gray-700 transition hover:text-gray-700/75">
                     Điều khoản & Điều kiện
-                  </a>
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/policy" className="text-gray-700 transition hover:text-gray-700/75">
+                    Chính sách đổi trả
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/policy" className="text-gray-700 transition hover:text-gray-700/75">
+                    Chính sách vận chuyển
+                  </Link>
                 </li>
               </ul>
+            </div>
+
+            <div className="text-center sm:text-left">
+              <p className="text-lg font-medium text-gray-900">Đăng Ký</p>
+              <div className="mx-auto mt-8 max-w-md sm:ms-0">
+                <p className="text-sm leading-relaxed text-gray-500">
+                  Đăng ký để nhận thông tin về sản phẩm mới và khuyến mãi
+                </p>
+
+                <form className="mt-4">
+                  <div className="flex flex-col gap-4 sm:flex-row">
+                    <input
+                      type="email"
+                      placeholder="Nhập email của bạn"
+                      className="w-full rounded-md border-gray-200 px-3 py-2 text-sm"
+                    />
+
+                    <button
+                      type="submit"
+                      className="block rounded bg-black px-6 py-2 text-sm font-medium text-white transition hover:bg-gray-800"
+                    >
+                      <ArrowRight className="h-6 w-6" />
+                    </button>
+                  </div>
+                </form>
+              </div>
             </div>
           </div>
         </div>
-        <hr className="my-6 border-gray-200 sm:mx-auto dark:border-gray-700 lg:my-8" />
-        <div className="sm:flex sm:items-center sm:justify-between">
-          <span className="text-sm text-gray-500 sm:text-center dark:text-gray-400">
-            © 2025{" "}
-            <a href="https://labuca.vn" className="hover:underline">
-              Labuca
-            </a>
-            . All Rights Reserved.
-          </span>
+
+        <div className="mt-12 border-t border-gray-100 pt-6">
+          <div className="text-center sm:flex sm:justify-between sm:text-left">
+            <p className="text-sm text-gray-500">
+              <span className="block sm:inline">© 2025 Labuca. </span>
+              <span className="inline-block">Copy right by Labuca</span>
+            </p>
+
+            <p className="mt-4 text-sm text-gray-500 sm:order-first sm:mt-0">
+              Thiết kế và phát triển bởi Labuca Team
+            </p>
+          </div>
         </div>
       </div>
     </footer>

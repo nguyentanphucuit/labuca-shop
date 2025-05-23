@@ -42,42 +42,38 @@ const Navbar = () => {
     setOpen(!open);
   };
   return (
-    <nav className="bg-white-500">
-      <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
-        <div className="relative flex h-16 items-center justify-between">
-          <div className=" inset-y-0 left-0 flex items-center sm:hidden">
+    <nav className="bg-white border-b">
+      <div className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
+        <div className="relative flex h-20 items-center justify-between">
+          {/* Mobile menu button */}
+          <div className="flex items-center sm:hidden">
             <button
               type="button"
-              className="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+              className="relative inline-flex items-center justify-center rounded-md p-2 text-gray-700 hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-black"
               aria-controls="mobile-menu"
               onClick={() => openMainMenu()}
               aria-expanded="false">
-              <span className="absolute -inset-0.5"></span>
               <span className="sr-only">Open main menu</span>
-
               <svg
-                className="block h-6 w-6"
+                className={`${open ? 'hidden' : 'block'} h-6 w-6`}
                 fill="none"
                 viewBox="0 0 24 24"
                 strokeWidth="1.5"
                 stroke="currentColor"
-                aria-hidden="true"
-                data-slot="icon">
+                aria-hidden="true">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
                 />
               </svg>
-
               <svg
-                className="hidden h-6 w-6"
+                className={`${open ? 'block' : 'hidden'} h-6 w-6`}
                 fill="none"
                 viewBox="0 0 24 24"
                 strokeWidth="1.5"
                 stroke="currentColor"
-                aria-hidden="true"
-                data-slot="icon">
+                aria-hidden="true">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -86,12 +82,16 @@ const Navbar = () => {
               </svg>
             </button>
           </div>
-          <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
+
+          {/* Logo */}
+          <div className="flex flex-1 items-center justify-between sm:items-stretch">
             <div className="flex shrink-0 items-center">
               <Link href="/" className="flex items-center">
-                <Image className="h-8 w-40" alt="labuca logo" src={logo} />
+                <Image className="h-8 w-40 object-contain" alt="labuca logo" src={logo} />
               </Link>
             </div>
+
+            {/* Desktop menu */}
             <div className="hidden sm:ml-6 sm:block">
               <div className="flex space-x-4">
                 {navigation.map((item) =>
@@ -105,9 +105,9 @@ const Navbar = () => {
                       aria-current={item.current ? "page" : undefined}
                       className={classNames(
                         item.current
-                          ? "bg-gray-400 text-white"
-                          : "bg-gray-500 text-gray-200 hover:bg-gray-700 hover:text-white",
-                        "font-medium rounded-lg text-sm px-3 py-2.5 text-center inline-flex items-center"
+                          ? "text-black font-semibold after:block after:content-[''] after:absolute after:h-[3px] after:bg-black after:w-[calc(100%-24px)] after:scale-x-100 after:bottom-0 after:left-[12px]"
+                          : "text-gray-600 hover:text-black relative after:block after:content-[''] after:absolute after:h-[3px] after:bg-black after:w-[calc(100%-24px)] after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300 after:origin-left after:bottom-0 after:left-[12px]",
+                        "px-3 py-2 text-sm font-medium relative"
                       )}>
                       {item.name}
                     </Link>
@@ -116,27 +116,33 @@ const Navbar = () => {
               </div>
             </div>
           </div>
-          <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-            <div className="relative ml-3">
-              <div>
-                <button
-                  type="button"
-                  className="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
-                  id="user-menu-button"
-                  aria-expanded="false"
-                  aria-haspopup="true">
-                  <span className="absolute -inset-1.5"></span>
-                  <span className="sr-only">Open user menu</span>
-                  {/* <img className="h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt=""> */}
-                </button>
-              </div>
-            </div>
+
+          {/* Right section - can be used for cart, account, etc */}
+          <div className="flex items-center gap-4">
+            <button
+              type="button"
+              className="rounded-full bg-gray-100 p-2 text-gray-700 hover:text-gray-900">
+              <span className="sr-only">View notifications</span>
+              <svg
+                className="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth="1.5"
+                stroke="currentColor">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"
+                />
+              </svg>
+            </button>
           </div>
         </div>
       </div>
 
-      <div className={open ? "sm:hidden + block" : "hidden"} id="mobile-menu">
-        <div className="space-y-1 px-2 pb-3 pt-2">
+      {/* Mobile menu */}
+      <div className={open ? "sm:hidden" : "hidden"} id="mobile-menu">
+        <div className="space-y-1 px-4 pb-3 pt-2">
           {navigation.map((item) => (
             <Link
               key={item.name}
@@ -145,9 +151,9 @@ const Navbar = () => {
               aria-current={item.current ? "page" : undefined}
               className={classNames(
                 item.current
-                  ? "text-white bg-gray-900"
-                  : "text-gray-600 hover:bg-gray-700 hover:text-white",
-                "block font-medium rounded-lg text-sm px-3 py-2.5"
+                  ? "text-black font-semibold"
+                  : "text-gray-700 hover:text-black",
+                "block px-3 py-2 text-base font-medium rounded-md"
               )}>
               {item.name}
             </Link>
@@ -159,28 +165,30 @@ const Navbar = () => {
 };
 
 const Dropdown = (props: DropdownProps) => {
-  const [openDropdown, setOpenDropdown] = React.useState(false);
   return (
-    <div>
-      <DropdownMenu>
-        <DropdownMenuTrigger className="block font-medium rounded-lg text-sm px-3 py-2.5 bg-gray-500 text-gray-200 hover:bg-gray-700 hover:text-white">
-          {props.name}
-        </DropdownMenuTrigger>
-        <DropdownMenuContent className="bg-gray-500">
-          {props.listDropdown.map((item) => (
-            <DropdownMenuItem
-              key={item.value}
-              className="text-gray-200 bg-gray-500">
-              <Link
-                href={item.href}
-                className="block font-medium rounded-lg text-sm px-3 py-2.5">
-                {item.label}
-              </Link>
-            </DropdownMenuItem>
-          ))}
-        </DropdownMenuContent>
-      </DropdownMenu>
-    </div>
+    <DropdownMenu>
+      <DropdownMenuTrigger className={classNames(
+        props.current
+          ? "text-black font-semibold after:block after:content-[''] after:absolute after:h-[3px] after:bg-black after:w-[calc(100%-24px)] after:scale-x-100 after:bottom-0 after:left-[12px]"
+          : "text-gray-600 hover:text-black relative after:block after:content-[''] after:absolute after:h-[3px] after:bg-black after:w-[calc(100%-24px)] after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300 after:origin-left after:bottom-0 after:left-[12px]",
+        "px-3 py-2 text-sm font-medium relative"
+      )}>
+        {props.name}
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="bg-white border rounded-md shadow-lg mt-2 min-w-[160px]">
+        {props.listDropdown.map((item) => (
+          <DropdownMenuItem
+            key={item.value}
+            className="focus:outline-none">
+            <Link
+              href={item.href}
+              className="block w-full px-4 py-2 text-sm text-gray-600 hover:text-black hover:bg-gray-50 transition-colors duration-200">
+              {item.label}
+            </Link>
+          </DropdownMenuItem>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 };
 
