@@ -23,22 +23,22 @@ const socialLinks = [
   {
     name: "Facebook",
     link: "https://www.facebook.com/profile.php?id=100063755854074&mibextid=LQQJ4d",
-    icon: Facebook,
+    img: '/assets/img/facebook-icon.png',
   },
   {
     name: "Shopee",
     link: "https://shopee.vn/labuca_bmt",
-    icon: Store,
+    img: '/assets/img/shopee.png',
   },
   {
     name: "TikTok",
     link: "https://www.tiktok.com/@labuca7979",
-    icon: Video,
+    img: '/assets/img/tiktok.svg',
   },
   {
     name: "Zalo",
     link: "https://zalo.me/0905075588",
-    icon: MessageCircle,
+    img: '/assets/img/zalo.png',
   },
 ];
 
@@ -73,7 +73,7 @@ const Footer = () => {
                     className="text-gray-700 transition hover:text-gray-700/75"
                   >
                     <span className="sr-only">{social.name}</span>
-                    <social.icon className="h-6 w-6" />
+                    <Image src={social.img} width={48} height={48} alt={social.name} />
                   </Link>
                 </li>
               ))}
