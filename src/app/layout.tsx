@@ -32,7 +32,6 @@ export default function RootLayout({
   return (
     <html lang="en">
       <Header />
-
       <body className={classNames(styles.main, inter.className)}>
         <GoogleTagManager gtmId="GTM-5CXDKNWS" />
         <CartProvider>
