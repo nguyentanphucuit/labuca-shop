@@ -5,7 +5,7 @@ import Link from "next/link";
 export default function ZaloSpeedDial() {
   return (
     <Link
-      href="https://zalo.me/0909090909"
+      href="https://zalo.me/0905075588"
       className="flex items-center gap-3 px-4 py-2.5 rounded-full
         bg-blue-500/10 hover:bg-blue-500/20
         transition-all duration-200
