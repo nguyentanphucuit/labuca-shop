@@ -1,15 +1,19 @@
 "use client";
 
+import { getAuth, onAuthStateChanged, User } from "firebase/auth";
 import { ShoppingBag } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { formatPriceVND } from "../constants/common";
 import { useCart } from "../context/CartContext";
+import app from "../utils/firebaseConfig";
 
 export default function CheckoutPage() {
   const router = useRouter();
   const { items, clearCart } = useCart();
+  const [user, setUser] = useState<User | null>(null);
+  const [authLoading, setAuthLoading] = useState(true);
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -21,9 +25,68 @@ export default function CheckoutPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Check if cart is empty
+  const auth = getAuth(app);
 
-  // If cart is empty, show loading or redirect
+  // Function to extract name from email
+  const extractNameFromEmail = (email: string): string => {
+    if (!email) return "";
+
+    // Get the part before @ symbol
+    const localPart = email.split("@")[0];
+
+    // Replace dots, underscores, and hyphens with spaces
+    const nameWithSpaces = localPart.replace(/[._-]/g, " ");
+
+    // Capitalize first letter of each word
+    const capitalizedName = nameWithSpaces
+      .split(" ")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join(" ");
+
+    return capitalizedName;
+  };
+
+  // Check authentication status
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      if (currentUser) {
+        setUser(currentUser);
+
+        // Auto-fill email and name from authenticated user
+        const nameFromAccount = currentUser.displayName;
+        const nameFromEmail = extractNameFromEmail(currentUser.email || "");
+
+        setFormData((prev) => ({
+          ...prev,
+          email: currentUser.email || "",
+          fullName: nameFromAccount || nameFromEmail || prev.fullName,
+        }));
+      } else {
+        // Redirect to login if not authenticated
+        router.push("/login");
+      }
+      setAuthLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, [auth, router]);
+
+  // Show loading while checking authentication
+  if (authLoading) {
+    return (
+      <div className="max-w-7xl mx-auto px-4 py-16 text-center">
+        <div className="animate-pulse">
+          <div className="h-8 bg-gray-300 rounded w-64 mx-auto mb-8"></div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="bg-gray-200 rounded-lg h-96"></div>
+            <div className="bg-gray-200 rounded-lg h-96"></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Check if cart is empty
   if (items.length === 0) {
     return (
       <div className="max-w-7xl mx-auto px-4 py-16 text-center">
@@ -183,6 +246,12 @@ export default function CheckoutPage() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
+
+    // Prevent email changes when user is logged in
+    if (name === "email" && user) {
+      return;
+    }
+
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
@@ -255,6 +324,11 @@ export default function CheckoutPage() {
               <div>
                 <label htmlFor="fullName" className="block text-sm font-medium text-gray-700">
                   Họ và tên
+                  {user && (
+                    <span className="text-xs text-blue-600 ml-2">
+                      {user.displayName ? "(Từ tài khoản đã đăng nhập)" : "(Từ email đã đăng nhập)"}
+                    </span>
+                  )}
                 </label>
                 <input
                   type="text"
@@ -265,11 +339,19 @@ export default function CheckoutPage() {
                   onChange={handleChange}
                   className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 focus:border-black focus:outline-none focus:ring-1 focus:ring-black"
                 />
+                {user && !user.displayName && (
+                  <p className="mt-1 text-xs text-gray-500">
+                    Tên được tự động tạo từ email. Bạn có thể chỉnh sửa nếu cần.
+                  </p>
+                )}
               </div>
 
               <div>
                 <label htmlFor="email" className="block text-sm font-medium text-gray-700">
                   Email
+                  {user && (
+                    <span className="text-xs text-green-600 ml-2">(Từ tài khoản đã đăng nhập)</span>
+                  )}
                 </label>
                 <input
                   type="email"
@@ -278,8 +360,19 @@ export default function CheckoutPage() {
                   required
                   value={formData.email}
                   onChange={handleChange}
-                  className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 focus:border-black focus:outline-none focus:ring-1 focus:ring-black"
+                  readOnly={!!user}
+                  className={`mt-1 block w-full rounded-md border px-3 py-2 focus:outline-none focus:ring-1 ${
+                    user
+                      ? "border-gray-200 bg-gray-50 text-gray-600 cursor-not-allowed"
+                      : "border-gray-300 focus:border-black focus:ring-black"
+                  }`}
+                  placeholder={user ? "Email từ tài khoản đã đăng nhập" : "Nhập email của bạn"}
                 />
+                {user && (
+                  <p className="mt-1 text-xs text-gray-500">
+                    Email được lấy từ tài khoản đã đăng nhập và không thể thay đổi
+                  </p>
+                )}
               </div>
             </div>
 
