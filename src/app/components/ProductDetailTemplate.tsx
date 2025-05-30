@@ -11,11 +11,11 @@ const ProductDetailTemplate = ({ ...props }: ProductTypes) => {
 
   // Define a set of realistic t-shirt colors
   const availableColors = [
-    { name: "Olive", value: "#556B2F" },
-    { name: "Navy", value: "#000080" },
-    { name: "Black", value: "#000000" },
-    { name: "Gray", value: "#808080" },
-    { name: "White", value: "#FFFFFF" },
+    { name: "Xanh Ô-liu", value: "#556B2F" },
+    { name: "Xanh Navy", value: "#000080" },
+    { name: "Đen", value: "#000000" },
+    { name: "Xám", value: "#808080" },
+    { name: "Trắng", value: "#FFFFFF" },
   ];
 
   const [selectedColor, setSelectedColor] = useState(availableColors[0]);
@@ -99,7 +99,7 @@ const ProductDetailTemplate = ({ ...props }: ProductTypes) => {
                         key={color.name}
                         className={classNames(
                           "px-2 py-1 text-sm font-semibold rounded",
-                          color.name === "White"
+                          color.name === "Trắng"
                             ? "text-gray-900 border border-gray-200"
                             : "text-white"
                         )}

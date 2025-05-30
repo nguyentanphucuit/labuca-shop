@@ -18,8 +18,8 @@ export interface CartItem {
 interface CartContextType {
   items: CartItem[];
   addItem: (item: CartItem) => void;
-  removeItem: (itemId: string) => void;
-  updateQuantity: (itemId: string, quantity: number) => void;
+  removeItem: (itemId: string, color?: string, size?: string) => void;
+  updateQuantity: (itemId: string, quantity: number, color?: string, size?: string) => void;
   clearCart: () => void;
   isCartOpen: boolean;
   setIsCartOpen: (isOpen: boolean) => void;
@@ -63,8 +63,16 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       }
 
       setItems((currentItems) => {
-        // Check if item already exists with same id
-        const existingItemIndex = currentItems.findIndex((item) => item.id === newItem.id);
+        // Create unique key for color/size combination
+        const itemKey = `${newItem.id}-${newItem.color.name}-${newItem.size}`;
+
+        // Check if item already exists with same id, color, and size
+        const existingItemIndex = currentItems.findIndex(
+          (item) =>
+            item.id === newItem.id &&
+            item.color.name === newItem.color.name &&
+            item.size === newItem.size
+        );
 
         if (existingItemIndex > -1) {
           // Update quantity of existing item
@@ -87,13 +95,33 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const removeItem = (itemId: string) => {
-    setItems((currentItems) => currentItems.filter((item) => item.id !== itemId));
+  const removeItem = (itemId: string, color?: string, size?: string) => {
+    setItems((currentItems) =>
+      currentItems.filter((item) => {
+        if (color && size) {
+          // Remove specific variant
+          return !(item.id === itemId && item.color.name === color && item.size === size);
+        } else {
+          // Remove all variants of the product (legacy support)
+          return item.id !== itemId;
+        }
+      })
+    );
   };
 
-  const updateQuantity = (itemId: string, quantity: number) => {
+  const updateQuantity = (itemId: string, quantity: number, color?: string, size?: string) => {
     setItems((currentItems) =>
-      currentItems.map((item) => (item.id === itemId ? { ...item, quantity } : item))
+      currentItems.map((item) => {
+        if (color && size) {
+          // Update specific variant
+          return item.id === itemId && item.color.name === color && item.size === size
+            ? { ...item, quantity }
+            : item;
+        } else {
+          // Update by ID only (legacy support)
+          return item.id === itemId ? { ...item, quantity } : item;
+        }
+      })
     );
   };
 

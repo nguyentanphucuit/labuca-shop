@@ -2,12 +2,14 @@
 import { Minus, Plus, ShoppingBag, X } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { formatPriceVND } from "../constants/common";
 import { useCart } from "../context/CartContext";
 
 export default function Cart() {
   const router = useRouter();
-  const { items, isCartOpen, setIsCartOpen, removeItem, updateQuantity } = useCart();
+  const { items, isCartOpen, setIsCartOpen, removeItem, updateQuantity, clearCart } = useCart();
+  const [showClearConfirm, setShowClearConfirm] = useState(false);
 
   const total = items.reduce((sum, item) => {
     // If price is undefined, use 0 as default
@@ -96,7 +98,12 @@ export default function Cart() {
                               <div className="flex items-center border rounded-lg">
                                 <button
                                   onClick={() =>
-                                    updateQuantity(item.id, Math.max(1, item.quantity - 1))
+                                    updateQuantity(
+                                      item.id,
+                                      Math.max(1, item.quantity - 1),
+                                      item.color.name,
+                                      item.size
+                                    )
                                   }
                                   className="p-2 hover:bg-gray-100"
                                   disabled={item.quantity <= 1}
@@ -105,14 +112,21 @@ export default function Cart() {
                                 </button>
                                 <span className="px-4 py-2">{item.quantity}</span>
                                 <button
-                                  onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                                  onClick={() =>
+                                    updateQuantity(
+                                      item.id,
+                                      item.quantity + 1,
+                                      item.color.name,
+                                      item.size
+                                    )
+                                  }
                                   className="p-2 hover:bg-gray-100"
                                 >
                                   <Plus className="w-4 h-4" />
                                 </button>
                               </div>
                               <button
-                                onClick={() => removeItem(item.id)}
+                                onClick={() => removeItem(item.id, item.color.name, item.size)}
                                 className="text-sm font-medium text-red-600 hover:text-red-500"
                               >
                                 Xóa
@@ -134,6 +148,15 @@ export default function Cart() {
                   <p>Tổng tiền</p>
                   <p>{formatPriceVND(total)}</p>
                 </div>
+
+                {/* Remove All Button */}
+                <button
+                  onClick={() => setShowClearConfirm(true)}
+                  className="w-full mb-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg px-6 py-2 text-sm font-medium transition-colors"
+                >
+                  Xóa tất cả sản phẩm
+                </button>
+
                 <button
                   onClick={() => {
                     setIsCartOpen(false);
@@ -143,6 +166,36 @@ export default function Cart() {
                 >
                   Thanh toán
                 </button>
+              </div>
+            )}
+
+            {/* Clear Cart Confirmation Modal */}
+            {showClearConfirm && (
+              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                <div className="bg-white rounded-xl p-6 max-w-sm w-full mx-4">
+                  <h3 className="text-lg font-semibold mb-2">Xác nhận xóa giỏ hàng</h3>
+                  <p className="text-gray-600 mb-6">
+                    Bạn có chắc chắn muốn xóa tất cả sản phẩm trong giỏ hàng không? Hành động này
+                    không thể hoàn tác.
+                  </p>
+                  <div className="flex gap-3">
+                    <button
+                      onClick={() => setShowClearConfirm(false)}
+                      className="flex-1 px-4 py-2 text-gray-600 hover:text-gray-800 font-medium transition-colors"
+                    >
+                      Hủy
+                    </button>
+                    <button
+                      onClick={() => {
+                        clearCart();
+                        setShowClearConfirm(false);
+                      }}
+                      className="flex-1 px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg transition-colors"
+                    >
+                      Xóa tất cả
+                    </button>
+                  </div>
+                </div>
               </div>
             )}
           </div>
