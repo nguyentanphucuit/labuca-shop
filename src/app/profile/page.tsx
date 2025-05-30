@@ -25,6 +25,7 @@ export default function ProfilePage() {
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [changingPassword, setChangingPassword] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -99,6 +100,60 @@ export default function ProfilePage() {
     setSaving(false);
   };
 
+  const handleImageUpload = async (file: File) => {
+    if (!user) return;
+
+    setUploading(true);
+    setError(null);
+    setSuccess(null);
+
+    try {
+      // Create form data for profile upload stream
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("public_id", `profile_${user.uid}`);
+
+      console.log("Uploading profile image...");
+
+      // Upload using dedicated profile upload API
+      const uploadResponse = await fetch("/api/upload/profile", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!uploadResponse.ok) {
+        const errorData = await uploadResponse.json();
+        throw new Error(errorData.error || "Upload failed");
+      }
+
+      const uploadData = await uploadResponse.json();
+      console.log("Profile upload successful:", uploadData);
+
+      const newPhotoURL = uploadData.url;
+
+      // Update Firebase Auth profile
+      await updateProfile(user, {
+        photoURL: newPhotoURL,
+      });
+
+      // Update Firestore user document
+      await updateDoc(doc(db, "users", user.uid), {
+        photoURL: newPhotoURL,
+        updatedAt: new Date(),
+      });
+
+      setSuccess("Cập nhật ảnh đại diện thành công!");
+
+      // Refresh user data
+      await fetchUserData(user.uid);
+    } catch (error: any) {
+      console.error("Profile upload error:", error);
+      setError("Lỗi cập nhật ảnh đại diện: " + error.message);
+    }
+
+    setUploading(false);
+  };
+
   const handleChangePassword = async () => {
     if (!user) return;
 
@@ -166,6 +221,24 @@ export default function ProfilePage() {
   return (
     <div className="min-h-screen pt-24 pb-8 px-4 bg-gray-50">
       <div className="max-w-4xl mx-auto">
+        {/* Customer Indicator Badge */}
+        <div className="mb-6 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="bg-blue-600 text-white px-4 py-2 rounded-full text-sm font-bold flex items-center gap-2">
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                <path
+                  fillRule="evenodd"
+                  d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                  clipRule="evenodd"
+                />
+              </svg>
+              👤 KHÁCH HÀNG
+            </div>
+            <div className="text-sm text-gray-500">Thông tin cá nhân</div>
+          </div>
+          <div className="text-xs text-gray-400">Quản lý hồ sơ</div>
+        </div>
+
         <div className="bg-white rounded-xl shadow-lg overflow-hidden">
           {/* Header */}
           <div className="bg-gradient-to-r from-indigo-500 to-purple-600 px-8 py-6">
@@ -179,25 +252,48 @@ export default function ProfilePage() {
                       className="w-20 h-20 rounded-full object-cover border-4 border-white shadow-lg"
                     />
                   ) : (
-                    <div className="w-20 h-20 rounded-full bg-white flex items-center justify-center border-4 border-white shadow-lg">
-                      <svg
-                        className="w-10 h-10 text-gray-400"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                        />
-                      </svg>
+                    <div className="w-20 h-20 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center border-4 border-white shadow-lg">
+                      <span className="text-white text-2xl font-bold">
+                        {user.displayName?.charAt(0)?.toUpperCase() ||
+                          user.email?.charAt(0)?.toUpperCase() ||
+                          "U"}
+                      </span>
                     </div>
                   )}
-                  <button className="absolute bottom-0 right-0 bg-white rounded-full p-1.5 shadow-lg hover:bg-gray-50 transition-colors">
-                    <Camera className="w-4 h-4 text-gray-600" />
-                  </button>
+                  <div className="absolute bottom-0 right-0">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) handleImageUpload(file);
+                      }}
+                      className="hidden"
+                      id="profile-upload"
+                      ref={(input) => {
+                        if (input) {
+                          input.onclick = () => {
+                            input.value = ""; // Reset to allow same file selection
+                          };
+                        }
+                      }}
+                    />
+                    <button
+                      onClick={() => {
+                        const input = document.getElementById("profile-upload") as HTMLInputElement;
+                        input?.click();
+                      }}
+                      className="bg-white rounded-full p-1.5 shadow-lg hover:bg-gray-50 transition-colors disabled:opacity-50"
+                      disabled={uploading}
+                      type="button"
+                    >
+                      {uploading ? (
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-600"></div>
+                      ) : (
+                        <Camera className="w-4 h-4 text-gray-600" />
+                      )}
+                    </button>
+                  </div>
                 </div>
                 <div className="text-white">
                   <h1 className="text-2xl font-bold">{user.displayName || "Người dùng"}</h1>
@@ -381,7 +477,7 @@ export default function ProfilePage() {
                     <h3 className="text-sm font-medium text-gray-700 mb-3">Liên kết nhanh</h3>
                     <div className="space-y-2">
                       <button
-                        onClick={() => router.push("/orders")}
+                        onClick={() => router.push("/customers/order")}
                         className="w-full text-left px-4 py-2 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors"
                       >
                         📦 Đơn hàng của tôi

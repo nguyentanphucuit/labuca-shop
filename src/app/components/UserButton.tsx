@@ -8,18 +8,41 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { getAuth, onAuthStateChanged, signOut, User } from "firebase/auth";
+import { doc, getDoc, getFirestore } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
+const db = getFirestore(app);
+
 export default function UserButton() {
   const [user, setUser] = useState<User | null>(null);
+  const [userRole, setUserRole] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
   const auth = getAuth(app);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
+
+      if (currentUser) {
+        // Fetch user role from Firestore
+        try {
+          const userDoc = await getDoc(doc(db, "users", currentUser.uid));
+          if (userDoc.exists()) {
+            const userData = userDoc.data();
+            setUserRole(userData.role || "customer");
+          } else {
+            setUserRole("customer");
+          }
+        } catch (error) {
+          console.error("Error fetching user role:", error);
+          setUserRole("customer");
+        }
+      } else {
+        setUserRole(null);
+      }
+
       setLoading(false);
     });
 
@@ -29,9 +52,17 @@ export default function UserButton() {
   const handleSignOut = async () => {
     try {
       await signOut(auth);
-      router.push("/");
+      router.push("/login");
     } catch (error) {
       console.error("Lỗi đăng xuất:", error);
+    }
+  };
+
+  const handleOrdersClick = () => {
+    if (userRole === "admin") {
+      router.push("/admin/order");
+    } else {
+      router.push("/customers/order");
     }
   };
 
@@ -82,19 +113,13 @@ export default function UserButton() {
         {user.photoURL ? (
           <img src={user.photoURL} alt="Avatar" className="h-6 w-6 rounded-full object-cover" />
         ) : (
-          <svg
-            className="h-6 w-6"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth="1.5"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
-            />
-          </svg>
+          <div className="h-6 w-6 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
+            <span className="text-white text-xs font-bold">
+              {user.displayName?.charAt(0)?.toUpperCase() ||
+                user.email?.charAt(0)?.toUpperCase() ||
+                "U"}
+            </span>
+          </div>
         )}
         {/* Online indicator */}
         <span className="absolute -top-1 -right-1 bg-green-500 w-3 h-3 rounded-full border-2 border-white"></span>
@@ -121,7 +146,7 @@ export default function UserButton() {
 
         <DropdownMenuItem className="focus:outline-none">
           <button
-            onClick={() => router.push("/orders")}
+            onClick={handleOrdersClick}
             className="block w-full text-left px-4 py-2.5 text-sm text-gray-600 hover:text-black rounded-md hover:bg-gray-50 transition-all duration-200"
           >
             Đơn hàng

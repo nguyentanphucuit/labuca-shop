@@ -213,6 +213,24 @@ export default function OrdersPage() {
   return (
     <div className="min-h-screen pt-24 pb-8 px-4 bg-gray-50">
       <div className="max-w-6xl mx-auto">
+        {/* Customer Indicator Badge */}
+        <div className="mb-6 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="bg-blue-600 text-white px-4 py-2 rounded-full text-sm font-bold flex items-center gap-2">
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                <path
+                  fillRule="evenodd"
+                  d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                  clipRule="evenodd"
+                />
+              </svg>
+              👤 KHÁCH HÀNG
+            </div>
+            <div className="text-sm text-gray-500">Khu vực cá nhân</div>
+          </div>
+          <div className="text-xs text-gray-400">Đơn hàng của bạn</div>
+        </div>
+
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center space-x-4">

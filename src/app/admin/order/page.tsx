@@ -1,8 +1,10 @@
 "use client";
 import app from "@/app/utils/firebaseConfig";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import {
   collection,
   doc,
+  getDoc,
   getDocs,
   getFirestore,
   orderBy,
@@ -10,6 +12,7 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { AlertCircle, CheckCircle, Eye, Trash2Icon, X } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const db = getFirestore(app);
@@ -26,6 +29,8 @@ const ORDER_STATUSES = [
 export default function AdminOrderPage() {
   const [orders, setOrders] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [authLoading, setAuthLoading] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<any | null>(null);
   const [notification, setNotification] = useState<{
     type: "success" | "error" | "warning";
@@ -37,21 +42,65 @@ export default function AdminOrderPage() {
     orderId: string;
     orderInfo: string;
   }>({ show: false, orderId: "", orderInfo: "" });
+  const router = useRouter();
+
+  // Check authentication and admin role
+  useEffect(() => {
+    const auth = getAuth(app);
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        // User not logged in, redirect to login
+        router.push("/login");
+        return;
+      }
+
+      try {
+        // Check user role in Firestore
+        const userDoc = await getDoc(doc(db, "users", user.uid));
+        if (userDoc.exists()) {
+          const userData = userDoc.data();
+          // Check if user is admin AND logged in via Google
+          if (userData.role === "admin" && userData.loginMethod === "google") {
+            setIsAdmin(true);
+          } else {
+            // User is not admin or didn't login via Google, redirect to home
+            router.push("/");
+            return;
+          }
+        } else {
+          // User data not found, redirect to home
+          router.push("/");
+          return;
+        }
+      } catch (error) {
+        console.error("Error checking user role:", error);
+        router.push("/login");
+        return;
+      }
+
+      setAuthLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, [router]);
 
   useEffect(() => {
-    async function fetchOrders() {
-      try {
-        const q = query(collection(db, "orders"), orderBy("createdAt", "desc"));
-        const snapshot = await getDocs(q);
-        setOrders(snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
-      } catch (error) {
-        showNotification("error", "Lỗi tải danh sách đơn hàng!");
-      } finally {
-        setLoading(false);
-      }
+    if (!authLoading && isAdmin) {
+      fetchOrders();
     }
-    fetchOrders();
-  }, []);
+  }, [authLoading, isAdmin]);
+
+  async function fetchOrders() {
+    try {
+      const q = query(collection(db, "orders"), orderBy("createdAt", "desc"));
+      const snapshot = await getDocs(q);
+      setOrders(snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
+    } catch (error) {
+      showNotification("error", "Lỗi tải danh sách đơn hàng!");
+    } finally {
+      setLoading(false);
+    }
+  }
 
   const showNotification = (type: "success" | "error" | "warning", message: string) => {
     setNotification({ type, message, show: true });
@@ -119,7 +168,7 @@ export default function AdminOrderPage() {
     );
   };
 
-  if (loading)
+  if (authLoading || loading)
     return (
       <div className="flex items-center justify-center h-64">
         <svg className="animate-spin h-8 w-8 text-indigo-500 mr-3" viewBox="0 0 24 24">
@@ -138,12 +187,37 @@ export default function AdminOrderPage() {
             d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
           />
         </svg>
-        <span className="text-indigo-600 font-medium text-lg">Đang tải đơn hàng...</span>
+        <span className="text-indigo-600 font-medium text-lg">
+          {authLoading ? "Đang xác thực..." : "Đang tải đơn hàng..."}
+        </span>
       </div>
     );
 
+  // Don't render anything if not admin (will be redirected)
+  if (!isAdmin) {
+    return null;
+  }
+
   return (
     <div className="max-w-7xl mx-auto p-8">
+      {/* Admin Indicator Badge */}
+      <div className="mb-6 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="bg-red-600 text-white px-4 py-2 rounded-full text-sm font-bold flex items-center gap-2">
+            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+              <path
+                fillRule="evenodd"
+                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                clipRule="evenodd"
+              />
+            </svg>
+            🔒 QUẢN TRỊ VIÊN
+          </div>
+          <div className="text-sm text-gray-500">Khu vực dành cho admin</div>
+        </div>
+        <div className="text-xs text-gray-400">Trang quản lý đơn hàng</div>
+      </div>
+
       {/* Notification */}
       {notification.show && (
         <div
@@ -221,39 +295,37 @@ export default function AdminOrderPage() {
               orders
                 .filter((order) => order.isShow !== false)
                 .map((order, idx) => (
-                  <>
-                    <tr
-                      key={order.id}
-                      className={`${idx % 2 === 0 ? "bg-white" : "bg-gray-50"} hover:bg-indigo-50 transition-colors`}
-                    >
-                      <td className="px-4 py-3 text-xs text-gray-500 font-mono">
-                        {order.id?.slice(0, 8)}...
-                      </td>
-                      <td className="px-4 py-3 font-semibold capitalize">{order.user?.fullName}</td>
-                      <td className="px-4 py-3 text-right text-indigo-600 font-bold">
-                        {order.total?.toLocaleString()}đ
-                      </td>
-                      <td className="px-4 py-3">{getStatusBadge(order.status || "pending")}</td>
-                      <td className="px-4 py-3 text-center">
-                        <button
-                          onClick={() => setSelectedOrder(order)}
-                          className="p-2 rounded-full hover:bg-indigo-100 transition-colors"
-                        >
-                          <Eye className="w-4 h-4 text-gray-600" />
-                        </button>
-                      </td>
-                      <td className="px-4 py-3 text-center">
-                        <button
-                          onClick={() =>
-                            handleDeleteClick(order.id, order.user?.fullName || "khách hàng")
-                          }
-                          className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-xs transition-colors"
-                        >
-                          <Trash2Icon className="w-4 h-4" />
-                        </button>
-                      </td>
-                    </tr>
-                  </>
+                  <tr
+                    key={order.id}
+                    className={`${idx % 2 === 0 ? "bg-white" : "bg-gray-50"} hover:bg-indigo-50 transition-colors`}
+                  >
+                    <td className="px-4 py-3 text-xs text-gray-500 font-mono">
+                      {order.id?.slice(0, 8)}...
+                    </td>
+                    <td className="px-4 py-3 font-semibold capitalize">{order.user?.fullName}</td>
+                    <td className="px-4 py-3 text-right text-indigo-600 font-bold">
+                      {order.total?.toLocaleString()}đ
+                    </td>
+                    <td className="px-4 py-3">{getStatusBadge(order.status || "pending")}</td>
+                    <td className="px-4 py-3 text-center">
+                      <button
+                        onClick={() => setSelectedOrder(order)}
+                        className="p-2 rounded-full hover:bg-indigo-100 transition-colors"
+                      >
+                        <Eye className="w-4 h-4 text-gray-600" />
+                      </button>
+                    </td>
+                    <td className="px-4 py-3 text-center">
+                      <button
+                        onClick={() =>
+                          handleDeleteClick(order.id, order.user?.fullName || "khách hàng")
+                        }
+                        className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-xs transition-colors"
+                      >
+                        <Trash2Icon className="w-4 h-4" />
+                      </button>
+                    </td>
+                  </tr>
                 ))
             )}
           </tbody>

@@ -37,16 +37,25 @@ export default function LoginPage() {
           email: user.email,
           displayName: user.displayName || "",
           photoURL: user.photoURL || "",
+          loginMethod: "google", // Add login method to distinguish from email
         }),
       });
 
-      // Don't throw error if Firestore save fails - user is still logged in
-      if (!response.ok) {
-        console.warn("Không thể lưu thông tin người dùng vào Firestore");
-      }
+      // Check user role for redirect
+      if (response.ok) {
+        const data = await response.json();
+        const userRole = data.user?.role;
 
-      // Redirect to home page
-      router.push("/");
+        // Redirect based on role
+        if (userRole === "admin") {
+          router.push("/admin/order");
+        } else {
+          router.push("/");
+        }
+      } else {
+        console.warn("Không thể lưu thông tin người dùng vào Firestore");
+        router.push("/");
+      }
     } catch (err: any) {
       setError("Đăng nhập Google thất bại.");
       setLoading(false);
@@ -70,7 +79,7 @@ export default function LoginPage() {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
-      // Call API to update user data in Firestore (in case it doesn't exist)
+      // Call API to update user data in Firestore (always as customer for email/password login)
       const response = await fetch("/api/create-account", {
         method: "POST",
         headers: {
@@ -81,27 +90,36 @@ export default function LoginPage() {
           email: user.email,
           displayName: user.displayName || "",
           photoURL: user.photoURL || "",
+          loginMethod: "email", // Add login method to distinguish from Google
         }),
       });
 
-      // Don't throw error if Firestore save fails - user is still logged in
+      // Always redirect to home page for email/password login
       if (!response.ok) {
         console.warn("Không thể cập nhật thông tin người dùng vào Firestore");
       }
-
-      // Redirect to home page or dashboard
       router.push("/");
     } catch (err: any) {
       if (err.code === "auth/user-not-found") {
-        setError("Tài khoản không tồn tại.");
+        setError(
+          "❌ Tài khoản này không tồn tại. Vui lòng kiểm tra lại email hoặc đăng ký tài khoản mới."
+        );
       } else if (err.code === "auth/wrong-password") {
-        setError("Mật khẩu không đúng.");
+        setError("🔒 Mật khẩu sai! Vui lòng nhập lại mật khẩu chính xác.");
       } else if (err.code === "auth/invalid-email") {
-        setError("Email không hợp lệ.");
+        setError("📧 Định dạng email không hợp lệ. Vui lòng nhập đúng địa chỉ email.");
       } else if (err.code === "auth/too-many-requests") {
-        setError("Quá nhiều lần thử. Vui lòng thử lại sau.");
+        setError("⚠️ Bạn đã thử đăng nhập quá nhiều lần. Vui lòng đợi một lúc rồi thử lại.");
+      } else if (err.code === "auth/user-disabled") {
+        setError("🚫 Tài khoản này đã bị vô hiệu hóa. Vui lòng liên hệ hỗ trợ.");
+      } else if (err.code === "auth/invalid-credential") {
+        setError(
+          "🔐 Thông tin đăng nhập không chính xác. Vui lòng kiểm tra lại email và mật khẩu."
+        );
       } else {
-        setError("Đăng nhập thất bại. Vui lòng thử lại.");
+        setError(
+          "💥 Có lỗi xảy ra trong quá trình đăng nhập. Vui lòng thử lại hoặc liên hệ hỗ trợ."
+        );
       }
     }
     setLoading(false);
