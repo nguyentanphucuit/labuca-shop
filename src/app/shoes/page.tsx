@@ -1,20 +1,19 @@
-'use client';
-import React, { useEffect, useState } from 'react';
-import ListItem from '@/app/components/ListItem';
-import { collection, getDocs } from 'firebase/firestore';
-import db from '@/app/utils/firestore';
-import { ProductTypes } from '@/app/types/common';
-import { emptyProduct } from '@/app/constants';
+"use client";
+import ListItem from "@/app/components/ListItem";
+import { ProductTypes } from "@/app/types/common";
+import db from "@/app/utils/firestore";
+import { collection, getDocs } from "firebase/firestore";
+import { useEffect, useState } from "react";
 
-const HighHeels = () => {
+const Shoes = () => {
   const [items, setItems] = useState<ProductTypes[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchItems = async () => {
-      const querySnapshot = await getDocs(collection(db, 'products'));
-      setItems(
-        querySnapshot.docs.map(doc => {
+      try {
+        const querySnapshot = await getDocs(collection(db, "products"));
+        const products = querySnapshot.docs.map((doc) => {
           const data = doc.data();
           return {
             id: doc.id,
@@ -32,13 +31,19 @@ const HighHeels = () => {
             price: data.price,
             discount: data.discount,
           };
-        })
-      );
+        });
+        setItems(products);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      } finally {
+        setLoading(false);
+      }
     };
+
     setLoading(true);
     fetchItems();
-    setLoading(false);
   }, []);
+
   console.log(items);
   return (
     <div className="mx-auto">
@@ -47,4 +52,4 @@ const HighHeels = () => {
   );
 };
 
-export default HighHeels;
+export default Shoes;

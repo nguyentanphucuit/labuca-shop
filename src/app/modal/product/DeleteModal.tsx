@@ -1,16 +1,16 @@
-'use client';
+"use client";
 
-import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react';
-import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
-import { deleteDoc, doc } from '@firebase/firestore';
-import db from '@/app/utils/firestore';
-import { notifySuccess } from '@/app/components/toast/common';
-import { ProductTypes } from '@/app/types/common';
+import { notifySuccess } from "@/app/components/toast/common";
+import { ProductTypes } from "@/app/types/common";
+import db from "@/app/utils/firestore";
+import { deleteDoc, doc } from "@firebase/firestore";
+import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from "@headlessui/react";
+import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 
 export default function DeleteModal({
   showDeleteModal,
   productCurrent,
-  collection,
+  collection: collectionName,
   setShowDeleteModal,
 }: {
   showDeleteModal: boolean;
@@ -25,10 +25,12 @@ export default function DeleteModal({
   const onDelete = async () => {
     console.log(productCurrent.id);
     try {
-      const ref = doc(db, collection, productCurrent.id);
+      // Delete the product
+      const ref = doc(db, collectionName, productCurrent.id);
       await deleteDoc(ref);
+      console.log("Product deleted successfully");
     } catch (e) {
-      console.error('Error adding document: ', e);
+      console.error("Error deleting product: ", e);
     }
     notifySuccess();
     close();
@@ -59,7 +61,7 @@ export default function DeleteModal({
                   </DialogTitle>
                   <div className="mt-2">
                     <p className="text-sm text-gray-500">
-                      Are you sure you want to delete{' '}
+                      Are you sure you want to delete{" "}
                       <span className="text-md font-bold px-1 text-red-600">
                         {productCurrent.code}
                       </span>

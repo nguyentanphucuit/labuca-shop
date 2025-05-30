@@ -1,6 +1,7 @@
 "use client";
 import { X } from "lucide-react";
 import { useState } from "react";
+import { PRODUCT_COLORS, isLightColor } from "../constants";
 import { formatPriceVND } from "../constants/common";
 import { useCart } from "../context/CartContext";
 
@@ -23,14 +24,8 @@ export default function VariantSelectionModal({
   onClose,
   product,
 }: VariantSelectionModalProps) {
-  // Define available colors (you can later move this to product data)
-  const availableColors = [
-    { name: "Xanh Ô-liu", value: "#556B2F" },
-    { name: "Xanh Navy", value: "#000080" },
-    { name: "Đen", value: "#000000" },
-    { name: "Xám", value: "#808080" },
-    { name: "Trắng", value: "#FFFFFF" },
-  ];
+  // Use centralized color constants
+  const availableColors = PRODUCT_COLORS;
 
   const sizes = product.size.split(",").map((s) => s.trim());
   const discountedPrice = (product.price * (100 - product.discount)) / 100;
@@ -123,7 +118,7 @@ export default function VariantSelectionModal({
                 style={{ backgroundColor: color.value }}
                 title={color.name}
               >
-                {color.name === "Trắng" && (
+                {isLightColor(color.name) && (
                   <div className="w-full h-full rounded-full border border-gray-200" />
                 )}
               </button>

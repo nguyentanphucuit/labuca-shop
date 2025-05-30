@@ -3,20 +3,15 @@ import { ProductTypes } from "@/app/types/common";
 import { Check, Star } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
+import { PRODUCT_COLORS, isLightColor } from "../constants";
 import { useCart } from "../context/CartContext";
 
 const ProductDetailTemplate = ({ ...props }: ProductTypes) => {
   // Create fake images based on the main image by adding different angles
   const thumbnails = [props.imageUrl, props.imageUrl, props.imageUrl];
 
-  // Define a set of realistic t-shirt colors
-  const availableColors = [
-    { name: "Xanh Ô-liu", value: "#556B2F" },
-    { name: "Xanh Navy", value: "#000080" },
-    { name: "Đen", value: "#000000" },
-    { name: "Xám", value: "#808080" },
-    { name: "Trắng", value: "#FFFFFF" },
-  ];
+  // Use centralized color constants
+  const availableColors = PRODUCT_COLORS;
 
   const [selectedColor, setSelectedColor] = useState(availableColors[0]);
   const [selectedSize, setSelectedSize] = useState(props.size.split(",")[0]);
@@ -99,7 +94,7 @@ const ProductDetailTemplate = ({ ...props }: ProductTypes) => {
                         key={color.name}
                         className={classNames(
                           "px-2 py-1 text-sm font-semibold rounded",
-                          color.name === "Trắng"
+                          isLightColor(color.name)
                             ? "text-gray-900 border border-gray-200"
                             : "text-white"
                         )}

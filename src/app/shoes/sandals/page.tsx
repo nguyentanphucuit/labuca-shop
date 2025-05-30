@@ -1,10 +1,9 @@
-'use client';
-import React, { useEffect, useState } from 'react';
-import ListItem from '@/app/components/ListItem';
-import { collection, getDocs, query, where } from 'firebase/firestore';
-import db from '@/app/utils/firestore';
-import { ProductTypes } from '@/app/types/common';
-import { emptyProduct } from '@/app/constants';
+"use client";
+import ListItem from "@/app/components/ListItem";
+import { ProductTypes } from "@/app/types/common";
+import db from "@/app/utils/firestore";
+import { collection, getDocs, query, where } from "firebase/firestore";
+import { useEffect, useState } from "react";
 
 const Sandals = () => {
   const [items, setItems] = useState<ProductTypes[]>([]);
@@ -12,10 +11,10 @@ const Sandals = () => {
 
   useEffect(() => {
     const fetchItems = async () => {
-      const q = query(collection(db, 'products'), where('typeValue', '==', '4'));
-      const querySnapshot = await getDocs(q);
-      setItems(
-        querySnapshot.docs.map(doc => {
+      try {
+        const q = query(collection(db, "products"), where("typeValue", "==", "4"));
+        const querySnapshot = await getDocs(q);
+        const products = querySnapshot.docs.map((doc) => {
           const data = doc.data();
           return {
             id: doc.id,
@@ -33,12 +32,17 @@ const Sandals = () => {
             price: data.price,
             discount: data.discount,
           };
-        })
-      );
+        });
+        setItems(products);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      } finally {
+        setLoading(false);
+      }
     };
+
     setLoading(true);
     fetchItems();
-    setLoading(false);
   }, []);
   console.log(items);
   return (

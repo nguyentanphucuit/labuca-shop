@@ -1,21 +1,19 @@
-import React, { useEffect, useState } from 'react';
-import ProductPage from '@/app/products/page';
-import { ProductTypes } from '@/app/types/common';
-import { listItem } from '@/app/constants/index';
-import { collection } from 'firebase/firestore';
-import { getDocs } from 'firebase/firestore';
-import db from '@/app/utils/firestore';
-import ProductDetailTemplate from '../ProductDetailTemplate';
-2;
+import ProductPage from "@/app/products/page";
+import { ProductTypes } from "@/app/types/common";
+import db from "@/app/utils/firestore";
+import { collection, getDocs } from "firebase/firestore";
+import { useEffect, useState } from "react";
+import ProductDetailTemplate from "../ProductDetailTemplate";
+
 const ProductDetail = ({ title }: { title: string }) => {
   const [items, setItems] = useState<ProductTypes[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchItems = async () => {
-      const querySnapshot = await getDocs(collection(db, 'products'));
-      setItems(
-        querySnapshot.docs.map(doc => {
+      try {
+        const querySnapshot = await getDocs(collection(db, "products"));
+        const products = querySnapshot.docs.map((doc) => {
           const data = doc.data();
           return {
             id: doc.id,
@@ -33,14 +31,20 @@ const ProductDetail = ({ title }: { title: string }) => {
             price: data.price,
             discount: data.discount,
           };
-        })
-      );
+        });
+        setItems(products);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      } finally {
+        setLoading(false);
+      }
     };
+
     setLoading(true);
     fetchItems();
-    setLoading(false);
   }, []);
-  const id = items.findIndex(item => item.href.toLowerCase() === title.toLowerCase());
+
+  const id = items.findIndex((item) => item.href.toLowerCase() === title.toLowerCase());
   console.log(title);
   return id === -1 ? <ProductPage /> : <ProductDetailTemplate {...items[id]} />;
 };

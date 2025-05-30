@@ -1,8 +1,9 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import Image from 'next/image';
-import Loading from './Loading';
+import { AlertCircle, Image as ImageIcon, Upload, X } from "lucide-react";
+import Image from "next/image";
+import { useState } from "react";
+import Loading from "./Loading";
 
 const UploadForm = ({
   uploadedImage,
@@ -17,21 +18,21 @@ const UploadForm = ({
   newPublicId: string;
 }) => {
   const [loading, setLoading] = useState(false);
+  const [isDragOver, setIsDragOver] = useState(false);
 
   const handleUpload = async (file: File) => {
     setLoading(true);
     const formData = new FormData();
-    formData.append('file', file);
-    formData.append('public_id', newPublicId || '');
-    console.log(formData);
+    formData.append("file", file);
+    formData.append("public_id", newPublicId || "");
 
     try {
-      const response = await fetch('/api/upload', {
-        method: 'POST',
+      const response = await fetch("/api/upload", {
+        method: "POST",
         body: formData,
       });
 
-      if (!response.ok) throw new Error('Upload failed');
+      if (!response.ok) throw new Error("Upload failed");
 
       const data = await response.json();
       setUploadedImage({
@@ -40,50 +41,160 @@ const UploadForm = ({
       });
       setLoading(false);
     } catch (error) {
-      console.error('Upload error:', error);
+      console.error("Upload error:", error);
+      setLoading(false);
     }
   };
 
   const handleDelete = async () => {
-    console.log(uploadedImage);
     if (!uploadedImage?.publicId) return;
     try {
-      const response = await fetch('/api/delete', {
-        method: 'POST',
+      const response = await fetch("/api/delete", {
+        method: "POST",
         body: JSON.stringify({ publicId: uploadedImage.publicId }),
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
       });
 
-      if (!response.ok) throw new Error('Delete failed');
-      const result = await response.json();
-      // alert(result.message);
+      if (!response.ok) throw new Error("Delete failed");
       setUploadedImage(null);
     } catch (error) {
-      console.error('Delete error:', error);
+      console.error("Delete error:", error);
     }
   };
 
-  return (
-    <div className="flex flex-col gap-4 max-w-72">
-      <h2 className="p-2 text-white bg-sky-500 w-32">Upload image</h2>
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      handleUpload(file);
+    }
+  };
 
-      {!newPublicId ? (
-        <>
-          <span className="text-sm text-red-500">Nhập mã sản phẩm để upload hình</span>
-        </>
-      ) : (
-        <input
-          type="file"
-          accept="image/*"
-          onChange={e => e.target.files && handleUpload(e.target.files[0])}
-        />
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragOver(false);
+    const file = e.dataTransfer.files?.[0];
+    if (file && file.type.startsWith("image/")) {
+      handleUpload(file);
+    }
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragOver(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragOver(false);
+  };
+
+  if (!newPublicId) {
+    return (
+      <div className="w-full">
+        <div className="flex items-center gap-2 p-4 bg-red-50 border border-red-200 rounded-lg">
+          <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0" />
+          <span className="text-sm text-red-700">
+            Vui lòng nhập mã sản phẩm trước khi upload hình ảnh
+          </span>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="w-full space-y-4">
+      {/* Upload Area */}
+      {!uploadedImage && (
+        <div
+          className={`relative border-2 border-dashed rounded-lg p-6 transition-all duration-200 ${
+            isDragOver
+              ? "border-blue-500 bg-blue-50"
+              : "border-gray-300 hover:border-gray-400 bg-gray-50"
+          }`}
+          onDrop={handleDrop}
+          onDragOver={handleDragOver}
+          onDragLeave={handleDragLeave}
+        >
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleFileChange}
+            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+            disabled={loading}
+          />
+
+          <div className="flex flex-col items-center justify-center space-y-3">
+            <div
+              className={`p-3 rounded-full transition-colors ${
+                isDragOver ? "bg-blue-100" : "bg-gray-100"
+              }`}
+            >
+              <Upload
+                className={`w-6 h-6 transition-colors ${
+                  isDragOver ? "text-blue-600" : "text-gray-400"
+                }`}
+              />
+            </div>
+
+            <div className="text-center">
+              <p className="text-sm font-medium text-gray-900">
+                {isDragOver ? "Thả hình ảnh vào đây" : "Kéo thả hình ảnh hoặc click để chọn"}
+              </p>
+              <p className="text-xs text-gray-500 mt-1">PNG, JPG, JPEG (tối đa 10MB)</p>
+            </div>
+
+            <button
+              type="button"
+              className="px-4 py-2 text-sm font-medium text-blue-600 bg-white border border-blue-300 rounded-lg hover:bg-blue-50 transition-colors"
+              disabled={loading}
+            >
+              Chọn hình ảnh
+            </button>
+          </div>
+        </div>
       )}
 
-      <Loading loading={loading} />
-      {uploadedImage && (
-        <Image src={uploadedImage.url} alt="Uploaded" width={640} height={160} priority />
+      {/* Loading State */}
+      {loading && (
+        <div className="flex items-center justify-center p-6 bg-gray-50 rounded-lg">
+          <Loading loading={loading} />
+          <span className="ml-3 text-sm text-gray-600">Đang upload hình ảnh...</span>
+        </div>
+      )}
+
+      {/* Uploaded Image */}
+      {uploadedImage && !loading && (
+        <div className="relative group">
+          <div className="relative overflow-hidden rounded-lg border border-gray-200">
+            <Image
+              src={uploadedImage.url}
+              alt="Uploaded"
+              width={640}
+              height={160}
+              className="w-full h-40 object-cover"
+              priority
+            />
+
+            {/* Overlay with delete button */}
+            <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-200 flex items-center justify-center">
+              <button
+                onClick={handleDelete}
+                className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 p-2 bg-red-500 text-white rounded-full hover:bg-red-600"
+                title="Xóa hình ảnh"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+
+          {/* Image info */}
+          <div className="flex items-center gap-2 mt-2 p-2 bg-green-50 border border-green-200 rounded">
+            <ImageIcon className="w-4 h-4 text-green-600" />
+            <span className="text-sm text-green-700">Hình ảnh đã được upload thành công</span>
+          </div>
+        </div>
       )}
     </div>
   );

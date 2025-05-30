@@ -1,13 +1,11 @@
-'use client';
-import React, { useEffect, useState } from 'react';
-import Image from 'next/image';
-import sourceImg from '/public/assets/img/background.png';
+"use client";
+import { useEffect, useState } from "react";
 
-import ListItem from './ListItem';
-import CarouselSection from './CarouselSection';
-import { collection, getDocs } from 'firebase/firestore';
-import db from '@/app/utils/firestore';
-import { ProductTypes } from '@/app/types/common';
+import { ProductTypes } from "@/app/types/common";
+import db from "@/app/utils/firestore";
+import { collection, getDocs } from "firebase/firestore";
+import CarouselSection from "./CarouselSection";
+import ListItem from "./ListItem";
 
 const Hero = () => {
   const [items, setItems] = useState<ProductTypes[]>([]);
@@ -15,9 +13,9 @@ const Hero = () => {
 
   useEffect(() => {
     const fetchItems = async () => {
-      const querySnapshot = await getDocs(collection(db, 'products'));
-      setItems(
-        querySnapshot.docs.map(doc => {
+      try {
+        const querySnapshot = await getDocs(collection(db, "products"));
+        const products = querySnapshot.docs.map((doc) => {
           const data = doc.data();
           return {
             id: doc.id,
@@ -35,19 +33,25 @@ const Hero = () => {
             price: data.price,
             discount: data.discount,
           };
-        })
-      );
+        });
+        setItems(products);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      } finally {
+        setLoading(false);
+      }
     };
+
     setLoading(true);
     fetchItems();
-    setLoading(false);
   }, []);
+
   return (
     <div className="mx-auto">
       {/* <Image className="" alt="labuca button" src={sourceImg} /> */}
       <CarouselSection />
       {/* <UpdateData /> */}
-      <ListItem items={items} loading={false} />
+      <ListItem items={items} loading={loading} />
     </div>
   );
 };

@@ -46,6 +46,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
           discount: data.discount,
         };
       }
+
+      console.warn(`Product not found: ${itemId}`);
       return null;
     } catch (error) {
       console.error("Error fetching product details:", error);
