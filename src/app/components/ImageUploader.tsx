@@ -108,7 +108,7 @@ const UploadForm = ({
       {/* Upload Area */}
       {!uploadedImage && (
         <div
-          className={`relative border-2 border-dashed rounded-lg p-6 transition-all duration-200 ${
+          className={`relative border-2 border-dashed rounded-lg p-4 transition-all duration-200 ${
             isDragOver
               ? "border-blue-500 bg-blue-50"
               : "border-gray-300 hover:border-gray-400 bg-gray-50"
@@ -125,14 +125,14 @@ const UploadForm = ({
             disabled={loading}
           />
 
-          <div className="flex flex-col items-center justify-center space-y-3">
+          <div className="flex flex-col items-center justify-center space-y-2">
             <div
-              className={`p-3 rounded-full transition-colors ${
+              className={`p-2 rounded-full transition-colors ${
                 isDragOver ? "bg-blue-100" : "bg-gray-100"
               }`}
             >
               <Upload
-                className={`w-6 h-6 transition-colors ${
+                className={`w-5 h-5 transition-colors ${
                   isDragOver ? "text-blue-600" : "text-gray-400"
                 }`}
               />
@@ -147,7 +147,7 @@ const UploadForm = ({
 
             <button
               type="button"
-              className="px-4 py-2 text-sm font-medium text-blue-600 bg-white border border-blue-300 rounded-lg hover:bg-blue-50 transition-colors"
+              className="px-3 py-1.5 text-xs font-medium text-blue-600 bg-white border border-blue-300 rounded-md hover:bg-blue-50 transition-colors"
               disabled={loading}
             >
               Chọn hình ảnh
@@ -158,7 +158,7 @@ const UploadForm = ({
 
       {/* Loading State */}
       {loading && (
-        <div className="flex items-center justify-center p-6 bg-gray-50 rounded-lg">
+        <div className="flex items-center justify-center p-4 bg-gray-50 rounded-lg">
           <Loading loading={loading} />
           <span className="ml-3 text-sm text-gray-600">Đang upload hình ảnh...</span>
         </div>
@@ -167,21 +167,22 @@ const UploadForm = ({
       {/* Uploaded Image */}
       {uploadedImage && !loading && (
         <div className="relative group">
-          <div className="relative overflow-hidden rounded-lg border border-gray-200">
-            <Image
-              src={uploadedImage.url}
-              alt="Uploaded"
-              width={640}
-              height={160}
-              className="w-full h-40 object-cover"
-              priority
-            />
+          <div className="relative overflow-hidden rounded-lg border border-gray-200 bg-gray-50">
+            <div className="aspect-video w-full">
+              <Image
+                src={uploadedImage.url}
+                alt="Uploaded"
+                fill
+                className="object-contain"
+                priority
+              />
+            </div>
 
             {/* Overlay with delete button */}
             <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-200 flex items-center justify-center">
               <button
                 onClick={handleDelete}
-                className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 p-2 bg-red-500 text-white rounded-full hover:bg-red-600"
+                className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 p-2 bg-red-500 text-white rounded-full hover:bg-red-600 shadow-lg"
                 title="Xóa hình ảnh"
               >
                 <X className="w-4 h-4" />
@@ -190,9 +191,13 @@ const UploadForm = ({
           </div>
 
           {/* Image info */}
-          <div className="flex items-center gap-2 mt-2 p-2 bg-green-50 border border-green-200 rounded">
-            <ImageIcon className="w-4 h-4 text-green-600" />
-            <span className="text-sm text-green-700">Hình ảnh đã được upload thành công</span>
+          <div className="flex items-center gap-2 mt-3 p-3 bg-green-50 border border-green-200 rounded-lg">
+            <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+              <ImageIcon className="w-4 h-4 text-green-600" />
+            </div>
+            <span className="text-sm font-medium text-green-700">
+              Hình ảnh đã được upload thành công
+            </span>
           </div>
         </div>
       )}

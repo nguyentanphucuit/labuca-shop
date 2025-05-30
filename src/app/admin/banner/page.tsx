@@ -1,10 +1,10 @@
-'use client';
-import ImageUploader from '@/app/components/ImageUploader';
-import { BANNER_IMAGE, FOLDER_IMAGE } from '@/app/constants';
-import DeleteImageModal from '@/app/modal/DeleteImageModal';
-import { Pencil, Trash2 } from 'lucide-react';
-import Image from 'next/image';
-import { use, useEffect, useState } from 'react';
+"use client";
+import ImageUploader from "@/app/components/ImageUploader";
+import { BANNER_IMAGE, FOLDER_IMAGE } from "@/app/constants";
+import DeleteImageModal from "@/app/modal/DeleteImageModal";
+import { Trash2 } from "lucide-react";
+import Image from "next/image";
+import { useEffect, useState } from "react";
 
 const ImageGallery = () => {
   const [images, setImages] = useState<string[]>([]);
@@ -12,8 +12,8 @@ const ImageGallery = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const [folder, setFolder] = useState(FOLDER_IMAGE); // Default folder name
-  const [publicId, setPublicId] = useState('');
-  const [publicIdCurrent, setPublicIdCurrent] = useState('');
+  const [publicId, setPublicId] = useState("");
+  const [publicIdCurrent, setPublicIdCurrent] = useState("");
   const [uploadedImage, setUploadedImage] = useState<{
     url: string;
     publicId: string;
@@ -25,17 +25,17 @@ const ImageGallery = () => {
       try {
         const response = await fetch(`/api/get-images?folder=${folder}`);
         const data = await response.json();
-        const listID = data.map((img: any) => parseInt(img.public_id.split('_')[1]));
+        const listID = data.map((img: any) => parseInt(img.public_id.split("_")[1]));
         const newID = listID.length !== 0 ? Math.max(...listID) + 1 : 0;
         setPublicId(`${BANNER_IMAGE}${newID}`);
 
         if (response.ok) {
           setImages(data.map((img: any) => img.secure_url));
         } else {
-          console.error('Error:', data.error);
+          console.error("Error:", data.error);
         }
       } catch (error) {
-        console.error('Fetch error:', error);
+        console.error("Fetch error:", error);
       } finally {
         setLoading(false);
       }
@@ -47,11 +47,11 @@ const ImageGallery = () => {
   const onDeleteImageBanner = (publicIdCurrent: string) => {
     setShowDeleteModal(!showDeleteModal);
     setPublicIdCurrent(publicIdCurrent);
-    console.log('Delete Image : ', publicIdCurrent);
+    console.log("Delete Image : ", publicIdCurrent);
   };
 
   return (
-    <div className="flex flex-col items-center gap-4 pt-12 px-10">
+    <div className="flex flex-col items-center px-10">
       <DeleteImageModal
         showDeleteModal={showDeleteModal}
         public_id={publicIdCurrent}
@@ -82,7 +82,7 @@ const ImageGallery = () => {
             <tr className="border border-gray-400" key={index}>
               <td className="p-4">
                 <div className="flex justify-center items-center">
-                  <p className="line-clamp-2">{url.split('/')?.pop()?.split('.')[0] as string}</p>
+                  <p className="line-clamp-2">{url.split("/")?.pop()?.split(".")[0] as string}</p>
                 </div>
               </td>
               <td className="p-4">
@@ -113,7 +113,7 @@ const ImageGallery = () => {
                 <div className="flex justify-center items-center">
                   <button
                     onClick={() =>
-                      onDeleteImageBanner(url.split('/')?.pop()?.split('.')[0] as string)
+                      onDeleteImageBanner(url.split("/")?.pop()?.split(".")[0] as string)
                     }
                   >
                     <Trash2 className="p-1 rounded-sm bg-red-300 text-red-600 w-6 h-6" />

@@ -1,5 +1,4 @@
-import { Editor } from '@tiptap/react';
-import { StaticImageData } from 'next/image';
+import { Editor } from "@tiptap/react";
 export interface ProductTypes {
   id: string;
   code: string;
@@ -15,6 +14,7 @@ export interface ProductTypes {
   date: string;
   price: number;
   discount: number;
+  imagesByColor?: { [colorName: string]: { url: string; publicId: string } | null };
 }
 
 export interface ToolbarProps {

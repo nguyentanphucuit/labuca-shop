@@ -24,8 +24,15 @@ export default function VariantSelectionModal({
   onClose,
   product,
 }: VariantSelectionModalProps) {
-  // Use centralized color constants
-  const availableColors = PRODUCT_COLORS;
+  // Parse colors from product data instead of using all global colors
+  const availableColors = product.color
+    ? product.color.split(",").map((colorName) => {
+        const foundColor = PRODUCT_COLORS.find(
+          (c) => c.name.toLowerCase() === colorName.trim().toLowerCase()
+        );
+        return foundColor || { name: colorName.trim(), value: "#ccc" };
+      })
+    : PRODUCT_COLORS.slice(0, 3); // fallback to first 3 colors
 
   const sizes = product.size.split(",").map((s) => s.trim());
   const discountedPrice = (product.price * (100 - product.discount)) / 100;

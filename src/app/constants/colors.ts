@@ -1,10 +1,10 @@
 // Centralized color constants for the application
 export const PRODUCT_COLORS = [
-  { name: "Xanh Ô-liu", value: "#556B2F" },
-  { name: "Xanh Navy", value: "#000080" },
   { name: "Đen", value: "#000000" },
-  { name: "Xám", value: "#808080" },
   { name: "Trắng", value: "#FFFFFF" },
+  { name: "Nâu", value: "#8B4513" },
+  { name: "Kem", value: "#FFF8DC" },
+  { name: "Đỏ", value: "#FF0000" },
 ];
 
 // Centralized size constants for the application
@@ -30,7 +30,7 @@ export const getColorValue = (colorName: string) => {
 };
 
 export const isLightColor = (colorName: string) => {
-  return colorName === "Trắng";
+  return colorName === "Trắng" || colorName === "Kem";
 };
 
 // Additional size utilities

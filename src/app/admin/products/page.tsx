@@ -1,12 +1,11 @@
 "use client";
 import { emptyProduct } from "@/app/constants";
+import { useAllProducts } from "@/app/hooks/useProducts";
 import CreateModal from "@/app/modal/product/CreateModal";
 import DeleteModal from "@/app/modal/product/DeleteModal";
 import EditModal from "@/app/modal/product/EditModal";
 import { ProductTypes } from "@/app/types/common";
 import app from "@/app/utils/firebaseConfig";
-import db from "@/app/utils/firestore";
-import { collection, getDocs } from "@firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc, getFirestore } from "firebase/firestore";
 import { Filter, Package, Pencil, Plus, Search, ShoppingCart, Trash2 } from "lucide-react";
@@ -18,10 +17,13 @@ import { ToastContainer } from "react-toastify";
 const firestore = getFirestore(app);
 
 const ProductAdminPage = () => {
-  const [productList, setProductList] = useState<ProductTypes[]>([]);
+  const {
+    products: productList,
+    loading: productsLoading,
+    error: productsError,
+  } = useAllProducts();
   const [filteredProducts, setFilteredProducts] = useState<ProductTypes[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [loading, setLoading] = useState(true);
   const [authLoading, setAuthLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -72,6 +74,11 @@ const ProductAdminPage = () => {
     return () => unsubscribe();
   }, [router]);
 
+  // Update filtered products when productList changes
+  useEffect(() => {
+    setFilteredProducts(productList);
+  }, [productList]);
+
   const onEditProduct = (product: ProductTypes) => {
     setShowEditModal(!showEditModal);
     setProductCurrent(product);
@@ -88,43 +95,6 @@ const ProductAdminPage = () => {
     setShowCreateModal(!showCreateModal);
   };
 
-  useEffect(() => {
-    if (!authLoading && isAdmin) {
-      const fetchItems = async () => {
-        try {
-          const querySnapshot = await getDocs(collection(db, "products"));
-          const products = querySnapshot.docs.map((doc) => {
-            const data = doc.data();
-            return {
-              id: doc.id,
-              code: data.code,
-              date: data.date,
-              title: data.title,
-              subtitle: data.subtitle,
-              content: data.content,
-              color: data.color,
-              size: data.size,
-              typeValue: data.typeValue,
-              typeLabel: data.typeLabel,
-              imageUrl: data.imageUrl,
-              href: data.href,
-              price: data.price,
-              discount: data.discount,
-            };
-          });
-          setProductList(products);
-          setFilteredProducts(products);
-        } catch (error) {
-          console.error("Error fetching products:", error);
-        } finally {
-          setLoading(false);
-        }
-      };
-
-      fetchItems();
-    }
-  }, [authLoading, isAdmin]);
-
   // Filter products based on search term
   useEffect(() => {
     if (searchTerm.trim() === "") {
@@ -140,7 +110,8 @@ const ProductAdminPage = () => {
     }
   }, [searchTerm, productList]);
 
-  if (authLoading || loading) {
+  // Show loading state
+  if (authLoading || productsLoading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
@@ -156,160 +127,197 @@ const ProductAdminPage = () => {
     );
   }
 
+  // Show error state
+  if (productsError) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-red-500 mb-4">⚠️ Có lỗi xảy ra</div>
+          <p className="text-gray-600 mb-4">{productsError}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+          >
+            Thử lại
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   // Don't render anything if not admin (will be redirected)
   if (!isAdmin) {
     return null;
   }
 
+  console.log("📊 Admin Products Data:", {
+    totalProducts: productList.length,
+    filteredProducts: filteredProducts.length,
+    searchTerm,
+  });
+
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto p-6">
-        {/* Header Section */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-4">
-              <div className="bg-gradient-to-r from-red-500 to-red-600 text-white px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 shadow-md">
-                <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
-                🔒 QUẢN TRỊ VIÊN
-              </div>
-              <div className="text-sm text-gray-500">Khu vực dành riêng cho quản trị viên</div>
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+        {/* Header */}
+        <div className="mb-8">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
+                <Package className="w-8 h-8" />
+                Quản lý sản phẩm
+              </h1>
+              <p className="text-gray-600 mt-2">
+                Tổng cộng {productList.length} sản phẩm
+                {searchTerm && ` • Tìm thấy ${filteredProducts.length} kết quả`}
+              </p>
             </div>
-            <div className="text-xs text-gray-400 bg-gray-100 px-3 py-1 rounded-full">
-              Trang quản lý sản phẩm
-            </div>
-          </div>
-
-          {/* Admin Navigation */}
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => router.push("/admin/order")}
-              className="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-all duration-200 hover:shadow-md"
-            >
-              <ShoppingCart className="w-4 h-4" />
-              Quản lý đơn hàng
-            </button>
-            <div className="flex items-center gap-2 px-4 py-2 bg-blue-100 text-blue-700 rounded-lg font-medium shadow-sm">
-              <Package className="w-4 h-4" />
-              Quản lý sản phẩm
+            <div className="flex items-center gap-3">
+              <button
+                onClick={onCreateProduct}
+                className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              >
+                <Plus className="w-5 h-5" />
+                Tạo sản phẩm mới
+              </button>
             </div>
           </div>
         </div>
 
-        {/* Main Content */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-          {/* Title and Actions Bar */}
-          <div className="p-6 border-b border-gray-200">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-3">
-                <Package className="w-8 h-8 text-blue-600" />
-                <div>
-                  <h1 className="text-2xl font-bold text-gray-900">Danh sách sản phẩm</h1>
-                  <p className="text-sm text-gray-500">Quản lý tất cả sản phẩm trong hệ thống</p>
-                </div>
-              </div>
-              <button
-                onClick={onCreateProduct}
-                className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-all duration-200 hover:shadow-lg transform hover:scale-105"
-              >
-                <Plus className="w-4 h-4" />
-                Tạo mới
-              </button>
+        {/* Search and Filters */}
+        <div className="mb-6 bg-white rounded-lg shadow p-6">
+          <div className="flex flex-col sm:flex-row gap-4">
+            <div className="flex-1 relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <input
+                type="text"
+                placeholder="Tìm kiếm theo tên, mã sản phẩm..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
             </div>
-
-            {/* Search and Filter Bar */}
-            <div className="flex items-center gap-4">
-              <div className="relative flex-1 max-w-md">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                <input
-                  type="text"
-                  placeholder="Tìm kiếm theo mã, tên hoặc mô tả..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                />
-              </div>
-              <div className="flex items-center gap-2 text-sm text-gray-600 bg-gray-50 px-3 py-2 rounded-lg">
-                <Filter className="w-4 h-4" />
-                <span className="font-medium">{filteredProducts.length}</span>
-                <span>sản phẩm</span>
-              </div>
-            </div>
+            <button className="inline-flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+              <Filter className="w-5 h-5" />
+              Bộ lọc
+            </button>
           </div>
+        </div>
 
-          {/* Products Table */}
+        {/* Products Table */}
+        <div className="bg-white rounded-lg shadow overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="bg-gray-50 border-b border-gray-200">
-                  <th className="text-left py-4 px-6 font-semibold text-gray-900 w-24">Mã SP</th>
-                  <th className="text-left py-4 px-6 font-semibold text-gray-900 w-20">Hình ảnh</th>
-                  <th className="text-left py-4 px-6 font-semibold text-gray-900">Tên sản phẩm</th>
-                  <th className="text-left py-4 px-6 font-semibold text-gray-900">Mô tả ngắn</th>
-                  <th className="text-center py-4 px-6 font-semibold text-gray-900 w-32">
-                    Thao tác
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Sản phẩm
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Mã
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Danh mục
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Giá
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Ngày tạo
+                  </th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Hành động
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200">
+              <tbody className="bg-white divide-y divide-gray-200">
                 {filteredProducts.length === 0 ? (
                   <tr>
-                    <td colSpan={5} className="text-center py-12">
-                      <div className="flex flex-col items-center gap-3">
-                        <Package className="w-12 h-12 text-gray-300" />
-                        <p className="text-gray-500 font-medium">
+                    <td colSpan={6} className="px-6 py-12 text-center">
+                      <div className="flex flex-col items-center">
+                        <ShoppingCart className="w-12 h-12 text-gray-400 mb-4" />
+                        <p className="text-gray-500">
                           {searchTerm ? "Không tìm thấy sản phẩm phù hợp" : "Chưa có sản phẩm nào"}
                         </p>
-                        {searchTerm && (
-                          <button
-                            onClick={() => setSearchTerm("")}
-                            className="text-blue-600 hover:text-blue-700 text-sm"
-                          >
-                            Xóa bộ lọc
-                          </button>
-                        )}
                       </div>
                     </td>
                   </tr>
                 ) : (
                   filteredProducts.map((product) => (
-                    <tr key={product.id} className="hover:bg-gray-50 transition-colors">
-                      <td className="py-4 px-6">
-                        <span className="font-mono text-sm font-medium text-gray-900 bg-gray-100 px-2 py-1 rounded">
+                    <tr key={product.id} className="hover:bg-gray-50">
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="flex items-center">
+                          <div className="h-16 w-16 flex-shrink-0">
+                            <Image
+                              className="h-16 w-16 rounded-lg object-cover"
+                              src={product.imageUrl}
+                              alt={product.title}
+                              width={64}
+                              height={64}
+                            />
+                          </div>
+                          <div className="ml-4 max-w-[300px] text-ellipsis overflow-hidden">
+                            <div className="text-sm font-medium text-gray-900 line-clamp-1">
+                              {product.title}
+                            </div>
+                            <div className="text-sm text-gray-500 line-clamp-1">
+                              {product.subtitle}
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span className="text-sm font-mono text-gray-900 bg-gray-100 px-2 py-1 rounded">
                           {product.code}
                         </span>
                       </td>
-                      <td className="py-4 px-6">
-                        <div className="w-14 h-14 rounded-lg overflow-hidden border border-gray-200 shadow-sm">
-                          <Image
-                            src={product.imageUrl}
-                            alt={product.title}
-                            width={56}
-                            height={56}
-                            className="w-full h-full object-cover"
-                          />
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span className="inline-flex px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full">
+                          {product.typeLabel}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-900">
+                          {product.discount > 0 && (
+                            <div className="flex items-center gap-2">
+                              <span className="font-medium">
+                                {(
+                                  (product.price * (100 - product.discount)) /
+                                  100
+                                ).toLocaleString()}
+                                đ
+                              </span>
+                              <span className="text-xs text-gray-500 line-through">
+                                {product.price.toLocaleString()}đ
+                              </span>
+                              <span className="text-xs bg-red-100 text-red-800 px-1 py-0.5 rounded">
+                                -{product.discount}%
+                              </span>
+                            </div>
+                          )}
+                          {product.discount === 0 && (
+                            <span className="font-medium">{product.price.toLocaleString()}đ</span>
+                          )}
                         </div>
                       </td>
-                      <td className="py-4 px-6">
-                        <h3 className="font-medium text-gray-900 line-clamp-2">{product.title}</h3>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {product.date}
                       </td>
-                      <td className="py-4 px-6">
-                        <p className="text-gray-600 line-clamp-2">{product.subtitle}</p>
-                      </td>
-                      <td className="py-4 px-6">
-                        <div className="flex items-center justify-center gap-2">
+                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <div className="flex items-center justify-end gap-2">
                           <button
                             onClick={() => onEditProduct(product)}
-                            className="p-2 text-orange-600 hover:text-orange-700 hover:bg-orange-50 rounded-lg transition-all duration-200 group"
+                            className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                             title="Chỉnh sửa"
                           >
-                            <Pencil className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                            <Pencil className="w-4 h-4" />
                           </button>
                           <button
                             onClick={() => onDeleteProduct(product)}
-                            className="p-2 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-all duration-200 group"
+                            className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                             title="Xóa"
                           >
-                            <Trash2 className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                            <Trash2 className="w-4 h-4" />
                           </button>
                         </div>
                       </td>
@@ -320,22 +328,23 @@ const ProductAdminPage = () => {
             </table>
           </div>
         </div>
-      </div>
 
-      {/* Modals */}
-      <ToastContainer />
-      <CreateModal showCreateModal={showCreateModal} setShowCreateModal={setShowCreateModal} />
-      <EditModal
-        showEditModal={showEditModal}
-        productCurrent={productCurrent}
-        setShowEditModal={setShowEditModal}
-      />
-      <DeleteModal
-        showDeleteModal={showDeleteModal}
-        productCurrent={productCurrent}
-        collection="products"
-        setShowDeleteModal={setShowDeleteModal}
-      />
+        {/* Modals */}
+        <CreateModal showCreateModal={showCreateModal} setShowCreateModal={setShowCreateModal} />
+        <EditModal
+          showEditModal={showEditModal}
+          setShowEditModal={setShowEditModal}
+          productCurrent={productCurrent}
+        />
+        <DeleteModal
+          showDeleteModal={showDeleteModal}
+          setShowDeleteModal={setShowDeleteModal}
+          productCurrent={productCurrent}
+          collection="products"
+        />
+
+        <ToastContainer />
+      </div>
     </div>
   );
 };

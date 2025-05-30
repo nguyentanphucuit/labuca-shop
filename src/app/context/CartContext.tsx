@@ -1,7 +1,6 @@
 "use client";
-import { doc, getDoc } from "firebase/firestore";
+import { fetchProductDetails } from "@/app/hooks/useProducts";
 import React, { createContext, useContext, useState } from "react";
-import db from "../utils/firestore";
 
 export interface CartItem {
   id: string;
@@ -17,12 +16,14 @@ export interface CartItem {
 
 interface CartContextType {
   items: CartItem[];
-  addItem: (item: CartItem) => void;
+  addItem: (item: CartItem) => Promise<void>;
   removeItem: (itemId: string, color?: string, size?: string) => void;
   updateQuantity: (itemId: string, quantity: number, color?: string, size?: string) => void;
   clearCart: () => void;
+  getTotalPrice: () => number;
+  getTotalItems: () => number;
   isCartOpen: boolean;
-  setIsCartOpen: (isOpen: boolean) => void;
+  setIsCartOpen: (open: boolean) => void;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -30,30 +31,6 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
-
-  // Function to fetch product details from Firestore
-  const fetchProductDetails = async (itemId: string) => {
-    try {
-      const docRef = doc(db, "products", itemId);
-      const docSnap = await getDoc(docRef);
-
-      if (docSnap.exists()) {
-        const data = docSnap.data();
-        return {
-          title: data.title,
-          price: data.price,
-          imageUrl: data.imageUrl,
-          discount: data.discount,
-        };
-      }
-
-      console.warn(`Product not found: ${itemId}`);
-      return null;
-    } catch (error) {
-      console.error("Error fetching product details:", error);
-      return null;
-    }
-  };
 
   const addItem = async (newItem: CartItem) => {
     try {
@@ -112,17 +89,23 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   };
 
   const updateQuantity = (itemId: string, quantity: number, color?: string, size?: string) => {
+    if (quantity <= 0) {
+      removeItem(itemId, color, size);
+      return;
+    }
+
     setItems((currentItems) =>
       currentItems.map((item) => {
         if (color && size) {
           // Update specific variant
-          return item.id === itemId && item.color.name === color && item.size === size
-            ? { ...item, quantity }
-            : item;
-        } else {
-          // Update by ID only (legacy support)
-          return item.id === itemId ? { ...item, quantity } : item;
+          if (item.id === itemId && item.color.name === color && item.size === size) {
+            return { ...item, quantity };
+          }
+        } else if (item.id === itemId) {
+          // Update first matching item (legacy support)
+          return { ...item, quantity };
         }
+        return item;
       })
     );
   };
@@ -131,21 +114,32 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     setItems([]);
   };
 
-  return (
-    <CartContext.Provider
-      value={{
-        items,
-        addItem,
-        removeItem,
-        updateQuantity,
-        clearCart,
-        isCartOpen,
-        setIsCartOpen,
-      }}
-    >
-      {children}
-    </CartContext.Provider>
-  );
+  const getTotalPrice = () => {
+    return items.reduce((total, item) => {
+      const itemPrice = item.price || 0;
+      const discount = item.discount || 0;
+      const discountedPrice = (itemPrice * (100 - discount)) / 100;
+      return total + discountedPrice * item.quantity;
+    }, 0);
+  };
+
+  const getTotalItems = () => {
+    return items.reduce((total, item) => total + item.quantity, 0);
+  };
+
+  const value: CartContextType = {
+    items,
+    addItem,
+    removeItem,
+    updateQuantity,
+    clearCart,
+    getTotalPrice,
+    getTotalItems,
+    isCartOpen,
+    setIsCartOpen,
+  };
+
+  return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }
 
 export function useCart() {
