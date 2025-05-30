@@ -1,10 +1,12 @@
 "use client";
 import { Minus, Plus, ShoppingBag, X } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { formatPriceVND } from "../constants/common";
 import { useCart } from "../context/CartContext";
 
 export default function Cart() {
+  const router = useRouter();
   const { items, isCartOpen, setIsCartOpen, removeItem, updateQuantity } = useCart();
 
   const total = items.reduce((sum, item) => {
@@ -132,7 +134,13 @@ export default function Cart() {
                   <p>Tổng tiền</p>
                   <p>{formatPriceVND(total)}</p>
                 </div>
-                <button className="w-full bg-black text-white rounded-lg px-6 py-3 text-sm font-medium hover:bg-gray-900">
+                <button
+                  onClick={() => {
+                    setIsCartOpen(false);
+                    router.push("/checkout");
+                  }}
+                  className="w-full bg-black text-white rounded-lg px-6 py-3 text-sm font-medium hover:bg-gray-900"
+                >
                   Thanh toán
                 </button>
               </div>
