@@ -6,9 +6,9 @@ const db = getFirestore(app);
 
 // Define admin emails
 const ADMIN_EMAILS = [
-  "admin@labuca.com",
-  "labuca.admin@gmail.com",
   "nguyentanphucuit1@gmail.com",
+  "hoaithuong0500@gmail.com",
+  "admin@gmail.com",
   // Add more admin emails here
 ];
 

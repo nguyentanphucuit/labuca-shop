@@ -62,10 +62,10 @@ const ProductDetails = ({
               className={`
                 absolute bottom-4 right-4 z-20 
                 flex items-center gap-2 px-4 py-2.5
-                bg-gradient-to-r from-[#B14BF4] to-[#F364D7] rounded-full
+                bg-gradient-to-r from-[#b14bf4]/70 to-red-500/70 backdrop-blur-md border border-white/30 rounded-full
                 text-sm font-medium text-white
                 transform transition-all duration-300
-                hover:shadow-[0_8px_20px_rgb(177,75,244,0.3)]
+                hover:from-[#b14bf4]/90 hover:to-red-500/90 hover:shadow-[0_8px_20px_rgb(177,75,244,0.4)]
                 hover:translate-y-[-2px]
                 active:scale-95
                 ${isHovered ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"}
@@ -90,7 +90,7 @@ const ProductDetails = ({
             {/* Labels */}
             <div className="absolute top-4 left-4 right-4 flex justify-between items-center z-20">
               {typeLabel && (
-                <span className="px-3 py-1 text-xs font-medium text-white bg-[#B14BF4]/90 backdrop-blur-md rounded-full shadow-sm">
+                <span className="px-3 py-1 text-xs font-medium text-white bg-red-500/90 backdrop-blur-md rounded-full shadow-sm">
                   {typeLabel}
                 </span>
               )}
@@ -104,12 +104,12 @@ const ProductDetails = ({
 
           {/* Content */}
           <div className="p-4">
-            <h3 className="text-sm font-medium text-gray-700 line-clamp-2 min-h-[40px] group-hover:text-[#B14BF4] transition-colors duration-300">
+            <h3 className="text-sm font-medium text-gray-700 line-clamp-2 min-h-[40px] group-hover:text-red-500 transition-colors duration-300">
               {title}
             </h3>
 
             <div className="mt-2 flex items-center gap-2">
-              <span className="text-base font-semibold text-gray-900">
+              <span className="text-base font-semibold text-red-500">
                 {formatPriceVND(discountedPrice)}
               </span>
               {discount > 0 && (

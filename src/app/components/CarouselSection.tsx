@@ -8,7 +8,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { FOLDER_IMAGE } from "../constants";
 
 const CarouselSkeleton = () => (
-  <div className="hidden md:block w-[2000px] max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 mt-20 mb-8">
+  <div className="hidden md:block w-[2000px] max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 mb-8">
     <div className="aspect-[21/9] rounded-2xl overflow-hidden bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 animate-pulse" />
   </div>
 );
@@ -34,7 +34,7 @@ const Carousel = () => {
   if (isLoading || !images.length) return <CarouselSkeleton />;
 
   return (
-    <div className="hidden md:block max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 mt-20 mb-8">
+    <div className="hidden md:block max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 mb-8">
       <Swiper
         modules={[Navigation, Pagination, Autoplay, EffectFade]}
         effect="fade"
