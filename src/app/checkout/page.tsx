@@ -3,7 +3,7 @@
 import { ShoppingBag } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { formatPriceVND } from "../constants/common";
 import { useCart } from "../context/CartContext";
 
@@ -22,11 +22,6 @@ export default function CheckoutPage() {
   const [error, setError] = useState<string | null>(null);
 
   // Check if cart is empty
-  useEffect(() => {
-    if (items.length === 0) {
-      router.push("/");
-    }
-  }, [items, router]);
 
   // If cart is empty, show loading or redirect
   if (items.length === 0) {
@@ -165,6 +160,17 @@ export default function CheckoutPage() {
       if (!adminResponse.ok || !customerResponse.ok) {
         throw new Error("Không thể gửi đơn hàng. Vui lòng thử lại sau.");
       }
+
+      // Save order to Firestore
+      await fetch("/api/create-order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          items,
+          user: formData,
+          total,
+        }),
+      });
 
       clearCart();
       router.push("/checkout/success");
