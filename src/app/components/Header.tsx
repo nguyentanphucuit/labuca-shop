@@ -2,6 +2,23 @@ const Header = () => {
   return (
     <head>
       <link rel="icon" href="/favicon.ico" sizes="32x32" />
+      <title>
+        Labuca - Chuyên cung cấp giày dép và túi xách nữ thời trang chất lượng cao với giá cả hợp
+        lý.
+      </title>
+      <meta
+        name="description"
+        content="Labuca - Chuyên cung cấp giày dép và túi xách nữ thời trang chất lượng cao với giá cả hợp lý."
+      />
+      <meta
+        name="keywords"
+        content="Labuca, giày dép, túi xách, nữ thời trang, chất lượng cao, giá cả hợp lý"
+      />
+      <meta name="author" content="Labuca" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <meta name="robots" content="index, follow" />
+      <meta name="googlebot" content="index, follow" />
+
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
