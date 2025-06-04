@@ -1,23 +1,22 @@
-import React from 'react';
-import Image from 'next/image';
-import { MapPin, Phone, Mail, Clock } from 'lucide-react';
-import { Metadata } from 'next';
+import { Clock, Mail, MapPin, Phone } from "lucide-react";
+import { Metadata } from "next";
+import Image from "next/image";
 
 export const metadata: Metadata = {
-  title: 'Về Chúng Tôi | Labuca - Giày Dép và Túi xách nữ thời trang',
+  title: "Về Chúng Tôi | Labuca - Giày Dép và Túi xách nữ thời trang",
   description:
-    'Labuca - Chuyên cung cấp giày dép và túi xách nữ thời trang chất lượng cao với giá cả hợp lý. Địa chỉ: 152 Lý Thường Kiệt, P. Thành Công, Tp. Buôn Ma Thuột.',
+    "Labuca - Chuyên cung cấp giày dép và túi xách nữ thời trang chất lượng cao với giá cả hợp lý. Địa chỉ: 152 Lý Thường Kiệt, P. Thành Công, Tp. Buôn Ma Thuột.",
   openGraph: {
-    title: 'Về Chúng Tôi | Labuca - Giày Dép và Túi xách nữ thời trang',
+    title: "Về Chúng Tôi | Labuca - Giày Dép và Túi xách nữ thời trang",
     description:
-      'Labuca - Chuyên cung cấp giày dép và túi xách nữ thời trang chất lượng cao với giá cả hợp lý. Địa chỉ: 152 Lý Thường Kiệt, P. Thành Công, Tp. Buôn Ma Thuột.',
-    url: 'https://labuca.vn/aboutUs',
-    siteName: 'Labuca',
-    locale: 'vi_VN',
-    type: 'website',
+      "Labuca - Chuyên cung cấp giày dép và túi xách nữ thời trang chất lượng cao với giá cả hợp lý. Địa chỉ: 152 Lý Thường Kiệt, P. Thành Công, Tp. Buôn Ma Thuột.",
+    url: "https://labuca.vn/aboutUs",
+    siteName: "Labuca",
+    locale: "vi_VN",
+    type: "website",
   },
   alternates: {
-    canonical: 'https://labuca.vn/aboutUs',
+    canonical: "https://labuca.vn/aboutUs",
   },
 };
 
