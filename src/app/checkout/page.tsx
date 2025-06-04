@@ -193,7 +193,52 @@ export default function CheckoutPage() {
         </div>
       `;
 
-      // Send email to admin (plain text only for now)
+      // Admin email HTML
+      const adminEmailHtml = `
+        <div style="font-family:sans-serif;max-width:600px;margin:auto;color:#222;">
+          <h2 style="color:#dc2626;">🔔 Đơn hàng mới - Labuca Shop</h2>
+          <p>Một đơn hàng mới vừa được đặt từ khách hàng <b>${formData.fullName}</b></p>
+          
+          <h3 style="margin-top:32px;">Chi tiết đơn hàng:</h3>
+          <table style="width:100%;border-collapse:collapse;margin-bottom:24px;border:1px solid #ddd;">
+            <thead>
+              <tr style="background:#f3f4f6;">
+                <th align="left" style="padding:12px 8px;border:1px solid #ddd;">Sản phẩm</th>
+                <th align="left" style="padding:12px 8px;border:1px solid #ddd;">Màu</th>
+                <th align="left" style="padding:12px 8px;border:1px solid #ddd;">Size</th>
+                <th align="center" style="padding:12px 8px;border:1px solid #ddd;">SL</th>
+                <th align="right" style="padding:12px 8px;border:1px solid #ddd;">Giá</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${orderItemsHtml}
+            </tbody>
+          </table>
+          
+          <h3 style="margin-top:32px;">Thông tin khách hàng:</h3>
+          <div style="background:#f9fafb;padding:16px;border-radius:8px;margin-bottom:24px;">
+            <ul style="margin:0;padding:0;list-style:none;">
+              <li style="margin-bottom:8px;"><b>Họ và tên:</b> ${formData.fullName}</li>
+              <li style="margin-bottom:8px;"><b>Email:</b> ${formData.email}</li>
+              <li style="margin-bottom:8px;"><b>Số điện thoại:</b> ${formData.phone}</li>
+              <li style="margin-bottom:8px;"><b>Địa chỉ giao hàng:</b> ${formData.address}</li>
+              <li style="margin-bottom:8px;"><b>Thành phố:</b> ${formData.city}</li>
+              ${formData.note ? `<li style="margin-bottom:8px;"><b>Ghi chú:</b> ${formData.note}</li>` : ""}
+            </ul>
+          </div>
+          
+          <div style="font-size:20px;margin-bottom:32px;padding:16px;background:#fef2f2;border-radius:8px;border:1px solid #fecaca;">
+            <b>💰 Tổng tiền:</b> <span style="color:#dc2626;font-weight:bold;">${formatPriceVND(total)}</span>
+          </div>
+          
+          <div style="background:#eff6ff;padding:16px;border-radius:8px;border:1px solid #bfdbfe;">
+            <p style="margin:0;color:#1e40af;"><b>📋 Hành động cần thực hiện:</b></p>
+            <p style="margin:8px 0 0 0;color:#374151;">Vui lòng liên hệ với khách hàng để xác nhận đơn hàng và sắp xếp giao hàng.</p>
+          </div>
+        </div>
+      `;
+
+      // Send email to admin (now with HTML and text)
       const adminResponse = await fetch("/api/send-email", {
         method: "POST",
         headers: {
@@ -201,8 +246,9 @@ export default function CheckoutPage() {
         },
         body: JSON.stringify({
           to: process.env.NEXT_PUBLIC_EMAIL_USER,
-          subject: `Đơn hàng mới từ ${formData.fullName}`,
-          text: `Đơn hàng mới từ ${formData.fullName}\n\n${orderItems}\n\nThông tin: ${formData.fullName}, ${formData.phone}, ${formData.address}, ${formData.city}`,
+          subject: `🔔 Đơn hàng mới từ ${formData.fullName} - ${formatPriceVND(total)}`,
+          text: `Đơn hàng mới từ ${formData.fullName}\n\n${orderItems}\n\nThông tin khách hàng:\n- Tên: ${formData.fullName}\n- Email: ${formData.email}\n- SĐT: ${formData.phone}\n- Địa chỉ: ${formData.address}, ${formData.city}${formData.note ? `\n- Ghi chú: ${formData.note}` : ""}\n\nTổng tiền: ${formatPriceVND(total)}\n\nVui lòng liên hệ với khách hàng để xác nhận đơn hàng.`,
+          html: adminEmailHtml,
         }),
       });
 
