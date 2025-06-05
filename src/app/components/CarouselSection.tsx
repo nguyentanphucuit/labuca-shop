@@ -46,8 +46,24 @@ const Carousel = () => {
           allBannerImages.push(...mainFolderBanners);
         }
 
+        // Filter only visible banners
+        const bannerSettings = JSON.parse(localStorage.getItem("bannerSettings") || "{}");
+        const visibleBanners = allBannerImages.filter((img: any) => {
+          const isVisible = bannerSettings[img.public_id]?.isVisible ?? true;
+          return isVisible;
+        });
+
+        // Sort by priority (higher priority first)
+        const sortedBanners = visibleBanners
+          .map((img: any) => ({
+            ...img,
+            priority: bannerSettings[img.public_id]?.priority ?? 0,
+          }))
+          .sort((a, b) => b.priority - a.priority);
+
         console.log("🎠 Carousel found", allBannerImages.length, "total banner images");
-        setImages(allBannerImages.map((img: any) => img.secure_url) || []);
+        console.log("🎠 Carousel showing", sortedBanners.length, "visible banner images");
+        setImages(sortedBanners.map((img: any) => img.secure_url) || []);
       } catch (error) {
         console.error("🎠 Carousel fetch error:", error);
         setImages([]);

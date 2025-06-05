@@ -2,10 +2,20 @@
 import ImageUploader from "@/app/components/ImageUploader";
 import { BANNER_FOLDER } from "@/app/constants";
 import DeleteImageModal from "@/app/modal/DeleteImageModal";
+import EditPriorityModal from "@/app/modal/EditPriorityModal";
 import app from "@/app/utils/firebaseConfig";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc, getFirestore } from "firebase/firestore";
-import { Image as ImageIcon, Trash2, Upload } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  Edit3,
+  Eye,
+  EyeOff,
+  Image as ImageIcon,
+  Trash2,
+  Upload,
+} from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -13,13 +23,22 @@ import { useEffect, useState } from "react";
 const db = getFirestore(app);
 
 const BannerAdminPage = () => {
-  const [images, setImages] = useState<{ url: string; publicId: string }[]>([]);
+  const [images, setImages] = useState<
+    { url: string; publicId: string; isVisible: boolean; priority: number }[]
+  >([]);
   const [loading, setLoading] = useState(false);
   const [authLoading, setAuthLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
   const [folder, setFolder] = useState(BANNER_FOLDER);
   const [publicIdCurrent, setPublicIdCurrent] = useState("");
+  const [editingBanner, setEditingBanner] = useState<{
+    publicId: string;
+    priority: number;
+  } | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(5);
   const [uploadedImage, setUploadedImage] = useState<{
     url: string;
     publicId: string;
@@ -117,12 +136,19 @@ const BannerAdminPage = () => {
       });
 
       // Store both URLs and full public_ids for deletion
-      setImages(
-        allBannerImages.map((img: any) => ({
-          url: img.secure_url,
-          publicId: img.public_id,
-        }))
-      );
+      const bannerSettings = JSON.parse(localStorage.getItem("bannerSettings") || "{}");
+
+      const imagesWithSettings = allBannerImages.map((img: any) => ({
+        url: img.secure_url,
+        publicId: img.public_id,
+        isVisible: bannerSettings[img.public_id]?.isVisible ?? true,
+        priority: bannerSettings[img.public_id]?.priority ?? 0,
+      }));
+
+      // Sort by priority (higher priority first)
+      imagesWithSettings.sort((a, b) => b.priority - a.priority);
+
+      setImages(imagesWithSettings);
     } catch (error) {
       console.error("💥 Fetch error:", error);
       setImages([]);
@@ -182,6 +208,45 @@ const BannerAdminPage = () => {
     return `banner_${timestamp}_${randomId}`;
   };
 
+  const updateBannerVisibility = (publicId: string, isVisible: boolean) => {
+    const bannerSettings = JSON.parse(localStorage.getItem("bannerSettings") || "{}");
+    if (!bannerSettings[publicId]) {
+      bannerSettings[publicId] = {};
+    }
+    bannerSettings[publicId].isVisible = isVisible;
+    localStorage.setItem("bannerSettings", JSON.stringify(bannerSettings));
+
+    setImages((prev) =>
+      prev.map((img) => (img.publicId === publicId ? { ...img, isVisible } : img))
+    );
+  };
+
+  const updateBannerPriority = (publicId: string, priority: number) => {
+    const bannerSettings = JSON.parse(localStorage.getItem("bannerSettings") || "{}");
+    if (!bannerSettings[publicId]) {
+      bannerSettings[publicId] = {};
+    }
+    bannerSettings[publicId].priority = priority;
+    localStorage.setItem("bannerSettings", JSON.stringify(bannerSettings));
+
+    setImages((prev) => {
+      const updated = prev.map((img) => (img.publicId === publicId ? { ...img, priority } : img));
+      // Re-sort by priority
+      return updated.sort((a, b) => b.priority - a.priority);
+    });
+  };
+
+  const onEditBanner = (publicId: string, priority: number) => {
+    setEditingBanner({ publicId, priority });
+    setShowEditModal(true);
+  };
+
+  // Pagination logic
+  const totalPages = Math.ceil(images.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentImages = images.slice(startIndex, endIndex);
+
   // Show loading while checking authentication
   if (authLoading || loading) {
     return (
@@ -223,6 +288,13 @@ const BannerAdminPage = () => {
         onSuccess={fetchImages}
       />
 
+      <EditPriorityModal
+        isOpen={showEditModal}
+        onClose={() => setShowEditModal(false)}
+        banner={editingBanner}
+        onUpdate={updateBannerPriority}
+      />
+
       {/* Admin Indicator Badge */}
       <div className="mb-6 flex items-center justify-between">
         <div className="flex items-center gap-3">
@@ -249,7 +321,10 @@ const BannerAdminPage = () => {
               <ImageIcon className="w-8 h-8" />
               Quản lý Banner
             </h1>
-            <p className="text-gray-600 mt-2">Tổng cộng {images.length} banner</p>
+            <p className="text-gray-600 mt-2">
+              Tổng cộng {images.length} banner • Hiển thị{" "}
+              {images.filter((img) => img.isVisible).length} banner
+            </p>
           </div>
         </div>
       </div>
@@ -286,69 +361,168 @@ const BannerAdminPage = () => {
             <p className="text-gray-500">Hãy upload banner đầu tiên của bạn</p>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Mã Banner
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Hình ảnh
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    URL
-                  </th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Hành động
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {images.map(({ url, publicId }, index) => {
-                  const imageCode = url.split("/")?.pop()?.split(".")[0] as string;
-                  return (
-                    <tr key={index} className="hover:bg-gray-50 transition-colors">
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm font-medium text-gray-900 font-mono">
-                          {imageCode}
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="flex-shrink-0 h-20 w-32">
-                          <Image
-                            src={url}
-                            width={128}
-                            height={80}
-                            alt={`Banner ${index + 1}`}
-                            className="h-20 w-32 object-cover rounded-lg border border-gray-200"
-                          />
-                        </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="text-sm text-gray-900 max-w-xs truncate">{url}</div>
+          <>
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Mã Banner
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Hình ảnh
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      URL
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Ưu tiên
+                    </th>
+                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Hành động
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {currentImages.map(({ url, publicId, isVisible, priority }, index) => {
+                    const imageCode = url.split("/")?.pop()?.split(".")[0] as string;
+                    return (
+                      <tr key={index} className="hover:bg-gray-50 transition-colors">
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm font-medium text-gray-900 font-mono">
+                            {imageCode}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="flex-shrink-0 h-20 w-32">
+                            <Image
+                              src={url}
+                              width={128}
+                              height={80}
+                              alt={`Banner ${index + 1}`}
+                              className="h-20 w-32 object-cover rounded-lg border border-gray-200"
+                            />
+                          </div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="text-sm text-gray-900 max-w-xs truncate">{url}</div>
+                          <button
+                            onClick={() => navigator.clipboard.writeText(url)}
+                            className="text-xs text-blue-600 hover:text-blue-800 mt-1"
+                          >
+                            Sao chép URL
+                          </button>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm text-gray-900 font-mono">{priority}</div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                          <div className="flex items-center gap-2 justify-end">
+                            <button
+                              onClick={() => onEditBanner(publicId, priority)}
+                              className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-md transition-colors"
+                            >
+                              <Edit3 className="w-3 h-3" />
+                              Sửa
+                            </button>
+                            <button
+                              onClick={() => updateBannerVisibility(publicId, !isVisible)}
+                              className={`inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
+                                isVisible
+                                  ? "text-orange-600 hover:text-orange-800 hover:bg-orange-50 border border-orange-200"
+                                  : "text-green-600 hover:text-green-800 hover:bg-green-50 border border-green-200"
+                              }`}
+                            >
+                              {isVisible ? (
+                                <>
+                                  <EyeOff className="w-3 h-3" />
+                                  Ẩn
+                                </>
+                              ) : (
+                                <>
+                                  <Eye className="w-3 h-3" />
+                                  Hiển thị
+                                </>
+                              )}
+                            </button>
+                            <button
+                              onClick={() => onDeleteImageBanner(publicId)}
+                              className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-red-600 hover:text-red-800 hover:bg-red-50 rounded-md transition-colors"
+                            >
+                              <Trash2 className="w-3 h-3" />
+                              Xóa
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <div className="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
+                <div className="flex-1 flex justify-between sm:hidden">
+                  <button
+                    onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+                    disabled={currentPage === 1}
+                    className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    Trước
+                  </button>
+                  <button
+                    onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
+                    disabled={currentPage === totalPages}
+                    className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    Sau
+                  </button>
+                </div>
+                <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                  <div>
+                    <p className="text-sm text-gray-700">
+                      Hiển thị <span className="font-medium">{startIndex + 1}</span> đến{" "}
+                      <span className="font-medium">{Math.min(endIndex, images.length)}</span> trong
+                      tổng số <span className="font-medium">{images.length}</span> banner
+                    </p>
+                  </div>
+                  <div>
+                    <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
+                      <button
+                        onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+                        disabled={currentPage === 1}
+                        className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        <ChevronLeft className="h-5 w-5" />
+                      </button>
+                      {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
                         <button
-                          onClick={() => navigator.clipboard.writeText(url)}
-                          className="text-xs text-blue-600 hover:text-blue-800 mt-1"
+                          key={page}
+                          onClick={() => setCurrentPage(page)}
+                          className={`relative inline-flex items-center px-4 py-2 border text-sm font-medium ${
+                            page === currentPage
+                              ? "z-10 bg-indigo-50 border-indigo-500 text-indigo-600"
+                              : "bg-white border-gray-300 text-gray-500 hover:bg-gray-50"
+                          }`}
                         >
-                          Sao chép URL
+                          {page}
                         </button>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <button
-                          onClick={() => onDeleteImageBanner(publicId)}
-                          className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-red-600 hover:text-red-800 hover:bg-red-50 rounded-md transition-colors"
-                        >
-                          <Trash2 className="w-3 h-3" />
-                          Xóa
-                        </button>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
+                      ))}
+                      <button
+                        onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
+                        disabled={currentPage === totalPages}
+                        className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        <ChevronRight className="h-5 w-5" />
+                      </button>
+                    </nav>
+                  </div>
+                </div>
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>
