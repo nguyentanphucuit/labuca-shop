@@ -1,6 +1,6 @@
 "use client";
 
-import { AlertCircle, Image as ImageIcon, Upload, X } from "lucide-react";
+import { AlertCircle, Image as ImageIcon, RefreshCw, Upload } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 import Loading from "./Loading";
@@ -20,7 +20,7 @@ const UploadForm = ({
   const [loading, setLoading] = useState(false);
   const [isDragOver, setIsDragOver] = useState(false);
 
-  const handleUpload = async (file: File) => {
+  const handleUpload = async (file: File, isReplacement = false) => {
     setLoading(true);
     const formData = new FormData();
     formData.append("file", file);
@@ -46,29 +46,22 @@ const UploadForm = ({
     }
   };
 
-  const handleDelete = async () => {
-    if (!uploadedImage?.publicId) return;
-    try {
-      const response = await fetch("/api/delete", {
-        method: "POST",
-        body: JSON.stringify({ publicId: uploadedImage.publicId }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (!response.ok) throw new Error("Delete failed");
-      setUploadedImage(null);
-    } catch (error) {
-      console.error("Delete error:", error);
-    }
-  };
-
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      handleUpload(file);
+      handleUpload(file, false);
     }
+    // Reset input
+    e.target.value = "";
+  };
+
+  const handleReplaceFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      handleUpload(file, true);
+    }
+    // Reset input
+    e.target.value = "";
   };
 
   const handleDrop = (e: React.DragEvent) => {
@@ -76,7 +69,7 @@ const UploadForm = ({
     setIsDragOver(false);
     const file = e.dataTransfer.files?.[0];
     if (file && file.type.startsWith("image/")) {
-      handleUpload(file);
+      handleUpload(file, !!uploadedImage);
     }
   };
 
@@ -178,15 +171,25 @@ const UploadForm = ({
               />
             </div>
 
-            {/* Overlay with delete button */}
-            <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-200 flex items-center justify-center">
-              <button
-                onClick={handleDelete}
-                className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 p-2 bg-red-500 text-white rounded-full hover:bg-red-600 shadow-lg"
-                title="Xóa hình ảnh"
-              >
-                <X className="w-4 h-4" />
-              </button>
+            {/* Overlay with replace button */}
+            <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-all duration-200 flex items-center justify-center">
+              <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                {/* Replace button */}
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleReplaceFileChange}
+                  className="hidden"
+                  id={`replace-${newPublicId}`}
+                />
+                <label
+                  htmlFor={`replace-${newPublicId}`}
+                  className="flex items-center justify-center p-3 bg-green-600 text-white rounded-full hover:bg-green-700 shadow-xl cursor-pointer transition-all duration-200"
+                  title="Thay thế hình ảnh"
+                >
+                  <RefreshCw className="w-5 h-5" />
+                </label>
+              </div>
             </div>
           </div>
 
@@ -195,9 +198,12 @@ const UploadForm = ({
             <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
               <ImageIcon className="w-4 h-4 text-green-600" />
             </div>
-            <span className="text-sm font-medium text-green-700">
-              Hình ảnh đã được upload thành công
-            </span>
+            <div className="flex-1">
+              <span className="text-sm font-medium text-green-700">
+                Hình ảnh đã được upload thành công
+              </span>
+              <p className="text-xs text-gray-500 mt-1">Hover để thay thế hình ảnh</p>
+            </div>
           </div>
         </div>
       )}
