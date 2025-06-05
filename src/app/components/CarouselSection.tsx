@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import "swiper/css/bundle";
 import { Autoplay, EffectFade, Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { FOLDER_IMAGE } from "../constants";
+import { BANNER_FOLDER } from "../constants";
 
 const CarouselSkeleton = () => (
   <div className="hidden md:block w-[2000px] max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 mb-8">
@@ -18,20 +18,50 @@ const Carousel = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`/api/get-images?folder=${FOLDER_IMAGE}`)
-      .then((res) => res.json())
-      .then((data) =>
-        setImages(
-          data
-            ?.filter((img: any) => img.secure_url.includes("LabucaBanner_"))
-            .map((img: any) => img.secure_url)
-        )
-      )
-      .catch(console.error)
-      .finally(() => setIsLoading(false));
+    console.log("🎠 Carousel fetching banners from multiple locations...");
+
+    const fetchAllBanners = async () => {
+      try {
+        // Fetch from banner subfolder
+        const bannerFolderResponse = await fetch(`/api/get-images?folder=${BANNER_FOLDER}`);
+        const bannerFolderData = await bannerFolderResponse.json();
+
+        // Fetch from main labuca folder for older banners
+        const mainFolderResponse = await fetch(`/api/get-images?folder=labuca`);
+        const mainFolderData = await mainFolderResponse.json();
+
+        let allBannerImages = [];
+
+        // Add images from banner subfolder
+        if (bannerFolderResponse.ok && Array.isArray(bannerFolderData)) {
+          allBannerImages.push(...bannerFolderData);
+        }
+
+        // Add banner images from main folder (ones with "banner_" that aren't already in subfolder)
+        if (mainFolderResponse.ok && Array.isArray(mainFolderData)) {
+          const mainFolderBanners = mainFolderData.filter(
+            (img: any) =>
+              img.public_id.includes("banner_") && !img.public_id.includes("labuca/banner/")
+          );
+          allBannerImages.push(...mainFolderBanners);
+        }
+
+        console.log("🎠 Carousel found", allBannerImages.length, "total banner images");
+        setImages(allBannerImages.map((img: any) => img.secure_url) || []);
+      } catch (error) {
+        console.error("🎠 Carousel fetch error:", error);
+        setImages([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchAllBanners();
   }, []);
 
   if (isLoading || !images.length) return <CarouselSkeleton />;
+
+  console.log("🎠 Carousel displaying", images.length, "banner images");
 
   return (
     <div className="hidden md:block max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 mb-8">

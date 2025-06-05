@@ -9,6 +9,7 @@ const UploadForm = ({
   uploadedImage,
   setUploadedImage,
   newPublicId,
+  folder,
 }: {
   uploadedImage: {
     url: string;
@@ -16,6 +17,7 @@ const UploadForm = ({
   } | null;
   setUploadedImage: (uploadedImage: { url: string; publicId: string } | null) => void;
   newPublicId: string;
+  folder?: string;
 }) => {
   const [loading, setLoading] = useState(false);
   const [isDragOver, setIsDragOver] = useState(false);
@@ -26,6 +28,13 @@ const UploadForm = ({
     formData.append("file", file);
     formData.append("public_id", newPublicId || "");
 
+    // Add folder parameter if provided
+    if (folder) {
+      formData.append("folder", folder);
+    }
+
+    console.log("📤 Uploading to folder:", folder, "with publicId:", newPublicId);
+
     try {
       const response = await fetch("/api/upload", {
         method: "POST",
@@ -35,13 +44,15 @@ const UploadForm = ({
       if (!response.ok) throw new Error("Upload failed");
 
       const data = await response.json();
+      console.log("✅ Upload successful:", data);
+
       setUploadedImage({
         url: data.url,
         publicId: newPublicId,
       });
       setLoading(false);
     } catch (error) {
-      console.error("Upload error:", error);
+      console.error("💥 Upload error:", error);
       setLoading(false);
     }
   };

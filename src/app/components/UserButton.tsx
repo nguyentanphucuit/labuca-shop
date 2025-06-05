@@ -2,7 +2,7 @@
 
 import { getAuth, onAuthStateChanged, signOut, User } from "firebase/auth";
 import { doc, getDoc, getFirestore } from "firebase/firestore";
-import { LogOut, Package, ShoppingBag, UserIcon } from "lucide-react";
+import { Image, LogOut, Package, ShoppingBag, UserIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -143,6 +143,12 @@ export default function UserButton() {
       icon: Package,
       label: "Quản lý sản phẩm",
       onClick: () => router.push("/admin/products"),
+      show: userRole === "admin",
+    },
+    {
+      icon: Image,
+      label: "Quản lý banner",
+      onClick: () => router.push("/admin/banner"),
       show: userRole === "admin",
     },
   ];

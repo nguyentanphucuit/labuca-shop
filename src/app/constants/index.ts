@@ -1,7 +1,7 @@
 const sourcesPerPage = 4;
 
 const FOLDER_IMAGE = "labuca";
-const BANNER_IMAGE = "LabucaBanner_";
+const BANNER_FOLDER = `${FOLDER_IMAGE}/banner`;
 
 const emptyProduct = {
   id: "",
@@ -103,7 +103,7 @@ const listItem = [
   },
 ];
 
-export { BANNER_IMAGE, emptyProduct, FOLDER_IMAGE, listItem, listType, sourcesPerPage };
+export { BANNER_FOLDER, emptyProduct, FOLDER_IMAGE, listItem, listType, sourcesPerPage };
 
 // Export color and size constants
 export {

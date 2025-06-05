@@ -1,20 +1,19 @@
-'use client';
+"use client";
 
-import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react';
-import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
-import { deleteDoc, doc } from '@firebase/firestore';
-import db from '@/app/utils/firestore';
-import { notifySuccess } from '@/app/components/toast/common';
-import { ProductTypes } from '@/app/types/common';
+import { notifySuccess } from "@/app/components/toast/common";
+import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from "@headlessui/react";
+import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 
 export default function DeleteImageModal({
   showDeleteModal,
   public_id,
   setShowDeleteModal,
+  onSuccess,
 }: {
   showDeleteModal: boolean;
   public_id: string;
   setShowDeleteModal: (setShowDeleteModal: boolean) => void;
+  onSuccess?: () => void;
 }) {
   const close = () => {
     setShowDeleteModal(!showDeleteModal);
@@ -22,32 +21,44 @@ export default function DeleteImageModal({
 
   const deleteImage = async (public_id: string) => {
     try {
-      const response = await fetch('/api/delete-image', {
-        method: 'DELETE',
+      console.log("🗑️ Deleting image:", public_id);
+      const response = await fetch("/api/delete-image", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({ public_id: public_id }),
       });
 
       const data = await response.json();
+      console.log("🗑️ Delete response:", data);
+
       if (response.ok) {
-        console.log('Image deleted:', data);
+        console.log("✅ Image deleted successfully:", data);
+        notifySuccess();
+        if (onSuccess) {
+          onSuccess();
+        }
       } else {
-        console.error('Error:', data.error);
+        console.error("❌ Delete failed:", data.error);
       }
     } catch (error) {
-      console.error('Delete request failed:', error);
+      console.error("💥 Delete request failed:", error);
     }
-    notifySuccess();
     close();
   };
 
+  // Extract just the filename for display
+  const displayName = public_id.split("/").pop() || public_id;
+
   return (
-    <Dialog open={showDeleteModal} onClose={close} className="relative z-10">
+    <Dialog open={showDeleteModal} onClose={close} className="relative z-50">
       <DialogBackdrop
         transition
         className="fixed inset-0 bg-gray-500/75 transition-opacity data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in"
       />
 
-      <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
+      <div className="fixed inset-0 z-50 w-screen overflow-y-auto">
         <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
           <DialogPanel
             transition
@@ -60,13 +71,13 @@ export default function DeleteImageModal({
                 </div>
                 <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
                   <DialogTitle as="h3" className="text-base font-semibold text-gray-900">
-                    Delete
+                    Xóa Banner
                   </DialogTitle>
                   <div className="mt-2">
                     <p className="text-sm text-gray-500">
-                      Are you sure you want to delete{' '}
-                      <span className="text-md font-bold px-1 text-red-600">{public_id}</span>? All
-                      of your data will be permanently removed. This action cannot be undone.
+                      Bạn có chắc chắn muốn xóa{" "}
+                      <span className="text-md font-bold px-1 text-red-600">{displayName}</span>? Dữ
+                      liệu sẽ bị xóa vĩnh viễn. Hành động này không thể hoàn tác.
                     </p>
                   </div>
                 </div>
@@ -78,7 +89,7 @@ export default function DeleteImageModal({
                 onClick={() => deleteImage(public_id)}
                 className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
               >
-                Delete
+                Xóa
               </button>
               <button
                 type="button"
@@ -86,7 +97,7 @@ export default function DeleteImageModal({
                 onClick={close}
                 className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
               >
-                Cancel
+                Hủy
               </button>
             </div>
           </DialogPanel>
