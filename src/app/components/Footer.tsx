@@ -1,54 +1,43 @@
 // import ExportedImage from "next-image-export-optimizer";
-import React from 'react';
-import Image from 'next/image';
-import Link from 'next/link';
-import {
-  Video,
-  MapPin,
-  Phone,
-  Mail,
-  ArrowRight,
-  Facebook,
-  Instagram,
-  Store,
-  MessageCircle,
-} from 'lucide-react';
-import logo from '/public/assets/img/labuca-logo.png';
+import { ArrowRight, MapPin, Phone } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import logo from "/public/assets/img/labuca-logo.png";
 const contactInfo = [
   {
-    name: 'Địa chỉ',
-    link: '152 Lý Thường Kiệt, P. Thành Công, Tp. Buôn Ma Thuột, tỉnh Đắk Lắk',
-    href: 'https://maps.app.goo.gl/KjnnaNFcaqDcQWDa7',
+    name: "Địa chỉ",
+    link: "152 Lý Thường Kiệt, P. Thành Công, Tp. Buôn Ma Thuột, tỉnh Đắk Lắk",
+    href: "https://maps.app.goo.gl/KjnnaNFcaqDcQWDa7",
     icon: MapPin,
   },
   {
-    name: 'Số điện thoại',
-    link: '0905 075 588',
-    href: 'https://zalo.me/0905075588',
+    name: "Số điện thoại",
+    link: "0905 075 588",
+    href: "https://zalo.me/0905075588",
     icon: Phone,
   },
 ];
 
 const socialLinks = [
   {
-    name: 'Facebook',
-    link: 'https://www.facebook.com/profile.php?id=100063755854074&mibextid=LQQJ4d',
-    img: '/assets/img/facebook-icon.png',
+    name: "Facebook",
+    link: "https://www.facebook.com/profile.php?id=100063755854074&mibextid=LQQJ4d",
+    img: "/assets/img/facebook-icon.png",
   },
   {
-    name: 'Shopee',
-    link: 'https://shopee.vn/labuca_bmt',
-    img: '/assets/img/shopee.png',
+    name: "Shopee",
+    link: "https://shopee.vn/labuca_bmt",
+    img: "/assets/img/shopee.png",
   },
   {
-    name: 'TikTok',
-    link: 'https://www.tiktok.com/@labuca7979',
-    img: '/assets/img/tiktok.svg',
+    name: "TikTok",
+    link: "https://www.tiktok.com/@labuca7979",
+    img: "/assets/img/tiktok.svg",
   },
   {
-    name: 'Zalo',
-    link: 'https://zalo.me/0905075588',
-    img: '/assets/img/zalo.png',
+    name: "Zalo",
+    link: "https://zalo.me/0905075588",
+    img: "/assets/img/zalo.png",
   },
 ];
 
@@ -74,7 +63,7 @@ const Footer = () => {
             </p>
 
             <ul className="mt-8 flex justify-center gap-6 sm:justify-start md:gap-8">
-              {socialLinks.map(social => (
+              {socialLinks.map((social) => (
                 <li key={social.name}>
                   <Link
                     href={social.link}
@@ -95,7 +84,7 @@ const Footer = () => {
             <div className="text-center sm:text-left">
               <p className="text-lg font-medium text-gray-900">Liên Hệ</p>
               <ul className="mt-8 space-y-4 text-sm">
-                {contactInfo.map(item => (
+                {contactInfo.map((item) => (
                   <li key={item.name}>
                     <a
                       className="flex items-center justify-center gap-1.5 sm:justify-start"
@@ -179,6 +168,35 @@ const Footer = () => {
             <p className="mt-4 text-sm text-gray-500 sm:order-first sm:mt-0">
               Thiết kế và phát triển bởi Labuca Team
             </p>
+          </div>
+
+          {/* Business Information */}
+          <div className="mt-6 pt-6 border-t border-gray-100">
+            <div className="text-center">
+              <div className="text-sm text-gray-500 space-y-1">
+                <p>
+                  <strong>Chủ thể kinh doanh:</strong> Hộ kinh doanh Labuca
+                </p>
+                <p>
+                  <strong>Mã số hộ kinh doanh:</strong> 8333565723-001
+                </p>
+                <p>
+                  <strong>Email:</strong> hoaithuong0500@gmail.com
+                </p>
+              </div>
+
+              {/* Ministry of Industry and Trade Image */}
+              <div className="mt-4 flex justify-center">
+                <Image
+                  src="/images/logo-da-thong-bao-bo-cong-thuong.webp"
+                  alt="Đã thông báo Bộ Công Thương"
+                  width={150}
+                  height={80}
+                  className="object-contain filter-none"
+                  priority
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>

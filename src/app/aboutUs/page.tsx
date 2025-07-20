@@ -44,8 +44,8 @@ const AboutUs = () => {
         </div>
       </div>
 
-      {/* Story Section */}
-      <section className="py-16 px-4 bg-white">
+      {/* Story Section - Hidden */}
+      {/* <section className="py-16 px-4 bg-white">
         <div className="max-w-screen-xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div className="order-2 lg:order-1">
@@ -79,7 +79,7 @@ const AboutUs = () => {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Values Section */}
       <section className="py-16 px-4 bg-neutral-50">
@@ -175,12 +175,45 @@ const AboutUs = () => {
             <div className="text-center">
               <Mail className="w-8 h-8 mx-auto mb-4 text-black" />
               <h3 className="font-semibold mb-2">Email</h3>
-              <p className="text-gray-600">contact@labuca.vn</p>
+              <p className="text-gray-600">hoaithuong0500@gmail.com</p>
             </div>
             <div className="text-center">
               <Clock className="w-8 h-8 mx-auto mb-4 text-black" />
               <h3 className="font-semibold mb-2">Giờ Làm Việc</h3>
               <p className="text-gray-600">T2 - CN: 8:00 - 22:00</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Business Information Section */}
+      <section className="py-16 px-4 bg-neutral-50">
+        <div className="max-w-screen-xl mx-auto">
+          <h2 className="text-3xl font-bold text-center mb-12">Thông Tin Doanh Nghiệp</h2>
+          <div className="bg-white rounded-xl shadow-lg p-8 max-w-2xl mx-auto">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between py-3 border-b border-gray-200">
+                <span className="font-semibold text-gray-700">Chủ thể kinh doanh:</span>
+                <span className="text-gray-600">Hộ kinh doanh Labuca</span>
+              </div>
+              <div className="flex items-center justify-between py-3 border-b border-gray-200">
+                <span className="font-semibold text-gray-700">Mã số hộ kinh doanh:</span>
+                <span className="text-gray-600">8333565723-001</span>
+              </div>
+              <div className="flex items-center justify-between py-3 border-b border-gray-200">
+                <span className="font-semibold text-gray-700">Địa chỉ:</span>
+                <span className="text-gray-600">
+                  152 Lý Thường Kiệt, P. Thành Công, Tp. Buôn Ma Thuột, tỉnh Đắk Lắk
+                </span>
+              </div>
+              <div className="flex items-center justify-between py-3 border-b border-gray-200">
+                <span className="font-semibold text-gray-700">Số điện thoại:</span>
+                <span className="text-gray-600">0905 075 588</span>
+              </div>
+              <div className="flex items-center justify-between py-3">
+                <span className="font-semibold text-gray-700">Email:</span>
+                <span className="text-gray-600">hoaithuong0500@gmail.com</span>
+              </div>
             </div>
           </div>
         </div>
