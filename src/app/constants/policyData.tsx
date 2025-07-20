@@ -380,4 +380,49 @@ export const policy = [
       </>
     ),
   },
+  {
+    title: "Chính sách vận chuyển",
+    content: (
+      <ul className="list-decimal">
+        <li>
+          <strong>Thời gian giao hàng:</strong>
+          <ul className="list-disc py-2">
+            <li>
+              <strong>Khu vực nội thành tỉnh Đắk Lắk:</strong> Từ 1 – 3 ngày
+            </li>
+            <li>
+              <strong>Khu vực ngoại thành và các thành phố lớn:</strong> 3 – 4 ngày
+            </li>
+            <li>
+              <strong>Các khu vực khác:</strong> 4 – 5 ngày
+            </li>
+          </ul>
+        </li>
+        <li>
+          <strong>Phí vận chuyển:</strong>
+          <ul className="list-disc py-2">
+            <li>
+              <strong>Đơn hàng từ 300.000 VND trở lên:</strong> Miễn phí vận chuyển
+            </li>
+            <li>
+              <strong>Đơn hàng dưới 300.000 VND:</strong> Phí vận chuyển 20.000 VND
+            </li>
+          </ul>
+        </li>
+        <li>
+          <strong>Lưu ý:</strong>
+          <ul className="list-disc py-2">
+            <li>
+              Thời gian giao hàng có thể thay đổi tùy thuộc vào tình hình thời tiết và địa hình
+            </li>
+            <li>
+              Với các đơn hàng đặt vào cuối tuần hoặc ngày lễ, thời gian giao hàng có thể kéo dài
+              hơn
+            </li>
+            <li>LABUCA sẽ thông báo trước cho khách hàng nếu có thay đổi về thời gian giao hàng</li>
+          </ul>
+        </li>
+      </ul>
+    ),
+  },
 ];

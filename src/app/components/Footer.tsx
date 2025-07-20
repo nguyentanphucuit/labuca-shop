@@ -185,8 +185,8 @@ const Footer = () => {
                 </p>
               </div>
 
-              {/* Ministry of Industry and Trade Image */}
-              <div className="mt-4 flex justify-center">
+              {/* Ministry of Industry and Trade Image - Hidden */}
+              {/* <div className="mt-4 flex justify-center">
                 <Image
                   src="/images/logo-da-thong-bao-bo-cong-thuong.webp"
                   alt="Đã thông báo Bộ Công Thương"
@@ -195,7 +195,7 @@ const Footer = () => {
                   className="object-contain filter-none"
                   priority
                 />
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
