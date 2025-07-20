@@ -114,6 +114,9 @@ export default function CheckoutPage() {
     return sum + discountedPrice * item.quantity;
   }, 0);
 
+  const shippingFee = total >= 300000 ? 0 : 20000;
+  const finalTotal = total + shippingFee;
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -188,7 +191,11 @@ export default function CheckoutPage() {
             <li><b>Thành phố:</b> ${formData.city}</li>
             ${formData.note ? `<li><b>Ghi chú:</b> ${formData.note}</li>` : ""}
           </ul>
-          <div style="font-size:18px;margin-bottom:32px;"><b>Tổng tiền:</b> <span style="color:#7c3aed;">${formatPriceVND(total)}</span></div>
+          <div style="font-size:18px;margin-bottom:32px;">
+            <div style="margin-bottom:8px;"><b>Tạm tính:</b> ${formatPriceVND(total)}</div>
+            <div style="margin-bottom:8px;"><b>Phí vận chuyển:</b> ${total >= 300000 ? "Miễn phí" : formatPriceVND(20000)}</div>
+            <div><b>Tổng tiền:</b> <span style="color:#7c3aed;">${formatPriceVND(finalTotal)}</span></div>
+          </div>
           <p style="color:#666;">Chúng tôi sẽ liên hệ với bạn trong thời gian sớm nhất để xác nhận đơn hàng.<br>Cảm ơn bạn đã tin tưởng Labuca Shop!</p>
         </div>
       `;
@@ -228,7 +235,9 @@ export default function CheckoutPage() {
           </div>
           
           <div style="font-size:20px;margin-bottom:32px;padding:16px;background:#fef2f2;border-radius:8px;border:1px solid #fecaca;">
-            <b>💰 Tổng tiền:</b> <span style="color:#dc2626;font-weight:bold;">${formatPriceVND(total)}</span>
+            <div style="margin-bottom:8px;"><b>Tạm tính:</b> ${formatPriceVND(total)}</div>
+            <div style="margin-bottom:8px;"><b>Phí vận chuyển:</b> ${total >= 300000 ? "Miễn phí" : formatPriceVND(20000)}</div>
+            <div><b>💰 Tổng tiền:</b> <span style="color:#dc2626;font-weight:bold;">${formatPriceVND(finalTotal)}</span>
           </div>
           
           <div style="background:#eff6ff;padding:16px;border-radius:8px;border:1px solid #bfdbfe;">
@@ -246,8 +255,8 @@ export default function CheckoutPage() {
         },
         body: JSON.stringify({
           to: process.env.NEXT_PUBLIC_EMAIL_USER,
-          subject: `🔔 Đơn hàng mới từ ${formData.fullName} - ${formatPriceVND(total)}`,
-          text: `Đơn hàng mới từ ${formData.fullName}\n\n${orderItems}\n\nThông tin khách hàng:\n- Tên: ${formData.fullName}\n- Email: ${formData.email}\n- SĐT: ${formData.phone}\n- Địa chỉ: ${formData.address}, ${formData.city}${formData.note ? `\n- Ghi chú: ${formData.note}` : ""}\n\nTổng tiền: ${formatPriceVND(total)}\n\nVui lòng liên hệ với khách hàng để xác nhận đơn hàng.`,
+          subject: `🔔 Đơn hàng mới từ ${formData.fullName} - ${formatPriceVND(finalTotal)}`,
+          text: `Đơn hàng mới từ ${formData.fullName}\n\n${orderItems}\n\nThông tin khách hàng:\n- Tên: ${formData.fullName}\n- Email: ${formData.email}\n- SĐT: ${formData.phone}\n- Địa chỉ: ${formData.address}, ${formData.city}${formData.note ? `\n- Ghi chú: ${formData.note}` : ""}\n\nTạm tính: ${formatPriceVND(total)}\nPhí vận chuyển: ${total >= 300000 ? "Miễn phí" : formatPriceVND(20000)}\nTổng tiền: ${formatPriceVND(finalTotal)}\n\nVui lòng liên hệ với khách hàng để xác nhận đơn hàng.`,
           html: adminEmailHtml,
         }),
       });
@@ -261,7 +270,7 @@ export default function CheckoutPage() {
         body: JSON.stringify({
           to: formData.email,
           subject: "Xác nhận đơn hàng - Labuca Shop",
-          text: `Xin chào ${formData.fullName},\n\nCảm ơn bạn đã đặt hàng tại Labuca Shop. Dưới đây là thông tin đơn hàng của bạn:\n\n${orderItems}\n\nThông tin giao hàng: ${formData.fullName}, ${formData.phone}, ${formData.address}, ${formData.city}\n\nTổng tiền: ${formatPriceVND(total)}`,
+          text: `Xin chào ${formData.fullName},\n\nCảm ơn bạn đã đặt hàng tại Labuca Shop. Dưới đây là thông tin đơn hàng của bạn:\n\n${orderItems}\n\nThông tin giao hàng: ${formData.fullName}, ${formData.phone}, ${formData.address}, ${formData.city}\n\nTạm tính: ${formatPriceVND(total)}\nPhí vận chuyển: ${total >= 300000 ? "Miễn phí" : formatPriceVND(20000)}\nTổng tiền: ${formatPriceVND(finalTotal)}`,
           html: customerEmailHtml,
         }),
       });
@@ -277,7 +286,7 @@ export default function CheckoutPage() {
         body: JSON.stringify({
           items,
           user: formData,
-          total,
+          total: finalTotal,
         }),
       });
 
@@ -354,9 +363,64 @@ export default function CheckoutPage() {
               );
             })}
             <div className="border-t pt-4 mt-4">
-              <div className="flex justify-between font-bold text-lg">
-                <p>Tổng tiền</p>
-                <p>{formatPriceVND(total)}</p>
+              {/* Shipping Info */}
+              <div className="mb-4 p-3 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg border border-blue-200">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                    <span className="text-sm font-medium text-gray-700">Phí vận chuyển</span>
+                  </div>
+                  <span
+                    className={`text-sm font-bold px-3 py-1 rounded-full ${
+                      total >= 300000
+                        ? "bg-green-100 text-green-700 border border-green-200"
+                        : "bg-orange-100 text-orange-700 border border-orange-200"
+                    }`}
+                  >
+                    {total >= 300000 ? "Miễn phí" : "20.000 VND"}
+                  </span>
+                </div>
+                {total < 300000 && (
+                  <div className="space-y-2">
+                    <div className="w-full bg-gray-200 rounded-full h-2">
+                      <div
+                        className="bg-gradient-to-r from-blue-500 to-purple-500 h-2 rounded-full transition-all duration-300"
+                        style={{ width: `${Math.min((total / 300000) * 100, 100)}%` }}
+                      ></div>
+                    </div>
+                    <p className="text-xs text-gray-600">
+                      Cần thêm{" "}
+                      <span className="font-semibold text-blue-600">
+                        {formatPriceVND(300000 - total)}
+                      </span>{" "}
+                      để được miễn phí vận chuyển
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              {/* Price Breakdown */}
+              <div className="space-y-2 mb-4">
+                <div className="flex justify-between text-sm text-gray-600">
+                  <p>Tạm tính</p>
+                  <p>{formatPriceVND(total)}</p>
+                </div>
+
+                <div className="flex justify-between text-sm text-gray-600">
+                  <p>Phí vận chuyển</p>
+                  <p>
+                    {total >= 300000 ? (
+                      <span className="text-green-600">Miễn phí</span>
+                    ) : (
+                      formatPriceVND(shippingFee)
+                    )}
+                  </p>
+                </div>
+
+                <div className="flex justify-between font-bold text-lg border-t pt-2">
+                  <p>Tổng tiền</p>
+                  <p>{formatPriceVND(finalTotal)}</p>
+                </div>
               </div>
             </div>
           </div>

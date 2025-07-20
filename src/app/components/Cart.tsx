@@ -1,5 +1,5 @@
 "use client";
-import { Minus, Plus, ShoppingBag, X } from "lucide-react";
+import { Minus, Plus, ShoppingBag, Tag, X } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -10,6 +10,8 @@ export default function Cart() {
   const router = useRouter();
   const { items, isCartOpen, setIsCartOpen, removeItem, updateQuantity, clearCart } = useCart();
   const [showClearConfirm, setShowClearConfirm] = useState(false);
+  const [voucherApplied, setVoucherApplied] = useState(false);
+  const shippingFee = 20000;
 
   const total = items.reduce((sum, item) => {
     // If price is undefined, use 0 as default
@@ -19,6 +21,16 @@ export default function Cart() {
     const discountedPrice = (price * (100 - discount)) / 100;
     return sum + discountedPrice * item.quantity;
   }, 0);
+
+  const finalTotal = voucherApplied ? total : total + shippingFee;
+
+  const handleApplyVoucher = () => {
+    setVoucherApplied(true);
+  };
+
+  const handleRemoveVoucher = () => {
+    setVoucherApplied(false);
+  };
 
   return (
     <div className={`fixed inset-0 z-50 ${isCartOpen ? "visible" : "invisible"}`}>
@@ -144,9 +156,75 @@ export default function Cart() {
             {/* Footer */}
             {items.length > 0 && (
               <div className="border-t border-gray-200 px-4 py-6">
-                <div className="flex justify-between text-base font-medium text-gray-900 mb-4">
-                  <p>Tổng tiền</p>
-                  <p>{formatPriceVND(total)}</p>
+                {/* Voucher Section */}
+                <div className="mb-4 p-3 bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg border border-purple-200">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-2">
+                      <Tag className="w-4 h-4 text-purple-600" />
+                      <span className="text-sm font-medium text-gray-900">
+                        Voucher miễn phí vận chuyển
+                      </span>
+                    </div>
+                    {voucherApplied && (
+                      <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">
+                        Đã áp dụng
+                      </span>
+                    )}
+                  </div>
+
+                  {!voucherApplied ? (
+                    <div className="space-y-2">
+                      <p className="text-xs text-gray-600">Áp dụng cho đơn hàng từ 300.000 VND</p>
+                      {total >= 300000 ? (
+                        <button
+                          onClick={handleApplyVoucher}
+                          className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white text-sm font-medium py-2 px-3 rounded-lg hover:from-purple-600 hover:to-pink-600 transition-all duration-200"
+                        >
+                          Áp dụng voucher
+                        </button>
+                      ) : (
+                        <div className="text-xs text-gray-500 bg-gray-100 p-2 rounded">
+                          Cần thêm {formatPriceVND(300000 - total)} để áp dụng voucher
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-green-700 font-medium">
+                        Miễn phí vận chuyển
+                      </span>
+                      <button
+                        onClick={handleRemoveVoucher}
+                        className="text-xs text-red-600 hover:text-red-700 font-medium"
+                      >
+                        Hủy voucher
+                      </button>
+                    </div>
+                  )}
+                </div>
+
+                {/* Price Summary */}
+                <div className="space-y-2 mb-4">
+                  <div className="flex justify-between text-sm text-gray-600">
+                    <p>Tạm tính</p>
+                    <p>{formatPriceVND(total)}</p>
+                  </div>
+
+                  <div className="flex justify-between text-sm text-gray-600">
+                    <p>Phí vận chuyển</p>
+                    <p>
+                      {voucherApplied ? (
+                        <span className="text-green-600">Miễn phí</span>
+                      ) : (
+                        formatPriceVND(shippingFee)
+                      )}
+                    </p>
+                  </div>
+
+                  <div className="flex justify-between text-base font-medium text-gray-900 border-t pt-2">
+                    <p>Tổng tiền</p>
+                    <p>{formatPriceVND(finalTotal)}</p>
+                  </div>
                 </div>
 
                 {/* Remove All Button */}
