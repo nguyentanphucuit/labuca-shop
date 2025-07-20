@@ -1,5 +1,6 @@
 import Footer from "@/app/components/Footer";
 import Navbar from "@/app/components/Navbar";
+import ShippingAnnouncement from "@/app/components/ShippingAnnouncement";
 import { GoogleTagManager } from "@next/third-parties/google";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
@@ -35,8 +36,9 @@ export default function RootLayout({
       <body className={classNames(styles.main, inter.className)}>
         <GoogleTagManager gtmId="GTM-5CXDKNWS" />
         <CartProvider>
+          <ShippingAnnouncement />
           <Navbar />
-          <main className="pt-20">
+          <main className="pt-36">
             <Suspense>
               <ProgressBarProvider>{children}</ProgressBarProvider>
             </Suspense>

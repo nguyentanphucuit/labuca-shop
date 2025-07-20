@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import logo from "/public/assets/img/labuca-logo.png";
 
 import {
@@ -30,9 +30,23 @@ const navigation = [
   { name: "Chính sách", href: "/policy", current: false },
   { name: "Thông tin", href: "/aboutUs", current: false },
 ];
+
 const Navbar = () => {
   const pathname = usePathname();
   const [open, setOpen] = React.useState(false);
+  const [isBannerHidden, setIsBannerHidden] = useState(false);
+
+  // Listen for banner visibility changes
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+      setIsBannerHidden(scrollY > 100);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   navigation.forEach((item) => {
     item.current = item.href === pathname;
   });
@@ -41,9 +55,14 @@ const Navbar = () => {
     console.log(open);
     setOpen(!open);
   };
+
   return (
-    <nav className="bg-white border-b">
-      <div className="fixed top-0 left-0 right-0 z-50 bg-white mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-8">
+    <nav className="bg-transparent border-b border-gray-200/50 shadow-sm">
+      <div
+        className={`fixed left-0 right-0 z-50 bg-white/80 backdrop-blur-md mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-8 transition-all duration-300 ${
+          isBannerHidden ? "top-0" : "top-12"
+        }`}
+      >
         <div className="relative flex h-20 items-center justify-between">
           {/* Mobile menu button */}
           <div className="absolute left-0 flex items-center sm:hidden">
@@ -126,7 +145,7 @@ const Navbar = () => {
       </div>
 
       {/* Mobile menu */}
-      <div className={open ? "sm:hidden pt-20" : "hidden"} id="mobile-menu">
+      <div className={open ? "sm:hidden pt-32" : "hidden"} id="mobile-menu">
         <div className="space-y-1 px-4 pb-3 pt-2">
           {navigation.map((item) => (
             <Link
