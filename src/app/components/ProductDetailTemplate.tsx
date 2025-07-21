@@ -427,12 +427,14 @@ const ProductDetailTemplate = ({ ...props }: ProductTypes) => {
                 +
               </button>
             </div>
+            {/*
             <button
               onClick={handleAddToCart}
               className="flex-1 px-6 py-3 text-sm font-medium text-white bg-black rounded-lg hover:bg-gray-900"
             >
               Thêm vào giỏ hàng
             </button>
+            */}
           </div>
         </div>
       </div>

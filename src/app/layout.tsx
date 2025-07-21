@@ -4,7 +4,6 @@ import ShippingAnnouncement from "@/app/components/ShippingAnnouncement";
 import { GoogleTagManager } from "@next/third-parties/google";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import Cart from "./components/Cart";
 import ProgressBarProvider from "./components/ProgressBar";
 import { CartProvider } from "./context/CartContext";
 import "./globals.css";
@@ -45,7 +44,7 @@ export default function RootLayout({
           </main>
           <SpeedDial />
           <Footer />
-          <Cart />
+          {/* <Cart /> */}
         </CartProvider>
       </body>
     </html>

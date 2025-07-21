@@ -14,7 +14,6 @@ import { usePathname } from "next/navigation";
 import { listType } from "../constants";
 import { classNames } from "../constants/common";
 import { DropdownProps } from "../types/common";
-import CartButton from "./CartButton";
 import UserButton from "./UserButton";
 
 const navigation = [
@@ -139,7 +138,7 @@ const Navbar = () => {
           {/* Right section - can be used for cart, account, etc */}
           <div className="flex items-center gap-4 md:px-6 lg:px-12">
             <UserButton />
-            <CartButton />
+            {/* <CartButton /> */}
           </div>
         </div>
       </div>

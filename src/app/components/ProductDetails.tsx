@@ -57,6 +57,7 @@ const ProductDetails = ({
             {isImageLoading && <div className="absolute inset-0 bg-gray-100 animate-pulse" />}
 
             {/* Floating Action Button */}
+            {/*
             <button
               onClick={handleAddToCart}
               className={`
@@ -86,6 +87,7 @@ const ProductDetails = ({
                 />
               </svg>
             </button>
+            */}
 
             {/* Labels */}
             <div className="absolute top-4 left-4 right-4 flex justify-between items-center z-20">

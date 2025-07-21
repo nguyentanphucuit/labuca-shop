@@ -187,6 +187,7 @@ export default function VariantSelectionModal({
         </div>
 
         {/* Add to Cart Button */}
+        {/*
         <button
           onClick={(e) => {
             e.stopPropagation();
@@ -196,6 +197,7 @@ export default function VariantSelectionModal({
         >
           Thêm vào giỏ hàng - {formatPriceVND(discountedPrice * quantity)}
         </button>
+        */}
       </div>
     </div>
   );
